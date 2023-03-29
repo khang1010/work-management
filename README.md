@@ -1,2 +1,2 @@
 # work-management 
-10$/1 lần tải
+100$/1 lần tải
