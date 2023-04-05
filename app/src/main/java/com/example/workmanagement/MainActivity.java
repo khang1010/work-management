@@ -2,10 +2,14 @@ package com.example.workmanagement;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.workmanagement.activities.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,6 +24,14 @@ public class MainActivity extends AppCompatActivity {
         txt = findViewById(R.id.text);
 
         btn.setOnClickListener(view -> txt.setText("Duy ngáo"));
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                finish();
+            }
+        }, 2000);
 
     }
 }
