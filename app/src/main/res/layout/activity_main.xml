@@ -26,17 +26,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/ic_logo3x_foreground" />
+        app:srcCompat="@drawable/property_1_lightlogo" />
 
     <ImageView
         android:id="@+id/whiteLogo"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/ic_logo3x_foreground"
+        app:srcCompat="@drawable/vvector"
         app:tint="@color/white" />
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

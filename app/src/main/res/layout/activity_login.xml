@@ -22,12 +22,12 @@
 
     <ImageView
         android:id="@+id/imgLogo"
-        android:layout_width="267dp"
-        android:layout_height="247dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_marginTop="100dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/ic_logo3x_foreground" />
+        app:srcCompat="@drawable/property_1_lightlogo" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
