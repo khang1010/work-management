@@ -97,6 +97,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
         binding.bottomNavigation.show(2, true);
+        
     }
 
     private void loadFragment(Fragment fragment) {

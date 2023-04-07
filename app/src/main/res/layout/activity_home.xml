@@ -31,6 +31,7 @@
         app:mbn_rippleColor="#2f424242"
         app:mbn_selectedIconColor="@color/main_02"
         app:mbn_shadowColor="#1f212121"
+        app:itemIconTint="@drawable/bnv_item"
         android:id="@+id/bottomNavigation"
         android:layout_alignParentBottom="true"
         />
