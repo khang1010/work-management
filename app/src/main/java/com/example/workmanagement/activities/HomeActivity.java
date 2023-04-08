@@ -1,6 +1,7 @@
 package com.example.workmanagement.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -40,10 +41,11 @@ public class HomeActivity extends AppCompatActivity {
 
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding =ActivityHomeBinding.inflate(getLayoutInflater());
+        binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -67,7 +69,7 @@ public class HomeActivity extends AppCompatActivity {
             AuthServiceImpl.getInstance().getService().loginUser(userDTO).enqueue(new Callback<UserDTO>() {
                 @Override
                 public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
-                    if(response.isSuccessful() && response.code() == 200) {
+                    if (response.isSuccessful() && response.code() == 200) {
                         Toast.makeText(HomeActivity.this, "Success", Toast.LENGTH_SHORT).show();
                         user = new ViewModelProvider(HomeActivity.this).get(User.class);
                         user.setId(response.body().getId());
@@ -88,6 +90,8 @@ public class HomeActivity extends AppCompatActivity {
         binding.logoutBtn.setOnClickListener(view -> {
             goSignOut();
         });
+
+        binding.imgSideBar.setOnClickListener(v -> binding.drawableLayout.openDrawer(GravityCompat.START));
 
         binding.bottomNavigation.add(new MeowBottomNavigation.Model(1, R.drawable.property_1_mess));
         binding.bottomNavigation.add(new MeowBottomNavigation.Model(2, R.drawable.property_1_home));
@@ -135,7 +139,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
         binding.bottomNavigation.show(2, true);
-        
+
     }
 
     private void loadFragment(Fragment fragment) {
@@ -144,6 +148,7 @@ public class HomeActivity extends AppCompatActivity {
                 .replace(R.id.fragment, fragment, null)
                 .commit();
     }
+
     private void goSignOut() {
         gsc.signOut().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
