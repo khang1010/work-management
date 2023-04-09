@@ -74,7 +74,6 @@ public class HomeActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
                     if (response.isSuccessful() && response.code() == 200) {
-                        //Toast.makeText(HomeActivity.this, "Success", Toast.LENGTH_SHORT).show();
                         userViewModel = new ViewModelProvider(HomeActivity.this).get(UserViewModel.class);
                         userViewModel.setId(response.body().getId());
                         userViewModel.setEmail(response.body().getEmail());
@@ -118,49 +117,39 @@ public class HomeActivity extends AppCompatActivity {
         binding.bottomNavigation.add(new MeowBottomNavigation.Model(2, R.drawable.property_1_home));
         binding.bottomNavigation.add(new MeowBottomNavigation.Model(3, R.drawable.property_1_setting));
 
-        binding.bottomNavigation.setOnClickMenuListener(new Function1<MeowBottomNavigation.Model, Unit>() {
-            @Override
-            public Unit invoke(MeowBottomNavigation.Model model) {
-                switch (model.getId()) {
-                    case 1:
-                        break;
-                    case 2:
-                        break;
-                    case 3:
-                        break;
-                    case 4:
-                        break;
-                    default:
-                        break;
-                }
-                return null;
+        binding.bottomNavigation.setOnClickMenuListener(model -> {
+            switch (model.getId()) {
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                default:
+                    break;
             }
+            return null;
         });
 
-        binding.bottomNavigation.setOnShowListener(new Function1<MeowBottomNavigation.Model, Unit>() {
-
-            @Override
-            public Unit invoke(MeowBottomNavigation.Model model) {
-                Fragment fragment = null;
-                switch (model.getId()) {
-                    case 1:
-                        fragment = new ChatFragment();
-                        break;
-                    case 2:
-                        fragment = new HomeFragment();
-                        break;
-                    case 3:
-                        fragment = new SettingFragment();
-                        break;
-                    default:
-                        break;
-                }
-                loadFragment(fragment);
-                return null;
+        binding.bottomNavigation.setOnShowListener(model -> {
+            switch (model.getId()) {
+                case 1:
+                    loadFragment(new ChatFragment());
+                    break;
+                case 2:
+                    loadFragment(new HomeFragment());
+                    break;
+                case 3:
+                    loadFragment(new SettingFragment());
+                    break;
+                default:
+                    break;
             }
+            return null;
         });
         binding.bottomNavigation.show(2, true);
-
     }
 
     private void loadFragment(Fragment fragment) {
@@ -171,13 +160,9 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void goSignOut() {
-        gsc.signOut().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                startActivity(new Intent(HomeActivity.this, LoginActivity.class));
-                finish();
-
-            }
+        gsc.signOut().addOnSuccessListener(unused -> {
+            startActivity(new Intent(HomeActivity.this, LoginActivity.class));
+            finish();
         });
     }
 }
