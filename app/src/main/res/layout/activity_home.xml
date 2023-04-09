@@ -12,6 +12,7 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/headerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -27,8 +28,8 @@
 
             <ImageView
                 android:id="@+id/imgSearch"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:padding="10dp"
                 android:src="@drawable/baseline_search_24"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -37,24 +38,26 @@
 
             <ImageView
                 android:id="@+id/imgNotifications"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:padding="10dp"
                 android:src="@drawable/baseline_circle_notifications_24"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/imgAvatar"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imgAvatar"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="10dp"
                 android:src="@mipmap/ic_launcher"
-                android:scaleType="centerCrop"
+                app:civ_border_width="2dp"
+                app:civ_border_color="#FF000000"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -70,7 +73,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/bottomNavigation"
-            android:layout_marginBottom="-1dp" />
+            android:layout_below="@id/headerLayout"
+            android:layout_marginBottom="-1dp"
+            android:background="@color/primary_5"/>
 
         <com.etebarian.meowbottomnavigation.MeowBottomNavigation
             android:id="@+id/bottomNavigation"
@@ -90,6 +95,7 @@
     </RelativeLayout>
 
     <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigationView"
         app:headerLayout="@layout/navigation_header"
         app:menu="@menu/navigation_menu"
         android:layout_width="wrap_content"

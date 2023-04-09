@@ -1,14 +1,15 @@
 package com.example.workmanagement.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.MenuItem;
+import android.view.SubMenu;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -20,12 +21,15 @@ import com.example.workmanagement.fragments.HomeFragment;
 import com.example.workmanagement.fragments.SettingFragment;
 import com.example.workmanagement.utils.dto.UserDTO;
 import com.example.workmanagement.utils.services.impl.AuthServiceImpl;
-import com.example.workmanagement.viewmodels.User;
+import com.example.workmanagement.viewmodels.UserViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.navigation.NavigationView;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
@@ -37,7 +41,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private ActivityHomeBinding binding;
 
-    private User user;
+    private UserViewModel userViewModel;
 
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
@@ -70,13 +74,27 @@ public class HomeActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
                     if (response.isSuccessful() && response.code() == 200) {
-                        Toast.makeText(HomeActivity.this, "Success", Toast.LENGTH_SHORT).show();
-                        user = new ViewModelProvider(HomeActivity.this).get(User.class);
-                        user.setId(response.body().getId());
-                        user.setEmail(response.body().getEmail());
-                        user.setDisplayName(response.body().getDisplayName());
-                        user.setPhotoUrl(response.body().getPhotoUrl());
-                        user.setToken(response.body().getToken());
+                        //Toast.makeText(HomeActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                        userViewModel = new ViewModelProvider(HomeActivity.this).get(UserViewModel.class);
+                        userViewModel.setId(response.body().getId());
+                        userViewModel.setEmail(response.body().getEmail());
+                        userViewModel.setDisplayName(response.body().getDisplayName());
+                        userViewModel.setPhotoUrl(response.body().getPhotoUrl());
+                        userViewModel.setToken(response.body().getToken());
+                        userViewModel.setBoards(response.body().getBoards());
+                        SubMenu subMenu = binding.navigationView.getMenu().addSubMenu("Your boards");
+                        userViewModel.getBoards().observe(HomeActivity.this, boards -> {
+                            AtomicInteger i = new AtomicInteger();
+                            boards.forEach(b -> {
+                                subMenu.add(b.getName());
+                                subMenu.getItem(i.getAndIncrement()).setIcon(R.drawable.space_dashboard_24);
+                            });
+                        });
+                        userViewModel.getPhotoUrl().observe(HomeActivity.this, photoUrl -> Glide.with(HomeActivity.this)
+                                .asBitmap()
+                                .load(photoUrl)
+                                .into(binding.imgAvatar)
+                        );
                     }
                 }
 
@@ -87,11 +105,14 @@ public class HomeActivity extends AppCompatActivity {
             });
         }
 
-        binding.logoutBtn.setOnClickListener(view -> {
-            goSignOut();
-        });
+        binding.logoutBtn.setOnClickListener(view -> goSignOut());
 
         binding.imgSideBar.setOnClickListener(v -> binding.drawableLayout.openDrawer(GravityCompat.START));
+
+        binding.navigationView.setNavigationItemSelectedListener(item -> {
+            Toast.makeText(HomeActivity.this, item.getTitle(), Toast.LENGTH_SHORT).show();
+            return false;
+        });
 
         binding.bottomNavigation.add(new MeowBottomNavigation.Model(1, R.drawable.property_1_mess));
         binding.bottomNavigation.add(new MeowBottomNavigation.Model(2, R.drawable.property_1_home));
