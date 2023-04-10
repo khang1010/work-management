@@ -79,7 +79,6 @@
 
         <com.etebarian.meowbottomnavigation.MeowBottomNavigation
             android:id="@+id/bottomNavigation"
-            android:background="@color/primary_5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -91,7 +90,8 @@
             app:mbn_defaultIconColor="#C0B5D7"
             app:mbn_rippleColor="#2f424242"
             app:mbn_selectedIconColor="@color/main_02"
-            app:mbn_shadowColor="#1f212121" />
+            app:mbn_shadowColor="#1f212121"
+            android:background="@color/primary_5"/>
 
     </RelativeLayout>
 
