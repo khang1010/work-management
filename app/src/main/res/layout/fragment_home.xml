@@ -15,6 +15,8 @@
         android:paddingLeft="100dp"
         android:paddingRight="100dp"
         android:textAlignment="center"
+        android:background="@color/primary_5"
+        app:elevation="0dp"
         app:itemTextAppearanceActive="@style/textStyle_homeNav_active"
         app:itemTextAppearanceInactive="@style/textStyle_homeNav_inactive"
         app:menu="@menu/home_navigation" />
@@ -25,6 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="Log out" />
+
     <FrameLayout
         android:id="@+id/frame_layout"
         android:layout_width="match_parent"

@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.widget.Toast;
@@ -21,6 +22,7 @@ import com.example.workmanagement.fragments.HomeFragment;
 import com.example.workmanagement.fragments.SettingFragment;
 import com.example.workmanagement.utils.dto.UserDTO;
 import com.example.workmanagement.utils.services.impl.AuthServiceImpl;
+import com.example.workmanagement.viewmodels.BoardViewModel;
 import com.example.workmanagement.viewmodels.UserViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -42,6 +44,8 @@ public class HomeActivity extends AppCompatActivity {
     private ActivityHomeBinding binding;
 
     private UserViewModel userViewModel;
+
+    private BoardViewModel boardViewModel;
 
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
@@ -81,14 +85,21 @@ public class HomeActivity extends AppCompatActivity {
                         userViewModel.setPhotoUrl(response.body().getPhotoUrl());
                         userViewModel.setToken(response.body().getToken());
                         userViewModel.setBoards(response.body().getBoards());
+
+                        System.out.println(response.body().getToken());
+
                         SubMenu subMenu = binding.navigationView.getMenu().addSubMenu("Your boards");
                         userViewModel.getBoards().observe(HomeActivity.this, boards -> {
                             AtomicInteger i = new AtomicInteger();
                             boards.forEach(b -> {
                                 subMenu.add(b.getName());
-                                subMenu.getItem(i.getAndIncrement()).setIcon(R.drawable.space_dashboard_24);
+                                subMenu.getItem(i.getAndIncrement()).setIcon(R.drawable.space_dashboard);
                             });
+                            subMenu.getItem(0).setChecked(true);
+                            boardViewModel = new ViewModelProvider(HomeActivity.this).get(BoardViewModel.class);
+                            boardViewModel.setId(boards.get(0).getId());
                         });
+
                         userViewModel.getPhotoUrl().observe(HomeActivity.this, photoUrl -> Glide.with(HomeActivity.this)
                                 .asBitmap()
                                 .load(photoUrl)
@@ -109,7 +120,13 @@ public class HomeActivity extends AppCompatActivity {
         binding.imgSideBar.setOnClickListener(v -> binding.drawableLayout.openDrawer(GravityCompat.START));
 
         binding.navigationView.setNavigationItemSelectedListener(item -> {
-            Toast.makeText(HomeActivity.this, item.getTitle(), Toast.LENGTH_SHORT).show();
+            Menu menu = binding.navigationView.getMenu().getItem(0).getSubMenu();
+            for (int i = 0; i < menu.size(); i++)
+                menu.getItem(i).setChecked(false);
+            item.setChecked(true);
+            long id = userViewModel.getBoards().getValue().stream().filter(b -> b.getName() == item.getTitle()).findFirst().get().getId();
+            boardViewModel.setId(id);
+            //Toast.makeText(HomeActivity.this, item.getTitle(), Toast.LENGTH_SHORT).show();
             return false;
         });
 
