@@ -15,9 +15,12 @@
         android:paddingLeft="100dp"
         android:paddingRight="100dp"
         android:textAlignment="center"
+        app:elevation="0dp"
+        android:background="@color/primary_5"
         app:itemTextAppearanceActive="@style/textStyle_homeNav_active"
         app:itemTextAppearanceInactive="@style/textStyle_homeNav_inactive"
-        app:menu="@menu/home_navigation" />
+        app:menu="@menu/home_navigation"
+        app:itemPaddingBottom="20dp"/>
 
     <Button
         android:id="@+id/logoutBtn"

@@ -1,14 +1,18 @@
 package com.example.workmanagement.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.workmanagement.R;
+import com.example.workmanagement.databinding.FragmentChartBinding;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,6 +25,8 @@ public class ChartFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private FragmentChartBinding binding;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -60,7 +66,43 @@ public class ChartFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        binding = FragmentChartBinding.inflate(inflater);
+        View view = binding.getRoot();
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_chart, container, false);
+        binding.weekButton.setOnClickListener(view1 -> {
+            loadFragment(new WeekChartFragment());
+            binding.weekButton.setTextColor(getActivity().getApplication().getResources().getColor(R.color.white));
+            binding.monthButton.setTextColor(getActivity().getApplication().getResources().getColor(R.color.black));
+            binding.yearButton.setTextColor(getActivity().getApplication().getResources().getColor(R.color.black));
+            binding.weekButton.setBackgroundResource(R.drawable.shape_chart_nav_active);
+            binding.monthButton.setBackgroundResource(R.drawable.shape_chart_nav_inactive);
+            binding.yearButton.setBackgroundResource(R.drawable.shape_chart_nav_inactive);
+        });
+        binding.monthButton.setOnClickListener(view1 -> {
+            loadFragment(new MonthChartFragment());
+            binding.weekButton.setTextColor(getActivity().getApplication().getResources().getColor(R.color.black));
+            binding.monthButton.setTextColor(getActivity().getApplication().getResources().getColor(R.color.white));
+            binding.yearButton.setTextColor(getActivity().getApplication().getResources().getColor(R.color.black));
+            binding.weekButton.setBackgroundResource(R.drawable.shape_chart_nav_inactive);
+            binding.monthButton.setBackgroundResource(R.drawable.shape_chart_nav_active);
+            binding.yearButton.setBackgroundResource(R.drawable.shape_chart_nav_inactive);
+        });
+        binding.yearButton.setOnClickListener(view1 -> {
+            loadFragment(new YearChartFragment());
+            binding.weekButton.setTextColor(getActivity().getApplication().getResources().getColor(R.color.black));
+            binding.monthButton.setTextColor(getActivity().getApplication().getResources().getColor(R.color.black));
+            binding.yearButton.setTextColor(getActivity().getApplication().getResources().getColor(R.color.white));
+            binding.weekButton.setBackgroundResource(R.drawable.shape_chart_nav_inactive);
+            binding.monthButton.setBackgroundResource(R.drawable.shape_chart_nav_inactive);
+            binding.yearButton.setBackgroundResource(R.drawable.shape_chart_nav_active);
+        });
+        return view;
+    }
+    private void loadFragment(Fragment fragment) {
+        // load fragment
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.chart_frame_layout, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }

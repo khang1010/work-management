@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,14 +7,65 @@
     tools:context=".fragments.ChartFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Chart Fragment"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+<!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
+<!--        android:id="@+id/chart_nav"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:contextClickable="false"-->
+<!--        android:pointerIcon="none"-->
+<!--        android:textAlignment="center"-->
+<!--        app:elevation="0dp"-->
+<!--        app:itemIconSize="0dp"-->
+<!--        app:itemPaddingBottom="20dp"-->
+<!--        app:itemTextAppearanceActive="@style/textStyle_chartNav_active"-->
+<!--        app:itemTextAppearanceInactive="@style/textStyle_chartNav_inactive"-->
+<!--        app:menu="@menu/chart_navigation" />-->
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <RelativeLayout
+        android:id="@+id/navigation_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="30dp"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/week_button"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:background="@drawable/shape_chart_nav_inactive"
+            android:text="Week"
+            android:textColor="@color/black"
+            android:textAllCaps="false"
+            android:textSize="18dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/month_button"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:background="@drawable/shape_chart_nav_inactive"
+            android:text="Month"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            android:layout_toRightOf="@+id/week_button"
+            android:layout_marginLeft="20dp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/year_button"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:background="@drawable/shape_chart_nav_inactive"
+            android:text="Year"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            android:layout_toRightOf="@+id/month_button"
+            android:layout_marginLeft="20dp"/>
+    </RelativeLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/chart_frame_layout"
+        android:layout_below="@+id/navigation_layout"/>
+
+</RelativeLayout>
