@@ -96,9 +96,11 @@ public class HomeActivity extends AppCompatActivity {
                                 subMenu.add(b.getName());
                                 subMenu.getItem(i.getAndIncrement()).setIcon(R.drawable.space_dashboard);
                             });
-                            subMenu.getItem(0).setChecked(true);
-                            boardViewModel = new ViewModelProvider(HomeActivity.this).get(BoardViewModel.class);
-                            boardViewModel.setId(boards.get(0).getId());
+                            if(i.get() > 0) {
+                                subMenu.getItem(0).setChecked(true);
+                                boardViewModel = new ViewModelProvider(HomeActivity.this).get(BoardViewModel.class);
+                                boardViewModel.setId(boards.get(0).getId());
+                            }
                         });
 
                         userViewModel.getPhotoUrl().observe(HomeActivity.this, photoUrl -> Glide.with(HomeActivity.this)
