@@ -89,6 +89,7 @@ public class HomeActivity extends AppCompatActivity {
                         System.out.println(response.body().getToken());
 
                         SubMenu subMenu = binding.navigationView.getMenu().addSubMenu("Your boards");
+
                         userViewModel.getBoards().observe(HomeActivity.this, boards -> {
                             AtomicInteger i = new AtomicInteger();
                             boards.forEach(b -> {

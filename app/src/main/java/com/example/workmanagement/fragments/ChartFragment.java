@@ -68,6 +68,9 @@ public class ChartFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentChartBinding.inflate(inflater);
         View view = binding.getRoot();
+        loadFragment(new WeekChartFragment());
+        binding.weekButton.setTextColor(getActivity().getApplication().getResources().getColor(R.color.white));
+        binding.weekButton.setBackgroundResource(R.drawable.shape_chart_nav_active);
         // Inflate the layout for this fragment
         binding.weekButton.setOnClickListener(view1 -> {
             loadFragment(new WeekChartFragment());

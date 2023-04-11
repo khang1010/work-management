@@ -30,37 +30,37 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/week_button"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
             android:background="@drawable/shape_chart_nav_inactive"
             android:text="Week"
             android:textColor="@color/black"
             android:textAllCaps="false"
-            android:textSize="18dp" />
+            android:textSize="15dp" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/month_button"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
             android:background="@drawable/shape_chart_nav_inactive"
             android:text="Month"
             android:textAllCaps="false"
             android:textColor="@color/black"
-            android:textSize="18dp"
+            android:textSize="15dp"
             android:layout_toRightOf="@+id/week_button"
-            android:layout_marginLeft="20dp"/>
+            android:layout_marginLeft="10dp"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/year_button"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
             android:background="@drawable/shape_chart_nav_inactive"
             android:text="Year"
             android:textAllCaps="false"
             android:textColor="@color/black"
-            android:textSize="18dp"
+            android:textSize="15dp"
             android:layout_toRightOf="@+id/month_button"
-            android:layout_marginLeft="20dp"/>
+            android:layout_marginLeft="10dp"/>
     </RelativeLayout>
     <FrameLayout
         android:layout_width="match_parent"
