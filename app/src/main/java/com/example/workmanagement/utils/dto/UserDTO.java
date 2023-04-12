@@ -2,6 +2,8 @@ package com.example.workmanagement.utils.dto;
 
 import com.squareup.moshi.Json;
 
+import java.util.List;
+
 public class UserDTO {
 
     @Json(name = "id")
@@ -24,6 +26,17 @@ public class UserDTO {
 
     @Json(name = "photoUrl")
     private String photoUrl;
+
+    @Json(name = "boards")
+    private List<BoardInfo> boards;
+
+    public List<BoardInfo> getBoards() {
+        return boards;
+    }
+
+    public void setBoards(List<BoardInfo> boards) {
+        this.boards = boards;
+    }
 
     public long getId() {
         return id;

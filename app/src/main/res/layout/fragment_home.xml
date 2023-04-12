@@ -3,14 +3,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.HomeFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="100dp"
+        android:paddingRight="100dp"
+        android:textAlignment="center"
+        app:elevation="0dp"
+        android:background="@color/primary_5"
+        app:itemTextAppearanceActive="@style/textStyle_homeNav_active"
+        app:itemTextAppearanceInactive="@style/textStyle_homeNav_inactive"
+        app:menu="@menu/home_navigation"
+        app:itemPaddingBottom="20dp"/>
+
     <Button
         android:id="@+id/logoutBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Log out"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"
+        android:text="Log out" />
+    <FrameLayout
+        android:id="@+id/frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/navigation" />
 
 </RelativeLayout>

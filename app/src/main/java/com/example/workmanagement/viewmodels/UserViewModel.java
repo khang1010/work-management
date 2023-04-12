@@ -3,7 +3,11 @@ package com.example.workmanagement.viewmodels;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class User extends ViewModel {
+import com.example.workmanagement.utils.dto.BoardInfo;
+
+import java.util.List;
+
+public class UserViewModel extends ViewModel {
 
     private MutableLiveData<Long> id = new MutableLiveData<>();
 
@@ -14,6 +18,16 @@ public class User extends ViewModel {
     private MutableLiveData<String> token = new MutableLiveData<>();
 
     private MutableLiveData<String> photoUrl = new MutableLiveData<>();
+
+    private MutableLiveData<List<BoardInfo>> boards = new MutableLiveData<>();
+
+    public MutableLiveData<List<BoardInfo>> getBoards() {
+        return boards;
+    }
+
+    public void setBoards(List<BoardInfo> boards) {
+        this.boards.setValue(boards);
+    }
 
     public MutableLiveData<Long> getId() {
         return id;
