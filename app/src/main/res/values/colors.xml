@@ -12,4 +12,7 @@
     <color name="primary_4">#DDD0FA</color>
     <color name="primary_5">#EFE8FD</color>
     <color name="text_color">#C0B5D7</color>
+    <color name="blue">#0000ff</color>
+    <color name="red">#ff0000</color>
+    <color name="yellow">#ffff00</color>
 </resources>
