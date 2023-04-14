@@ -88,7 +88,16 @@ public class WeekChartFragment extends Fragment {
         barChart.setPinchZoom(false);
         barChart.setDrawGridBackground(true);
         // empty labels so that the names are spread evenly
-        String[] labels = {"", "Name1", "Name2", "Name3", "Name4", "Name5", ""};
+
+        List<String> labels = new ArrayList<>();
+        labels.add("");
+        labels.add("1");
+        labels.add("2");
+        labels.add("3");
+        labels.add("4");
+        labels.add("");
+        //String[] labels = {"", "Name1", "Name2", "Name3", "Name4", "Name5", ""};
+
         XAxis xAxis = barChart.getXAxis();
         xAxis.setCenterAxisLabels(true);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -150,9 +159,9 @@ public class WeekChartFragment extends Fragment {
         // (barSpace + barWidth) * 2 + groupSpace = 1
         data.setBarWidth(barWidth);
         // so that the entire chart is shown when scrolled from right to left
-        xAxis.setAxisMaximum(labels.length - 1.1f);
+        xAxis.setAxisMaximum(labels.size() - 1.1f);
         barChart.setData(data);
-        barChart.setScaleEnabled(false);
+        barChart.setScaleEnabled(true);
         barChart.setVisibleXRangeMaximum(6f);
         barChart.groupBars(1f, groupSpace, barSpace);
         barChart.invalidate();
