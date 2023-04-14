@@ -7,7 +7,7 @@
     android:layout_height="wrap_content">
 
     <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/imgAvatar"
+        android:id="@+id/imgAvatarSearchUser"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginRight="10dp"
@@ -19,15 +19,15 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/txtEmailSearchUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="24dp"
         android:text="Giang"
-        android:textSize="22dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imgAvatar"
-        app:layout_constraintStart_toEndOf="@+id/imgAvatar"
-        app:layout_constraintTop_toTopOf="@+id/imgAvatar" />
+        android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgAvatarSearchUser"
+        app:layout_constraintStart_toEndOf="@+id/imgAvatarSearchUser"
+        app:layout_constraintTop_toTopOf="@+id/imgAvatarSearchUser" />
 
     <CheckBox
         android:id="@+id/cbxSearchUser"

@@ -27,6 +27,13 @@
         android:layout_below="@id/editTxtCreateBoardName"
         android:text="Invite your board members"/>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/invitedUserRecView"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtInvite"/>
+
     <EditText
         android:id="@+id/editTxtSearchUser"
         android:layout_width="match_parent"
@@ -34,7 +41,7 @@
         android:layout_marginTop="20dp"
         android:textSize="13dp"
         android:padding="10dp"
-        android:layout_below="@id/txtInvite"
+        android:layout_below="@id/invitedUserRecView"
         android:inputType="textPersonName"
         android:background="@drawable/search_user_input_border"
         android:textColor="@color/disable"
