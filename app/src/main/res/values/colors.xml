@@ -19,5 +19,8 @@
     <color name="table_view_default_text_color">#0a0a0a</color>
     <color name="text_field">#E6E1F1</color>
     <color name="disable">#C0B5D7</color>
+    <color name="blue">#0000ff </color>
+    <color name="red">#FF0000</color>
+    <color name="yellow">#ffff00</color>
 
 </resources>

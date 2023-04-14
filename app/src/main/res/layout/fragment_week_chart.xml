@@ -17,7 +17,9 @@
     <com.github.mikephil.charting.charts.BarChart
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:id="@+id/barchartWeek"/>
+        android:id="@+id/barchartWeek"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"/>
 
 
 

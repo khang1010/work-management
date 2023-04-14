@@ -7,14 +7,14 @@
     tools:context=".fragments.TableFragment">
 
     <!-- TODO: Update blank fragment layout -->
-<!--    <com.evrencoskun.tableview.TableView-->
-<!--        android:id="@+id/content_container"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:column_header_height="@dimen/column_header_height"-->
-<!--        app:row_header_width="@dimen/row_header_width"-->
-<!--        app:selected_color="@color/white"-->
-<!--        app:shadow_color="@color/primary_4"-->
-<!--        app:unselected_color="@color/white"/>-->
+    <com.evrencoskun.tableview.TableView
+        android:id="@+id/content_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:column_header_height="@dimen/default_column_header_height"
+        app:row_header_width="@dimen/default_row_header_width"
+        app:selected_color="@color/white"
+        app:shadow_color="@color/primary_4"
+        app:unselected_color="@color/white"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
