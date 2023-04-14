@@ -6,11 +6,14 @@ import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
+import android.view.Window;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -96,7 +99,7 @@ public class HomeActivity extends AppCompatActivity {
                                 subMenu.add(b.getName());
                                 subMenu.getItem(i.getAndIncrement()).setIcon(R.drawable.space_dashboard);
                             });
-                            if(i.get() > 0) {
+                            if (i.get() > 0) {
                                 subMenu.getItem(0).setChecked(true);
                                 boardViewModel = new ViewModelProvider(HomeActivity.this).get(BoardViewModel.class);
                                 boardViewModel.setId(boards.get(0).getId());
@@ -170,6 +173,16 @@ public class HomeActivity extends AppCompatActivity {
             return null;
         });
         binding.bottomNavigation.show(2, true);
+        binding.navigationView.getHeaderView(0).findViewById(R.id.btnAddNewBoard)
+                .setOnClickListener(v -> showCreateBoardDialog());
+    }
+
+    private void showCreateBoardDialog() {
+        Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.create_board);
+        dialog.show();
     }
 
     private void loadFragment(Fragment fragment) {

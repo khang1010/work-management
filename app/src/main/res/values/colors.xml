@@ -9,10 +9,15 @@
     <color name="white">#FFFFFFFF</color>
     <color name="main_01">#4D17C0</color>
     <color name="main_02">#5612E5</color>
+    <color name="primary_0">#5612E5</color>
     <color name="primary_4">#DDD0FA</color>
     <color name="primary_5">#EFE8FD</color>
+    <color name="primary_2">#9971EF</color>
     <color name="text_color">#C0B5D7</color>
     <color name="cell_background_color">#ffffff</color>
     <color name="header_line_color">#0a0a0a</color>
     <color name="table_view_default_text_color">#0a0a0a</color>
+    <color name="text_field">#E6E1F1</color>
+    <color name="disable">#C0B5D7</color>
+
 </resources>

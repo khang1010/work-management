@@ -25,6 +25,7 @@
             android:layout_below="@id/navigationBoardTitle"/>
 
         <TextView
+            android:id="@+id/btnAddNewBoard"
             android:layout_width="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="10dp"
