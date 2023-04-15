@@ -5,27 +5,39 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
 import com.example.workmanagement.R;
+import com.example.workmanagement.adapter.UserInvitedRecViewAdapter;
+import com.example.workmanagement.adapter.UserSearchRecViewAdapter;
 import com.example.workmanagement.databinding.ActivityHomeBinding;
 import com.example.workmanagement.fragments.ChatFragment;
 import com.example.workmanagement.fragments.HomeFragment;
 import com.example.workmanagement.fragments.SettingFragment;
+import com.example.workmanagement.utils.dto.SearchUserResponse;
 import com.example.workmanagement.utils.dto.UserDTO;
+import com.example.workmanagement.utils.dto.UserInfoDTO;
+import com.example.workmanagement.utils.services.UserService;
 import com.example.workmanagement.utils.services.impl.AuthServiceImpl;
+import com.example.workmanagement.utils.services.impl.UserServiceImpl;
 import com.example.workmanagement.viewmodels.BoardViewModel;
 import com.example.workmanagement.viewmodels.UserViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -35,6 +47,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import kotlin.Unit;
@@ -181,10 +195,56 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void showCreateBoardDialog() {
+
+        //List<UserInfoDTO> selectedUsers = new ArrayList<>();
+
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.create_board);
+        EditText txtSearchUser = dialog.findViewById(R.id.editTxtSearchUser);
+
+        UserInvitedRecViewAdapter invitedAdapter = new UserInvitedRecViewAdapter(this);
+        RecyclerView userInvitedRecView = dialog.findViewById(R.id.invitedUserRecView);
+        userInvitedRecView.setLayoutManager(new GridLayoutManager(this,5 ));
+        userInvitedRecView.setAdapter(invitedAdapter);
+
+        UserSearchRecViewAdapter adapter = new UserSearchRecViewAdapter(this, invitedAdapter);
+        RecyclerView userRecView = dialog.findViewById(R.id.searchUserRecView);
+        userRecView.setLayoutManager(new LinearLayoutManager(this));
+        userRecView.setAdapter(adapter);
+
+        txtSearchUser.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                //System.out.println(selectedUsers.size());
+                if (!charSequence.toString().isEmpty())
+                    UserServiceImpl.getInstance().getService(userViewModel.getToken().getValue()).searchUser(1, charSequence.toString()).enqueue(new Callback<SearchUserResponse>() {
+                        @Override
+                        public void onResponse(Call<SearchUserResponse> call, Response<SearchUserResponse> response) {
+                            if (response.isSuccessful() && response.code() == 200) {
+                                adapter.setUsers(response.body().getUsers());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<SearchUserResponse> call, Throwable t) {
+                            Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                else adapter.setUsers(new ArrayList<>());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         dialog.show();
     }
 
