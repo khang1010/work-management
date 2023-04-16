@@ -119,7 +119,7 @@ public class HomeActivity extends AppCompatActivity {
                             if (i.get() > 0) {
                                 subMenu.getItem(0).setChecked(true);
                                 boardViewModel = new ViewModelProvider(HomeActivity.this).get(BoardViewModel.class);
-                                boardViewModel.setId(boards.get(0).getId());
+                                userViewModel.setCurrentBoardId(boards.get(0).getId());
                             }
                         });
 
@@ -148,7 +148,7 @@ public class HomeActivity extends AppCompatActivity {
                 menu.getItem(i).setChecked(false);
             item.setChecked(true);
             long id = userViewModel.getBoards().getValue().stream().filter(b -> b.getName() == item.getTitle()).findFirst().get().getId();
-            boardViewModel.setId(id);
+            userViewModel.setCurrentBoardId(id);
             //Toast.makeText(HomeActivity.this, item.getTitle(), Toast.LENGTH_SHORT).show();
             return false;
         });

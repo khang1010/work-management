@@ -21,6 +21,8 @@ public class UserViewModel extends ViewModel {
 
     private MutableLiveData<List<BoardInfo>> boards = new MutableLiveData<>();
 
+    private MutableLiveData<Long> currentBoardId = new MutableLiveData<>();
+
     public MutableLiveData<List<BoardInfo>> getBoards() {
         return boards;
     }
@@ -67,5 +69,13 @@ public class UserViewModel extends ViewModel {
 
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl.postValue(photoUrl);
+    }
+
+    public MutableLiveData<Long> getCurrentBoardId() {
+        return currentBoardId;
+    }
+
+    public void setCurrentBoardId(Long currentBoardId) {
+        this.currentBoardId.postValue(currentBoardId);
     }
 }
