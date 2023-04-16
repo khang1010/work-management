@@ -52,7 +52,7 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         RelativeLayout container, titleBar;
-        ImageView down, download;
+        ImageView down, download, up;
         TextView tableName;
         TableView table;
 
@@ -61,9 +61,21 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
             container = itemView.findViewById(R.id.fragment_container);
             titleBar = itemView.findViewById(R.id.titleBar);
             down = itemView.findViewById(R.id.iconDown);
+            up = itemView.findViewById(R.id.iconUp);
             download = itemView.findViewById(R.id.iconDownload);
             tableName = itemView.findViewById(R.id.tableName);
             table = itemView.findViewById(R.id.table_container);
+
+            down.setOnClickListener(view -> {
+                down.setVisibility(View.GONE);
+                up.setVisibility(View.VISIBLE);
+                table.setVisibility(View.GONE);
+            });
+            up.setOnClickListener(view -> {
+                down.setVisibility(View.VISIBLE);
+                up.setVisibility(View.GONE);
+                table.setVisibility(View.VISIBLE);
+            });
 
             TableViewModel tableViewModel = new TableViewModel();
             TableViewAdapter tableViewAdapter = new TableViewAdapter(tableViewModel);
