@@ -37,6 +37,11 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_gravity="bottom"
-            android:background="@color/white" />
+            android:background="@color/border_table" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="top"
+            android:background="@color/border_table" />
     </FrameLayout>
 </LinearLayout>

@@ -103,6 +103,7 @@
         android:layout_below="@+id/table_test_container"
         app:allow_click_inside_cell="true"
         app:allow_click_inside_column_header="true"
-        app:allow_click_inside_row_header="true" />
+        app:allow_click_inside_row_header="true"
+        app:separator_color="@color/border_table"/>
     </RelativeLayout>
 </RelativeLayout>

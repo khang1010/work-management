@@ -44,8 +44,8 @@ import java.util.Random;
 public class TableViewModel {
 
     // Columns indexes
-    public static final int MOOD_COLUMN_INDEX = 3;
-    public static final int GENDER_COLUMN_INDEX = 4;
+    public static final int MOOD_COLUMN_INDEX = 1;
+    public static final int GENDER_COLUMN_INDEX = 3;
 
     // Constant values for icons
     public static final int SAD = 1;
@@ -124,7 +124,7 @@ public class TableViewModel {
                 final int random = new Random().nextInt();
                 if (j == 0) {
                     text = "Khang";
-                } else if (j == 1) {
+                } else if (j == 2) {
                     text = random % 2 == 0 ? HAPPY : SAD;
                 } else if (j == MOOD_COLUMN_INDEX) {
                     text = random % 2 == 0 ? HAPPY : SAD;

@@ -50,6 +50,7 @@ public class TableFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentTableBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
+        binding.tableTestContainer.setVisibility(View.GONE);
 //        TableView tableView = new TableView(getContext());
 //        TableViewModel tableViewModel =new TableViewModel();
 //        TableViewAdapter adapter = new TableViewAdapter(tableViewModel);
