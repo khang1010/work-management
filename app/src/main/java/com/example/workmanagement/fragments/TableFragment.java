@@ -6,7 +6,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +19,7 @@ import com.example.workmanagement.R;
 
 import com.example.workmanagement.activities.HomeActivity;
 
+import com.example.workmanagement.adapter.TableRecViewAdapter;
 import com.example.workmanagement.databinding.FragmentTableBinding;
 import com.example.workmanagement.tableview.TableViewAdapter;
 import com.example.workmanagement.tableview.TableViewListener;
@@ -25,6 +29,7 @@ import com.example.workmanagement.tableview.model.ColumnHeader;
 import com.example.workmanagement.tableview.model.RowHeader;
 import com.example.workmanagement.viewmodels.BoardViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TableFragment extends Fragment {
@@ -32,9 +37,8 @@ public class TableFragment extends Fragment {
     private FragmentTableBinding binding;
 
     private BoardViewModel boardViewModel;
-    private List<RowHeader> mRowHeaderList;
-    private List<ColumnHeader> mColumnHeaderList;
-    private List<List<Cell>> mCellList;
+    private RecyclerView tableRecView;
+    private ArrayList<String> temp = new ArrayList<>();
     public TableFragment() {
         // Required empty public constructor
     }
@@ -50,7 +54,7 @@ public class TableFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentTableBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
-        binding.tableTestContainer.setVisibility(View.GONE);
+//        binding.tableTestContainer.setVisibility(View.GONE);
 //        TableView tableView = new TableView(getContext());
 //        TableViewModel tableViewModel =new TableViewModel();
 //        TableViewAdapter adapter = new TableViewAdapter(tableViewModel);
@@ -64,15 +68,28 @@ public class TableFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        mTableView = view.findViewById(R.id.tableview);
-        TableViewModel tableViewModel = new TableViewModel();
+//        mTableView = view.findViewById(R.id.tableview);
+//        TableViewModel tableViewModel = new TableViewModel();
+//
+//        TableViewAdapter tableViewAdapter = new TableViewAdapter(tableViewModel);
+//
+//        mTableView.setAdapter(tableViewAdapter);
+//        mTableView.setTableViewListener(new TableViewListener(mTableView));
+//        tableViewAdapter.setAllItems(tableViewModel.getColumnHeaderList(), tableViewModel
+//                .getRowHeaderList(), tableViewModel.getCellList());
 
-        TableViewAdapter tableViewAdapter = new TableViewAdapter(tableViewModel);
-
-        mTableView.setAdapter(tableViewAdapter);
-        mTableView.setTableViewListener(new TableViewListener(mTableView));
-        tableViewAdapter.setAllItems(tableViewModel.getColumnHeaderList(), tableViewModel
-                .getRowHeaderList(), tableViewModel.getCellList());
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                tableRecView = view.findViewById(R.id.table_rec_view);
+                TableRecViewAdapter adapter = new TableRecViewAdapter(getActivity());
+                tableRecView.setAdapter(adapter);
+                tableRecView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                temp.add("1");
+                temp.add("2");
+                adapter.setTables(temp);
+            }
+        }, 300);
         boardViewModel = new ViewModelProvider(requireActivity()).get(BoardViewModel.class);
 //        boardViewModel.getId().observe(getViewLifecycleOwner(), id -> binding.tableFragmentText.setText("Board with id: " + id));
     }

@@ -31,4 +31,10 @@
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="0dp"
         android:background="@color/border_table" />
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="0dp"
+        android:background="@color/border_table" />
 </RelativeLayout>
