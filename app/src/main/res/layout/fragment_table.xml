@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.TableFragment">
+    tools:context=".fragments.TableFragment"
+    android:background="@color/primary_5">
 
     <RelativeLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/primary_5"
         android:focusableInTouchMode="true">
 
 
@@ -106,6 +106,22 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/table_rec_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content" />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/addTableBtn"
+            android:background="@drawable/shape_button_add_table"
+            android:layout_below="@+id/table_rec_view"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="20dp"
+            android:text="+ Add new table"
+            android:textAllCaps="false"
+            android:textColor="@color/border_table"
+            android:textSize="15sp"
+            android:textStyle="bold"/>
     </RelativeLayout>
-</RelativeLayout>
+
+</ScrollView>

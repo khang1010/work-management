@@ -33,14 +33,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_down"
-                    android:layout_centerVertical="true" />
+                    android:layout_centerVertical="true"
+                    android:visibility="gone"/>
                 <ImageView
                     android:id="@+id/iconUp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_up"
-                    android:layout_centerVertical="true"
-                    android:visibility="gone"/>
+                    android:layout_centerVertical="true" />
             </RelativeLayout>
 
             <TextView
@@ -67,13 +67,25 @@
         <com.evrencoskun.tableview.TableView
             android:id="@+id/table_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/titleBar"
             app:allow_click_inside_cell="true"
             app:allow_click_inside_column_header="true"
             app:allow_click_inside_row_header="true"
-            app:separator_color="@color/border_table"
-            android:layout_marginBottom="10dp"/>
+            app:separator_color="@color/border_table" />
+        
+        <TextView
+            android:id="@+id/addTaskBtn"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="+ Add new task"
+            android:textColor="@color/border_table"
+            android:textSize="16sp"
+            android:layout_below="@+id/table_container"
+            android:background="@drawable/custom_border"
+            android:layout_marginBottom="10dp"
+            android:paddingTop="7dp"
+            android:paddingLeft="20dp"/>
     </RelativeLayout>
 
 </RelativeLayout>
