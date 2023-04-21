@@ -8,6 +8,6 @@ import retrofit2.http.Path;
 
 public interface BoardService {
 
-    @GET("board/{id}")
+    @GET("boards/{id}")
     Call<BoardDetailsDTO> getBoardDetails(@Path("id") long id);
 }
