@@ -22,6 +22,8 @@
         <activity
             android:name=".activities.LoginActivity"
             android:exported="false" />
+        <activity android:name=".activities.UserInforActivity"
+            android:exported="false"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">
