@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -30,9 +31,12 @@ import com.example.workmanagement.fragments.ChatFragment;
 import com.example.workmanagement.fragments.HomeFragment;
 import com.example.workmanagement.fragments.SettingFragment;
 import com.example.workmanagement.utils.SystemConstant;
+import com.example.workmanagement.utils.dto.BoardDTO;
+import com.example.workmanagement.utils.dto.BoardInfo;
 import com.example.workmanagement.utils.dto.SearchUserResponse;
 import com.example.workmanagement.utils.dto.UserDTO;
 import com.example.workmanagement.utils.services.impl.AuthServiceImpl;
+import com.example.workmanagement.utils.services.impl.BoardServiceImpl;
 import com.example.workmanagement.utils.services.impl.UserServiceImpl;
 import com.example.workmanagement.viewmodels.BoardViewModel;
 import com.example.workmanagement.viewmodels.UserViewModel;
@@ -42,7 +46,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -104,6 +110,7 @@ public class HomeActivity extends AppCompatActivity {
                         SubMenu subMenu = binding.navigationView.getMenu().addSubMenu("Your boards");
 
                         userViewModel.getBoards().observe(HomeActivity.this, boards -> {
+                            subMenu.clear();
                             AtomicInteger i = new AtomicInteger();
                             boards.forEach(b -> {
                                 subMenu.add(b.getName());
@@ -192,7 +199,7 @@ public class HomeActivity extends AppCompatActivity {
     private void initSocketConnection(String token) {
         stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, SystemConstant.BASE_URL + "ws/websocket");
         stompClient.connect();
-        stompClient.topic("/notification/" + userViewModel.getId().getValue()).subscribe(message -> runOnUiThread(() -> Toast.makeText(this,  message.getPayload(), Toast.LENGTH_SHORT).show()));
+        stompClient.topic("/notification/" + userViewModel.getId().getValue()).subscribe(message -> runOnUiThread(() -> Toast.makeText(this, message.getPayload(), Toast.LENGTH_SHORT).show()));
     }
 
     private void showCreateBoardDialog() {
@@ -202,6 +209,9 @@ public class HomeActivity extends AppCompatActivity {
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.create_board);
         EditText txtSearchUser = dialog.findViewById(R.id.editTxtSearchUser);
+        EditText txtBoardName = dialog.findViewById(R.id.editTxtCreateBoardName);
+        ConstraintLayout btnCreateBoard = dialog.findViewById(R.id.btnCreateBoard);
+
 
         UserInvitedRecViewAdapter invitedAdapter = new UserInvitedRecViewAdapter(this);
         RecyclerView userInvitedRecView = dialog.findViewById(R.id.invitedUserRecView);
@@ -225,9 +235,8 @@ public class HomeActivity extends AppCompatActivity {
                     UserServiceImpl.getInstance().getService(userViewModel.getToken().getValue()).searchUser(1, charSequence.toString()).enqueue(new Callback<SearchUserResponse>() {
                         @Override
                         public void onResponse(Call<SearchUserResponse> call, Response<SearchUserResponse> response) {
-                            if (response.isSuccessful() && response.code() == 200) {
+                            if (response.isSuccessful() && response.code() == 200)
                                 adapter.setUsers(response.body().getUsers());
-                            }
                         }
 
                         @Override
@@ -242,6 +251,33 @@ public class HomeActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
 
             }
+        });
+
+        btnCreateBoard.setOnClickListener(v -> {
+//            if (txtBoardName.getText().toString().isEmpty())
+//                Toast.makeText(this, "Please enter board name", Toast.LENGTH_SHORT).show();
+//            else
+//                BoardServiceImpl.getInstance().getService(userViewModel.getToken().getValue())
+//                        .createBoard(new BoardDTO(txtBoardName.getText().toString(),
+//                                invitedAdapter.getUsers().stream().map(u -> u.getId()).collect(Collectors.toList()))
+//                        )
+//                        .enqueue(new Callback<BoardInfo>() {
+//                            @Override
+//                            public void onResponse(Call<BoardInfo> call, Response<BoardInfo> response) {
+//                                if (response.isSuccessful() && response.code() == 201) {
+//                                    List<BoardInfo> boards = userViewModel.getBoards().getValue();
+//                                    boards.add(0, response.body());
+//                                    userViewModel.setBoards(boards);
+//                                    dialog.dismiss();
+//                                    //binding.drawableLayout.closeDrawer(GravityCompat.START);
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onFailure(Call<BoardInfo> call, Throwable t) {
+//                                Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
         });
         dialog.show();
     }
