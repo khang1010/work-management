@@ -206,12 +206,16 @@ public class HomeActivity extends AppCompatActivity {
         binding.bottomNavigation.show(2, true);
         binding.navigationView.getHeaderView(0).findViewById(R.id.btnAddNewBoard)
                 .setOnClickListener(v -> showCreateBoardDialog());
+        binding.imgNotifications.setOnClickListener(v -> startActivity(new Intent(this, NotificationActivity.class)));
     }
 
     private void initSocketConnection(String token) {
         stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, SystemConstant.BASE_URL + "ws/websocket");
         stompClient.connect();
-        stompClient.topic("/notification/" + userViewModel.getId().getValue()).subscribe(message -> runOnUiThread(() -> Toast.makeText(this, message.getPayload(), Toast.LENGTH_SHORT).show()));
+        stompClient.topic("/notification/" + userViewModel.getId().getValue())
+                .subscribe(message ->
+                        runOnUiThread(() -> Toast.makeText(this, message.getPayload(), Toast.LENGTH_SHORT).show())
+                );
     }
 
     private void showCreateBoardDialog() {
