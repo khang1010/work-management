@@ -3,6 +3,10 @@ package com.example.workmanagement.activities;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
@@ -11,16 +15,95 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.workmanagement.R;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class UserInforActivity extends AppCompatActivity {
+    private Button btnBack;
+    private CircleImageView avatar;
+    private EditText bio;
+    private EditText phone;
+    private EditText work;
+    private ImageView imgEditBio;
+    private ImageView imgEditPhone;
+    private ImageView imgEditWork;
+    private TextView txtNothing;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_user_infor);
-        Button btn = findViewById(R.id.btn_back);
-        btn.setOnClickListener(new View.OnClickListener() {
+        btnBack = findViewById(R.id.btn_back);
+        avatar = findViewById(R.id.img_avater_user_profiler);
+        bio = findViewById(R.id.edit_text_bio);
+        phone=findViewById(R.id.edit_text_phone);
+        work=findViewById(R.id.edit_text_work);
+        imgEditBio= findViewById(R.id.img_edit_bio);
+        imgEditPhone=findViewById(R.id.img_edit_phone);
+        imgEditWork=findViewById(R.id.img_edit_work);
+        txtNothing = findViewById(R.id.txt_nothing);
+
+        txtNothing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(UserInforActivity.this, "Please enter board !!!", Toast.LENGTH_SHORT).show();
+            }
+        });
+        imgEditBio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(bio.isEnabled())
+                {
+                    bio.setEnabled(false);
+                }
+                else
+                {
+                    bio.setEnabled(true);
+                }
+            }
+        });
+        imgEditPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(phone.isEnabled())
+                {
+                    phone.setEnabled(false);
+                }
+                else
+                {
+                    phone.setEnabled(true);
+                }
+            }
+        });
+        imgEditWork.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(work.isEnabled())
+                {
+                    work.setEnabled(false);
+                }
+                else
+                {
+                    work.setEnabled(true);
+                }
+            }
+        });
+
+
+
+
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBackPressed();
+            }
+        });
+
+        avatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
 

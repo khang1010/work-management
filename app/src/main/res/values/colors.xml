@@ -27,5 +27,6 @@
     <color name="border_table">#9971EF</color>
     <color name="background_color">#f4eeff</color>
     <color name="lavender">#e6e1f1</color>
+    <color name="text_user_profile">#c2b7d8</color>
 
 </resources>
