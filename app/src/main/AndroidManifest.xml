@@ -14,9 +14,12 @@
         android:icon="@mipmap/ic_logo3x"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
         android:theme="@style/Theme.WorkManagement"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".activities.NotificationActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.HomeActivity"
             android:exported="false" />
