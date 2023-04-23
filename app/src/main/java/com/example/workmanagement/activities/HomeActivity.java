@@ -1,27 +1,27 @@
 package com.example.workmanagement.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.view.GravityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
@@ -32,11 +32,13 @@ import com.example.workmanagement.databinding.ActivityHomeBinding;
 import com.example.workmanagement.fragments.ChatFragment;
 import com.example.workmanagement.fragments.HomeFragment;
 import com.example.workmanagement.fragments.SettingFragment;
+import com.example.workmanagement.utils.SystemConstant;
+import com.example.workmanagement.utils.dto.BoardDTO;
+import com.example.workmanagement.utils.dto.BoardInfo;
 import com.example.workmanagement.utils.dto.SearchUserResponse;
 import com.example.workmanagement.utils.dto.UserDTO;
-import com.example.workmanagement.utils.dto.UserInfoDTO;
-import com.example.workmanagement.utils.services.UserService;
 import com.example.workmanagement.utils.services.impl.AuthServiceImpl;
+import com.example.workmanagement.utils.services.impl.BoardServiceImpl;
 import com.example.workmanagement.utils.services.impl.UserServiceImpl;
 import com.example.workmanagement.viewmodels.BoardViewModel;
 import com.example.workmanagement.viewmodels.UserViewModel;
@@ -44,18 +46,17 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import ua.naiksoftware.stomp.Stomp;
+import ua.naiksoftware.stomp.StompClient;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -65,6 +66,11 @@ public class HomeActivity extends AppCompatActivity {
 
     private BoardViewModel boardViewModel;
 
+    private ImageButton userInforImageButton;
+
+
+    private StompClient stompClient;
+
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
 
@@ -73,8 +79,16 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
+        userInforImageButton = findViewById(R.id.imgAvatar);
         binding.logoutBtn.setVisibility(View.GONE);
+
+        userInforImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, UserInforActivity.class);
+                startActivity(intent);
+            }
+        });
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -106,11 +120,10 @@ public class HomeActivity extends AppCompatActivity {
                         userViewModel.setToken(response.body().getToken());
                         userViewModel.setBoards(response.body().getBoards());
 
-                        System.out.println(response.body().getToken());
-
                         SubMenu subMenu = binding.navigationView.getMenu().addSubMenu("Your boards");
 
                         userViewModel.getBoards().observe(HomeActivity.this, boards -> {
+                            subMenu.clear();
                             AtomicInteger i = new AtomicInteger();
                             boards.forEach(b -> {
                                 subMenu.add(b.getName());
@@ -128,6 +141,9 @@ public class HomeActivity extends AppCompatActivity {
                                 .load(photoUrl)
                                 .into(binding.imgAvatar)
                         );
+                        userViewModel.getToken().observe(HomeActivity.this, token -> {
+                            initSocketConnection(token);
+                        });
                     }
                 }
 
@@ -149,7 +165,6 @@ public class HomeActivity extends AppCompatActivity {
             item.setChecked(true);
             long id = userViewModel.getBoards().getValue().stream().filter(b -> b.getName() == item.getTitle()).findFirst().get().getId();
             userViewModel.setCurrentBoardId(id);
-            //Toast.makeText(HomeActivity.this, item.getTitle(), Toast.LENGTH_SHORT).show();
             return false;
         });
 
@@ -194,19 +209,26 @@ public class HomeActivity extends AppCompatActivity {
                 .setOnClickListener(v -> showCreateBoardDialog());
     }
 
-    private void showCreateBoardDialog() {
+    private void initSocketConnection(String token) {
+        stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, SystemConstant.BASE_URL + "ws/websocket");
+        stompClient.connect();
+        stompClient.topic("/notification/" + userViewModel.getId().getValue()).subscribe(message -> runOnUiThread(() -> Toast.makeText(this, message.getPayload(), Toast.LENGTH_SHORT).show()));
+    }
 
-        //List<UserInfoDTO> selectedUsers = new ArrayList<>();
+    private void showCreateBoardDialog() {
 
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.create_board);
         EditText txtSearchUser = dialog.findViewById(R.id.editTxtSearchUser);
+        EditText txtBoardName = dialog.findViewById(R.id.editTxtCreateBoardName);
+        ConstraintLayout btnCreateBoard = dialog.findViewById(R.id.btnCreateBoard);
+
 
         UserInvitedRecViewAdapter invitedAdapter = new UserInvitedRecViewAdapter(this);
         RecyclerView userInvitedRecView = dialog.findViewById(R.id.invitedUserRecView);
-        userInvitedRecView.setLayoutManager(new GridLayoutManager(this,5 ));
+        userInvitedRecView.setLayoutManager(new GridLayoutManager(this, 5));
         userInvitedRecView.setAdapter(invitedAdapter);
 
         UserSearchRecViewAdapter adapter = new UserSearchRecViewAdapter(this, invitedAdapter);
@@ -222,14 +244,12 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                //System.out.println(selectedUsers.size());
                 if (!charSequence.toString().isEmpty())
                     UserServiceImpl.getInstance().getService(userViewModel.getToken().getValue()).searchUser(1, charSequence.toString()).enqueue(new Callback<SearchUserResponse>() {
                         @Override
                         public void onResponse(Call<SearchUserResponse> call, Response<SearchUserResponse> response) {
-                            if (response.isSuccessful() && response.code() == 200) {
+                            if (response.isSuccessful() && response.code() == 200)
                                 adapter.setUsers(response.body().getUsers());
-                            }
                         }
 
                         @Override
@@ -244,6 +264,33 @@ public class HomeActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
 
             }
+        });
+
+        btnCreateBoard.setOnClickListener(v -> {
+//            if (txtBoardName.getText().toString().isEmpty())
+//                Toast.makeText(this, "Please enter board name", Toast.LENGTH_SHORT).show();
+//            else
+//                BoardServiceImpl.getInstance().getService(userViewModel.getToken().getValue())
+//                        .createBoard(new BoardDTO(txtBoardName.getText().toString(),
+//                                invitedAdapter.getUsers().stream().map(u -> u.getId()).collect(Collectors.toList()))
+//                        )
+//                        .enqueue(new Callback<BoardInfo>() {
+//                            @Override
+//                            public void onResponse(Call<BoardInfo> call, Response<BoardInfo> response) {
+//                                if (response.isSuccessful() && response.code() == 201) {
+//                                    List<BoardInfo> boards = userViewModel.getBoards().getValue();
+//                                    boards.add(0, response.body());
+//                                    userViewModel.setBoards(boards);
+//                                    dialog.dismiss();
+//                                    //binding.drawableLayout.closeDrawer(GravityCompat.START);
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onFailure(Call<BoardInfo> call, Throwable t) {
+//                                Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
         });
         dialog.show();
     }

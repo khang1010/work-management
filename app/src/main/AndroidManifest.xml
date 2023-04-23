@@ -5,6 +5,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
         android:allowBackup="true"
@@ -22,6 +23,8 @@
         <activity
             android:name=".activities.LoginActivity"
             android:exported="false" />
+        <activity android:name=".activities.UserInforActivity"
+            android:exported="false"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">

@@ -8,6 +8,6 @@ import retrofit2.http.Query;
 
 public interface UserService {
 
-    @GET("user")
+    @GET("users")
     Call<SearchUserResponse> searchUser(@Query("page") int page, @Query("keyword") String keyword);
 }

@@ -52,6 +52,7 @@ public class HomeFragment extends Fragment {
         loadFragment(new TableFragment());
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -73,6 +74,21 @@ public class HomeFragment extends Fragment {
             goSignOut();
         });
         binding.logoutBtn.setVisibility(View.GONE);
+        binding.navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Fragment fragment;
+                switch (item.getItemId()) {
+                    case R.id.navigation_table:
+                        loadFragment(new TableFragment());
+                        return true;
+                    case R.id.navigation_chart:
+                        loadFragment(new ChartFragment());
+                        return true;
+                }
+                return false;
+            }
+        });
 
         //return inflater.inflate(R.layout.fragment_home, container, false);
         return view;
