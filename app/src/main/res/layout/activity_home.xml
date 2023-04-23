@@ -52,16 +52,15 @@
                     android:src="@drawable/notification"
                     android:layout_toStartOf="@id/imgAvatar"/>
 
-                <ImageButton
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/imgAvatar"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:padding="10dp"
-                    android:background="@drawable/circle_shape"
                     android:src="@mipmap/ic_launcher"
-                    android:scaleType="fitCenter"
                     android:layout_marginEnd="5dp"
-                    android:contentDescription="@string/app_name"/>
+                    app:civ_border_width="2dp"
+                    app:civ_border_color="#FF000000"/>
 
             </LinearLayout>
 

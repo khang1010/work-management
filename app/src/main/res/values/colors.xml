@@ -23,5 +23,7 @@
     <color name="red">#FF0000</color>
     <color name="yellow">#ffff00</color>
     <color name="border_table">#9971EF</color>
+    <color name="background_color">#f4eeff</color>
+    <color name="lavender">#e6e1f1</color>
 
 </resources>

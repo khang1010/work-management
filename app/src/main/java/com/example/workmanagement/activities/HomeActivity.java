@@ -66,8 +66,6 @@ public class HomeActivity extends AppCompatActivity {
 
     private BoardViewModel boardViewModel;
 
-    private ImageButton userInforImageButton;
-
 
     private StompClient stompClient;
 
@@ -79,16 +77,9 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        userInforImageButton = findViewById(R.id.imgAvatar);
         binding.logoutBtn.setVisibility(View.GONE);
 
-        userInforImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(HomeActivity.this, UserInforActivity.class);
-                startActivity(intent);
-            }
-        });
+
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -157,6 +148,14 @@ public class HomeActivity extends AppCompatActivity {
         binding.logoutBtn.setOnClickListener(view -> goSignOut());
 
         binding.imgSideBar.setOnClickListener(v -> binding.drawableLayout.openDrawer(GravityCompat.START));
+
+        binding.imgAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, UserInforActivity.class);
+                startActivity(intent);
+            }
+        });
 
         binding.navigationView.setNavigationItemSelectedListener(item -> {
             Menu menu = binding.navigationView.getMenu().getItem(0).getSubMenu();
