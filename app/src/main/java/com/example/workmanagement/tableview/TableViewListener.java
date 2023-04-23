@@ -24,7 +24,10 @@
 
 package com.example.workmanagement.tableview;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
+import android.widget.DatePicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,6 +36,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.evrencoskun.tableview.TableView;
 import com.evrencoskun.tableview.listener.ITableViewListener;
 import com.example.workmanagement.tableview.holder.ColumnHeaderViewHolder;
+import com.example.workmanagement.tableview.holder.PersonCellViewHolder;
+import com.example.workmanagement.R;
 import com.example.workmanagement.tableview.popup.ColumnHeaderLongPressPopup;
 import com.example.workmanagement.tableview.popup.RowHeaderLongPressPopup;
 
@@ -63,7 +68,22 @@ public class TableViewListener implements ITableViewListener {
 
         // Do what you want.
         showToast("Cell " + column + " " + row + " has been clicked.");
+        if (column == 2) {
+            TextView cell_name = cellView.itemView.findViewById(R.id.cell_data);
+            openDialog(cell_name);
+        }
 
+    }
+
+    private void openDialog(TextView cell_name) {
+        DatePickerDialog dialog = new DatePickerDialog(mContext,R.style.DialogTheme, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                cell_name.setText(String.valueOf(day) + "/" + String.valueOf(month) + "/" + String.valueOf(year));
+            }
+
+        }, 2023, 4, 23);
+        dialog.show();
     }
 
     /**

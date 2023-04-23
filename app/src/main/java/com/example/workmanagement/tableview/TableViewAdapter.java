@@ -40,6 +40,7 @@ import com.example.workmanagement.tableview.holder.CellViewHolder;
 import com.example.workmanagement.tableview.holder.ColumnHeaderViewHolder;
 import com.example.workmanagement.tableview.holder.GenderCellViewHolder;
 import com.example.workmanagement.tableview.holder.MoodCellViewHolder;
+import com.example.workmanagement.tableview.holder.PersonCellViewHolder;
 import com.example.workmanagement.tableview.holder.RowHeaderViewHolder;
 import com.example.workmanagement.tableview.model.Cell;
 import com.example.workmanagement.tableview.model.ColumnHeader;
@@ -54,7 +55,7 @@ import com.example.workmanagement.tableview.model.RowHeader;
 public class TableViewAdapter extends AbstractTableAdapter<ColumnHeader, RowHeader, Cell> {
 
     // Cell View Types by Column Position
-    private static final int MOOD_CELL_TYPE = 1;
+    private static final int PERSON_CELL_TYPE = 1;
     private static final int GENDER_CELL_TYPE = 2;
     // add new one if it necessary..
 
@@ -86,11 +87,11 @@ public class TableViewAdapter extends AbstractTableAdapter<ColumnHeader, RowHead
         View layout;
 
         switch (viewType) {
-            case MOOD_CELL_TYPE:
+            case PERSON_CELL_TYPE:
                 // Get image cell layout which has ImageView on the base instead of TextView.
                 layout = inflater.inflate(R.layout.table_view_image_cell_layout, parent, false);
 
-                return new MoodCellViewHolder(layout);
+                return new PersonCellViewHolder(layout);
             case GENDER_CELL_TYPE:
                 // Get image cell layout which has ImageView instead of TextView.
                 layout = inflater.inflate(R.layout.table_view_image_cell_layout, parent, false);
@@ -124,11 +125,13 @@ public class TableViewAdapter extends AbstractTableAdapter<ColumnHeader, RowHead
             columnPosition, int rowPosition) {
 
         switch (holder.getItemViewType()) {
-            case MOOD_CELL_TYPE:
-                MoodCellViewHolder moodViewHolder = (MoodCellViewHolder) holder;
+            case PERSON_CELL_TYPE:
+                PersonCellViewHolder personViewHolder = (PersonCellViewHolder) holder;
 
-                moodViewHolder.cell_image.setImageResource(mTableViewModel.getDrawable((int) cellItemModel
+                personViewHolder.cell_image.setImageResource(mTableViewModel.getDrawable((int) cellItemModel
                         .getData(), false));
+                personViewHolder.cell_container.setBackgroundResource(R.color.primary_4);
+                personViewHolder.cell_name.setText("Hello");
                 break;
             case GENDER_CELL_TYPE:
                 GenderCellViewHolder genderViewHolder = (GenderCellViewHolder) holder;
@@ -278,8 +281,8 @@ public class TableViewAdapter extends AbstractTableAdapter<ColumnHeader, RowHead
         // then you should fill this method to be able create different
         // type of CellViewHolder on "onCreateCellViewHolder"
         switch (column) {
-            case TableViewModel.MOOD_COLUMN_INDEX:
-                return MOOD_CELL_TYPE;
+            case TableViewModel.PERSON_COLUMN_INDEX:
+                return PERSON_CELL_TYPE;
             case TableViewModel.GENDER_COLUMN_INDEX:
                 return GENDER_CELL_TYPE;
             default:

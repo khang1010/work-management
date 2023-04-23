@@ -33,7 +33,11 @@ import com.example.workmanagement.tableview.model.Cell;
 import com.example.workmanagement.tableview.model.ColumnHeader;
 import com.example.workmanagement.tableview.model.RowHeader;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -44,7 +48,8 @@ import java.util.Random;
 public class TableViewModel {
 
     // Columns indexes
-    public static final int MOOD_COLUMN_INDEX = 1;
+    public static final int PERSON_COLUMN_INDEX = 1;
+    public static final int DEADLINE_COLUMN_INDEX = 2;
     public static final int GENDER_COLUMN_INDEX = 3;
 
     // Constant values for icons
@@ -54,8 +59,8 @@ public class TableViewModel {
     public static final int GIRL = 2;
 
     // Constant size for dummy data sets
-    private static final int COLUMN_SIZE = 10;
-    private static final int ROW_SIZE = 10;
+    private static final int COLUMN_SIZE = 3;
+    private static final int ROW_SIZE = 5;
 
     // Drawables
     @DrawableRes
@@ -124,12 +129,14 @@ public class TableViewModel {
                 final int random = new Random().nextInt();
                 if (j == 0) {
                     text = "Khang";
-                } else if (j == 2) {
-                    text = random % 2 == 0 ? HAPPY : SAD;
-                } else if (j == MOOD_COLUMN_INDEX) {
+                } else if (j == DEADLINE_COLUMN_INDEX) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                    Date date = new Date();
+                    text = String.valueOf(dateFormat.format(date));
+                } else if (j == PERSON_COLUMN_INDEX) {
                     text = random % 2 == 0 ? HAPPY : SAD;
                 } else if (j == GENDER_COLUMN_INDEX) {
-                    text = random % 2 == 0 ? BOY : GIRL;
+                    text = 1;
                 }
 
                 // Create dummy id.
@@ -139,8 +146,6 @@ public class TableViewModel {
                 if (j == 3) {
                     cell = new Cell(id, text);
                 } else if (j == 4) {
-                    // NOTE female and male keywords for filter will have conflict since "female"
-                    // contains "male"
                     cell = new Cell(id, text);
                 } else {
                     cell = new Cell(id, text);

@@ -13,4 +13,10 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="DialogTheme" parent="Theme.MaterialComponents.DayNight.Dialog">
+        <item name="colorAccent">@color/border_table</item>
+        <item name="colorOnPrimary">@color/border_table</item>
+        <item name="android:textColor">@color/border_table</item>
+    </style>
 </resources>
