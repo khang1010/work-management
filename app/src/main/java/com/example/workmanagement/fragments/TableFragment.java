@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.evrencoskun.tableview.TableView;
 import com.example.workmanagement.R;
@@ -38,6 +39,7 @@ public class TableFragment extends Fragment {
 
     private BoardViewModel boardViewModel;
     private RecyclerView tableRecView;
+    private RelativeLayout clockLayout;
     private ArrayList<String> temp = new ArrayList<>();
     public TableFragment() {
         // Required empty public constructor
@@ -88,8 +90,11 @@ public class TableFragment extends Fragment {
                 temp.add("1");
                 temp.add("2");
                 adapter.setTables(temp);
+                clockLayout = view.findViewById(R.id.clock_container);
+                clockLayout.setVisibility(View.GONE);
+
             }
-        }, 300);
+        }, 500);
         boardViewModel = new ViewModelProvider(requireActivity()).get(BoardViewModel.class);
 //        boardViewModel.getId().observe(getViewLifecycleOwner(), id -> binding.tableFragmentText.setText("Board with id: " + id));
     }

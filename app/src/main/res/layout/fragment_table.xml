@@ -10,7 +10,7 @@
     <RelativeLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:focusableInTouchMode="true">
 
 
@@ -122,6 +122,21 @@
             android:textColor="@color/border_table"
             android:textSize="15sp"
             android:textStyle="bold"/>
+
+        <RelativeLayout
+            android:layout_width="170dp"
+            android:layout_height="170dp"
+            android:id="@+id/clock_container"
+            android:layout_below="@+id/addTableBtn"
+            android:background="@drawable/background_table"
+            android:layout_centerInParent="true">
+            <pl.droidsonroids.gif.GifImageView
+                android:id="@+id/gif_clock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/clock"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
     </RelativeLayout>
 
 </ScrollView>
