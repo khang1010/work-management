@@ -10,6 +10,8 @@
     <color name="main_01">#4D17C0</color>
     <color name="main_02">#5612E5</color>
     <color name="primary_0">#5612E5</color>
+    <color name="primary_1">#7741EA</color>
+    <color name="primary_3">#BBA0F5 </color>
     <color name="primary_4">#DDD0FA</color>
     <color name="primary_5">#EFE8FD</color>
     <color name="primary_2">#9971EF</color>
@@ -23,5 +25,7 @@
     <color name="red">#FF0000</color>
     <color name="yellow">#ffff00</color>
     <color name="border_table">#9971EF</color>
+    <color name="background_color">#f4eeff</color>
+    <color name="lavender">#e6e1f1</color>
 
 </resources>

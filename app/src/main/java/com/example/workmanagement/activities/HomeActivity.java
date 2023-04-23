@@ -66,8 +66,6 @@ public class HomeActivity extends AppCompatActivity {
 
     private BoardViewModel boardViewModel;
 
-    private ImageButton userInforImageButton;
-
 
     private StompClient stompClient;
 
@@ -79,16 +77,9 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        userInforImageButton = findViewById(R.id.imgAvatar);
         binding.logoutBtn.setVisibility(View.GONE);
 
-        userInforImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(HomeActivity.this, UserInforActivity.class);
-                startActivity(intent);
-            }
-        });
+
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -158,6 +149,14 @@ public class HomeActivity extends AppCompatActivity {
 
         binding.imgSideBar.setOnClickListener(v -> binding.drawableLayout.openDrawer(GravityCompat.START));
 
+        binding.imgAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, UserInforActivity.class);
+                startActivity(intent);
+            }
+        });
+
         binding.navigationView.setNavigationItemSelectedListener(item -> {
             Menu menu = binding.navigationView.getMenu().getItem(0).getSubMenu();
             for (int i = 0; i < menu.size(); i++)
@@ -207,12 +206,16 @@ public class HomeActivity extends AppCompatActivity {
         binding.bottomNavigation.show(2, true);
         binding.navigationView.getHeaderView(0).findViewById(R.id.btnAddNewBoard)
                 .setOnClickListener(v -> showCreateBoardDialog());
+        binding.imgNotifications.setOnClickListener(v -> startActivity(new Intent(this, NotificationActivity.class)));
     }
 
     private void initSocketConnection(String token) {
         stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, SystemConstant.BASE_URL + "ws/websocket");
         stompClient.connect();
-        stompClient.topic("/notification/" + userViewModel.getId().getValue()).subscribe(message -> runOnUiThread(() -> Toast.makeText(this, message.getPayload(), Toast.LENGTH_SHORT).show()));
+        stompClient.topic("/notification/" + userViewModel.getId().getValue())
+                .subscribe(message ->
+                        runOnUiThread(() -> Toast.makeText(this, message.getPayload(), Toast.LENGTH_SHORT).show())
+                );
     }
 
     private void showCreateBoardDialog() {

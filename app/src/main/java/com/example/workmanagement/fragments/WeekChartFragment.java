@@ -3,12 +3,17 @@ package com.example.workmanagement.fragments;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.Button;
 
 
 import java.util.ArrayList;
@@ -24,24 +29,36 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link WeekChartFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class WeekChartFragment extends Fragment {
 
     private BarChart barChart;
     private View view;
+    private Button contextmenubutton;
 
     public WeekChartFragment() {
         // Required empty public constructor
     }
 
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
+    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getActivity().getMenuInflater().inflate(R.menu.chart_context_menu, menu);
+
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        return super.onContextItemSelected(item);
     }
 
     public void GroupBarChart(){
@@ -137,6 +154,8 @@ public class WeekChartFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_week_chart, container, false);
         GroupBarChart();
+        contextmenubutton = view.findViewById(R.id.week_chart_context_menu_button);
+        registerForContextMenu(contextmenubutton);
         return view;
     }
 }
