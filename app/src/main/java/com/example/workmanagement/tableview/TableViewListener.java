@@ -25,9 +25,12 @@
 package com.example.workmanagement.tableview;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -40,6 +43,8 @@ import com.example.workmanagement.tableview.holder.PersonCellViewHolder;
 import com.example.workmanagement.R;
 import com.example.workmanagement.tableview.popup.ColumnHeaderLongPressPopup;
 import com.example.workmanagement.tableview.popup.RowHeaderLongPressPopup;
+
+import java.util.Calendar;
 
 /**
  * Created by evrencoskun on 21/09/2017.
@@ -63,6 +68,7 @@ public class TableViewListener implements ITableViewListener {
      * @param column   : X (Column) position of Clicked Cell item.
      * @param row      : Y (Row) position of Clicked Cell item.
      */
+    String date_time = "";
     @Override
     public void onCellClicked(@NonNull RecyclerView.ViewHolder cellView, int column, int row) {
 
@@ -76,13 +82,33 @@ public class TableViewListener implements ITableViewListener {
     }
 
     private void openDialog(TextView cell_name) {
+        final Calendar c = Calendar.getInstance();
+        int mYear = c.get(Calendar.YEAR);
+        int mMonth = c.get(Calendar.MONTH);
+        int mDay = c.get(Calendar.DAY_OF_MONTH);
         DatePickerDialog dialog = new DatePickerDialog(mContext,R.style.DialogTheme, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                cell_name.setText(String.valueOf(day) + "/" + String.valueOf(month) + "/" + String.valueOf(year));
+                date_time = String.valueOf(day) + "/" + String.valueOf(month) + "/" + String.valueOf(year);
+                openTimeDialog(cell_name);
             }
 
-        }, 2023, 4, 23);
+        }, mYear, mMonth, mDay);
+        dialog.show();
+    }
+
+    private void openTimeDialog(TextView cell_name) {
+        final Calendar c = Calendar.getInstance();
+        int mHour = c.get(Calendar.HOUR_OF_DAY);
+        int mMinute = c.get(Calendar.MINUTE);
+        TimePickerDialog dialog = new TimePickerDialog(mContext,R.style.DialogTheme, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int hours, int minutes) {
+                date_time = (String.format("%02d", hours) + ":" + String.format("%02d", minutes) + " " + date_time);
+                cell_name.setText(date_time);
+                Toast.makeText(mContext, cell_name.getText().toString(), Toast.LENGTH_SHORT).show();
+            }
+        }, mHour, mMinute, true);
         dialog.show();
     }
 

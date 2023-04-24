@@ -130,7 +130,7 @@ public class TableViewModel {
                 if (j == 0) {
                     text = "Khang";
                 } else if (j == DEADLINE_COLUMN_INDEX) {
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
                     Date date = new Date();
                     text = String.valueOf(dateFormat.format(date));
                 } else if (j == PERSON_COLUMN_INDEX) {
