@@ -13,19 +13,19 @@ public class NotificationDTO {
     @Json(name = "thumbnail")
     private String thumbnail;
 
-    @Json(name = "isRead")
+    @Json(name = "read")
     private boolean isRead;
 
     @Json(name = "boardId")
     private long boardId;
 
     @Json(name = "type")
-    private int type;
+    private String type;
 
-    @Json(name = "isAccept")
+    @Json(name = "accept")
     private boolean isAccept;
 
-    @Json(name = "isReject")
+    @Json(name = "reject")
     private boolean isReject;
 
     public long getId() {
@@ -68,11 +68,11 @@ public class NotificationDTO {
         this.boardId = boardId;
     }
 
-    public int getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(String type) {
         this.type = type;
     }
 

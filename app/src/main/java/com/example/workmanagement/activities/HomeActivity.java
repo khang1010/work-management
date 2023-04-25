@@ -10,8 +10,6 @@ import android.view.SubMenu;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,12 +31,9 @@ import com.example.workmanagement.fragments.ChatFragment;
 import com.example.workmanagement.fragments.HomeFragment;
 import com.example.workmanagement.fragments.SettingFragment;
 import com.example.workmanagement.utils.SystemConstant;
-import com.example.workmanagement.utils.dto.BoardDTO;
-import com.example.workmanagement.utils.dto.BoardInfo;
 import com.example.workmanagement.utils.dto.SearchUserResponse;
 import com.example.workmanagement.utils.dto.UserDTO;
 import com.example.workmanagement.utils.services.impl.AuthServiceImpl;
-import com.example.workmanagement.utils.services.impl.BoardServiceImpl;
 import com.example.workmanagement.utils.services.impl.UserServiceImpl;
 import com.example.workmanagement.viewmodels.BoardViewModel;
 import com.example.workmanagement.viewmodels.UserViewModel;
@@ -48,9 +43,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -66,7 +59,6 @@ public class HomeActivity extends AppCompatActivity {
 
     private BoardViewModel boardViewModel;
 
-
     private StompClient stompClient;
 
     GoogleSignInOptions gso;
@@ -77,9 +69,8 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         binding.logoutBtn.setVisibility(View.GONE);
-
-
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -103,7 +94,6 @@ public class HomeActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
                     if (response.isSuccessful() && response.code() == 200) {
-                        userViewModel = new ViewModelProvider(HomeActivity.this).get(UserViewModel.class);
                         userViewModel.setId(response.body().getId());
                         userViewModel.setEmail(response.body().getEmail());
                         userViewModel.setDisplayName(response.body().getDisplayName());
@@ -132,9 +122,7 @@ public class HomeActivity extends AppCompatActivity {
                                 .load(photoUrl)
                                 .into(binding.imgAvatar)
                         );
-                        userViewModel.getToken().observe(HomeActivity.this, token -> {
-                            initSocketConnection(token);
-                        });
+                        userViewModel.getToken().observe(HomeActivity.this, token -> initSocketConnection(token));
                     }
                 }
 
@@ -149,13 +137,9 @@ public class HomeActivity extends AppCompatActivity {
 
         binding.imgSideBar.setOnClickListener(v -> binding.drawableLayout.openDrawer(GravityCompat.START));
 
-        binding.imgAvatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(HomeActivity.this, UserInforActivity.class);
-                startActivity(intent);
-            }
-        });
+        binding.imgAvatar.setOnClickListener(v ->
+            startActivity(new Intent(HomeActivity.this, UserInforActivity.class))
+        );
 
         binding.navigationView.setNavigationItemSelectedListener(item -> {
             Menu menu = binding.navigationView.getMenu().getItem(0).getSubMenu();
@@ -206,7 +190,18 @@ public class HomeActivity extends AppCompatActivity {
         binding.bottomNavigation.show(2, true);
         binding.navigationView.getHeaderView(0).findViewById(R.id.btnAddNewBoard)
                 .setOnClickListener(v -> showCreateBoardDialog());
-        binding.imgNotifications.setOnClickListener(v -> startActivity(new Intent(this, NotificationActivity.class)));
+        binding.imgNotifications.setOnClickListener(v -> {
+            Intent intent = new Intent(this, NotificationActivity.class);
+            intent.putExtra("TOKEN", userViewModel.getToken().getValue());
+            intent.putExtra("ID", userViewModel.getId().getValue());
+            startActivity(intent);
+        });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        stompClient.disconnect();
     }
 
     private void initSocketConnection(String token) {
