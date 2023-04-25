@@ -54,11 +54,6 @@ public class CellViewHolder extends AbstractViewHolder {
 
     public void setCell(@Nullable Cell cell) {
         cell_textview.setText(String.valueOf(cell.getData()));
-
-        // If your TableView should have auto resize for cells & columns.
-        // Then you should consider the below lines. Otherwise, you can ignore them.
-
-        // It is necessary to remeasure itself.
         cell_container.getLayoutParams().width = LinearLayout.LayoutParams.WRAP_CONTENT;
         cell_textview.requestLayout();
     }

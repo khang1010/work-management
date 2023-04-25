@@ -24,6 +24,7 @@
 
 package com.example.workmanagement.tableview;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +32,9 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LifecycleOwner;
 
+import com.bumptech.glide.Glide;
 import com.evrencoskun.tableview.adapter.AbstractTableAdapter;
 import com.evrencoskun.tableview.adapter.recyclerview.holder.AbstractViewHolder;
 import com.evrencoskun.tableview.sort.SortState;
@@ -45,6 +48,7 @@ import com.example.workmanagement.tableview.holder.RowHeaderViewHolder;
 import com.example.workmanagement.tableview.model.Cell;
 import com.example.workmanagement.tableview.model.ColumnHeader;
 import com.example.workmanagement.tableview.model.RowHeader;
+import com.example.workmanagement.viewmodels.UserViewModel;
 
 /**
  * Created by evrencoskun on 11/06/2017.
@@ -63,10 +67,23 @@ public class TableViewAdapter extends AbstractTableAdapter<ColumnHeader, RowHead
 
     @NonNull
     private final TableViewModel mTableViewModel;
-
+    private Context mContext;
+    private LifecycleOwner lifecycleOwner;
+    private UserViewModel userViewModel;
     public TableViewAdapter(@NonNull TableViewModel tableViewModel) {
         super();
         this.mTableViewModel = tableViewModel;
+    }
+
+    public TableViewAdapter(@NonNull TableViewModel mTableViewModel, Context mContext) {
+        this.mTableViewModel = mTableViewModel;
+        this.mContext = mContext;
+    }
+
+    public TableViewAdapter(@NonNull TableViewModel mTableViewModel, Context mContext, LifecycleOwner lifecycleOwner) {
+        this.mTableViewModel = mTableViewModel;
+        this.mContext = mContext;
+        this.lifecycleOwner = lifecycleOwner;
     }
 
     /**
@@ -91,7 +108,7 @@ public class TableViewAdapter extends AbstractTableAdapter<ColumnHeader, RowHead
                 // Get image cell layout which has ImageView on the base instead of TextView.
                 layout = inflater.inflate(R.layout.table_view_image_cell_layout, parent, false);
 
-                return new PersonCellViewHolder(layout);
+                return new PersonCellViewHolder(layout, parent.getContext());
             case GENDER_CELL_TYPE:
                 // Get image cell layout which has ImageView instead of TextView.
                 layout = inflater.inflate(R.layout.table_view_image_cell_layout, parent, false);
@@ -131,7 +148,12 @@ public class TableViewAdapter extends AbstractTableAdapter<ColumnHeader, RowHead
                 personViewHolder.cell_image.setImageResource(mTableViewModel.getDrawable((int) cellItemModel
                         .getData(), false));
                 personViewHolder.cell_container.setBackgroundResource(R.color.primary_4);
-                personViewHolder.cell_name.setText("Hello");
+                personViewHolder.cell_name.setText("Khang");
+
+//                userViewModel.getPhotoUrl().observe(lifecycleOwner, photoUrl -> Glide.with(mContext)
+//                .asBitmap()
+//                .load(photoUrl)
+//                .into(personViewHolder.cell_image));
                 break;
             case GENDER_CELL_TYPE:
                 GenderCellViewHolder genderViewHolder = (GenderCellViewHolder) holder;

@@ -24,16 +24,21 @@
 
 package com.example.workmanagement.tableview.holder;
 
+import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
 
+import com.bumptech.glide.Glide;
 import com.evrencoskun.tableview.adapter.recyclerview.holder.AbstractViewHolder;
 import com.example.workmanagement.R;
+import com.example.workmanagement.activities.HomeActivity;
 import com.example.workmanagement.tableview.TableViewModel;
+import com.example.workmanagement.viewmodels.UserViewModel;
 
 /**
  * Created by evrencoskun on 4.02.2018.
@@ -44,9 +49,18 @@ public class PersonCellViewHolder extends AbstractViewHolder {
     public final ImageView cell_image;
     public final TextView cell_name;
     public final RelativeLayout cell_container;
-
+    private UserViewModel userViewModel;
+    private Context mContext;
     public PersonCellViewHolder(@NonNull View itemView) {
         super(itemView);
+        cell_image = itemView.findViewById(R.id.cell_image);
+        cell_name = itemView.findViewById(R.id.cell_text);
+        cell_container = itemView.findViewById(R.id.cell_background);
+    }
+
+    public PersonCellViewHolder(@NonNull View itemView, Context mContext) {
+        super(itemView);
+        this.mContext = mContext;
         cell_image = itemView.findViewById(R.id.cell_image);
         cell_name = itemView.findViewById(R.id.cell_text);
         cell_container = itemView.findViewById(R.id.cell_background);
@@ -59,5 +73,11 @@ public class PersonCellViewHolder extends AbstractViewHolder {
         cell_image.setImageResource(moodDrawable);
         cell_name.setText(name);
         cell_container.setBackgroundResource(R.color.blue);
+
+//        userViewModel.getPhotoUrl().observe((LifecycleOwner) mContext, photoUrl -> Glide.with(mContext)
+//                .asBitmap()
+//                .load(photoUrl)
+//                .into(cell_image));
+//        cell_name.setText(userViewModel.getDisplayName().toString());
     }
 }

@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.evrencoskun.tableview.TableView;
@@ -23,13 +24,18 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
 
     private ArrayList<String> tables = new ArrayList<>();
     private Context context;
-
+    private LifecycleOwner lifecycleOwner;
     public void setTables(ArrayList<String> tables) {
         this.tables = tables;
     }
 
     public TableRecViewAdapter(Context context) {
         this.context = context;
+    }
+
+    public TableRecViewAdapter(Context context, LifecycleOwner lifecycleOwner) {
+        this.context = context;
+        this.lifecycleOwner = lifecycleOwner;
     }
 
     @NonNull

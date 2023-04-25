@@ -32,6 +32,7 @@ import com.example.workmanagement.R;
 import com.example.workmanagement.tableview.model.Cell;
 import com.example.workmanagement.tableview.model.ColumnHeader;
 import com.example.workmanagement.tableview.model.RowHeader;
+import com.example.workmanagement.viewmodels.UserViewModel;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -71,6 +72,7 @@ public class TableViewModel {
     private final int mHappyDrawable;
     @DrawableRes
     private final int mSadDrawable;
+    private UserViewModel userViewModel;
 
     public TableViewModel() {
         // initialize drawables
