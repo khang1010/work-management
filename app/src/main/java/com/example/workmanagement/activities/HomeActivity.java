@@ -10,8 +10,6 @@ import android.view.SubMenu;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,17 +31,11 @@ import com.example.workmanagement.fragments.ChatFragment;
 import com.example.workmanagement.fragments.HomeFragment;
 import com.example.workmanagement.fragments.SettingFragment;
 import com.example.workmanagement.utils.SystemConstant;
-import com.example.workmanagement.utils.dto.BoardDTO;
-import com.example.workmanagement.utils.dto.BoardInfo;
-import com.example.workmanagement.utils.dto.NotificationDTO;
 import com.example.workmanagement.utils.dto.SearchUserResponse;
 import com.example.workmanagement.utils.dto.UserDTO;
 import com.example.workmanagement.utils.services.impl.AuthServiceImpl;
-import com.example.workmanagement.utils.services.impl.BoardServiceImpl;
-import com.example.workmanagement.utils.services.impl.NotificationServiceImpl;
 import com.example.workmanagement.utils.services.impl.UserServiceImpl;
 import com.example.workmanagement.viewmodels.BoardViewModel;
-import com.example.workmanagement.viewmodels.NotificationViewModel;
 import com.example.workmanagement.viewmodels.UserViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -51,9 +43,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -203,8 +193,15 @@ public class HomeActivity extends AppCompatActivity {
         binding.imgNotifications.setOnClickListener(v -> {
             Intent intent = new Intent(this, NotificationActivity.class);
             intent.putExtra("TOKEN", userViewModel.getToken().getValue());
+            intent.putExtra("ID", userViewModel.getId().getValue());
             startActivity(intent);
         });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        stompClient.disconnect();
     }
 
     private void initSocketConnection(String token) {
