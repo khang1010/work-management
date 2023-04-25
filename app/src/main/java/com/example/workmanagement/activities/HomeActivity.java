@@ -138,7 +138,7 @@ public class HomeActivity extends AppCompatActivity {
         binding.imgSideBar.setOnClickListener(v -> binding.drawableLayout.openDrawer(GravityCompat.START));
 
         binding.imgAvatar.setOnClickListener(v ->
-            startActivity(new Intent(HomeActivity.this, UserInforActivity.class))
+            startActivity(new Intent(this, UserInforActivity.class))
         );
 
         binding.navigationView.setNavigationItemSelectedListener(item -> {
@@ -201,7 +201,12 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        stompClient.disconnect();
+        try {
+            stompClient.disconnect();
+        }catch (Exception e){
+
+        }
+
     }
 
     private void initSocketConnection(String token) {

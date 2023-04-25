@@ -1,10 +1,13 @@
 package com.example.workmanagement.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import android.view.ContextMenu;
@@ -14,27 +17,52 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 
+import java.lang.reflect.Array;
+import java.time.LocalDate;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
 import com.example.workmanagement.R;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import java.util.Locale;
 
 
 public class WeekChartFragment extends Fragment {
 
     private BarChart barChart;
+
+    private LineChart lineChart;
+    private PieChart barChart3;
     private View view;
-    private Button contextmenubutton;
+    private Button selectedChartButton;
+    private String[] listItems = {"chart 1", "chart 2", "chart 3"};
+    private boolean[] selectedItems = {true, false, false};
+
+    private LocalDate localDate;
+
+    private int dayOfWeek;
+
+
+
 
     public WeekChartFragment() {
         // Required empty public constructor
@@ -63,99 +91,140 @@ public class WeekChartFragment extends Fragment {
 
     public void GroupBarChart(){
         barChart = view.findViewById(R.id.barchartWeek);
-        barChart.setDrawBarShadow(false);
-        barChart.getDescription().setEnabled(false);
-        barChart.setPinchZoom(false);
-        barChart.setDrawGridBackground(true);
-        // empty labels so that the names are spread evenly
+        lineChart = view.findViewById(R.id.linechartWeek);
+        barChart3 = view.findViewById(R.id.piechartWeek);
 
-        List<String> labels = new ArrayList<>();
-        labels.add("");
-        labels.add("1");
-        labels.add("2");
-        labels.add("3");
-        labels.add("4");
-        labels.add("");
-        //String[] labels = {"", "Name1", "Name2", "Name3", "Name4", "Name5", ""};
-
-        XAxis xAxis = barChart.getXAxis();
-        xAxis.setCenterAxisLabels(true);
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setDrawGridLines(true);
-        xAxis.setGranularity(1f); // only intervals of 1 day
-        xAxis.setTextColor(Color.BLACK);
-        xAxis.setTextSize(12);
-        xAxis.setAxisLineColor(Color.WHITE);
-        xAxis.setAxisMinimum(1f);
-        xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
-
-        YAxis leftAxis = barChart.getAxisLeft();
-        leftAxis.setTextColor(getActivity().getApplication().getResources().getColor(R.color.black));
-        leftAxis.setTextSize(12);
-        leftAxis.setAxisLineColor(getActivity().getApplication().getResources().getColor(R.color.white));
-        leftAxis.setDrawGridLines(true);
-        leftAxis.setGranularity(2);
-        leftAxis.setLabelCount(8, true);
-        leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
-
-        barChart.getAxisRight().setEnabled(false);
-        barChart.getLegend().setEnabled(false);
-
-        float[] valOne = {10, 20, 30, 40, 50};
-        float[] valTwo = {60, 50, 40, 30, 20};
-        float[] valThree = {50, 60, 20, 10, 30};
-
-        ArrayList<BarEntry> barOne = new ArrayList<>();
-        ArrayList<BarEntry> barTwo = new ArrayList<>();
-        ArrayList<BarEntry> barThree = new ArrayList<>();
-        for (int i = 0; i < valOne.length; i++) {
-            barOne.add(new BarEntry(i, valOne[i]));
-            barTwo.add(new BarEntry(i, valTwo[i]));
-            barThree.add(new BarEntry(i, valThree[i]));
-        }
-
-        BarDataSet set1 = new BarDataSet(barOne, "barOne");
-        set1.setColor(getActivity().getApplication().getResources().getColor(R.color.blue));
-        BarDataSet set2 = new BarDataSet(barTwo, "barTwo");
-        set2.setColor(getActivity().getApplication().getResources().getColor(R.color.red));
-        BarDataSet set3 = new BarDataSet(barThree, "barTwo");
-        set3.setColor(getActivity().getApplication().getResources().getColor(R.color.yellow));
-
-        set1.setHighlightEnabled(false);
-        set2.setHighlightEnabled(false);
-        set3.setHighlightEnabled(false);
-        set1.setDrawValues(false);
-        set2.setDrawValues(false);
-        set3.setDrawValues(false);
-
-        ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
-        dataSets.add(set1);
-        dataSets.add(set2);
-        dataSets.add(set3);
-        BarData data = new BarData(dataSets);
-        float groupSpace = 0.4f;
-        float barSpace = 0f;
-        float barWidth = 0.3f;
-        // (barSpace + barWidth) * 2 + groupSpace = 1
-        data.setBarWidth(barWidth);
-        // so that the entire chart is shown when scrolled from right to left
-        xAxis.setAxisMaximum(labels.size() - 1.1f);
-        barChart.setData(data);
-        barChart.setScaleEnabled(true);
-        barChart.setVisibleXRangeMaximum(6f);
-        barChart.groupBars(1f, groupSpace, barSpace);
+        barChart.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
+        barChart.setData(getDataBarChart());
         barChart.invalidate();
 
+        lineChart.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
+        lineChart.setData(getDataLineChart());
+        lineChart.invalidate();
+
+        barChart3.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
+        barChart3.setData(getDataPieChart());
+        barChart3.invalidate();
+
+
     }
+
+    private BarData getDataBarChart(){
+        ArrayList<BarEntry> data = new ArrayList<BarEntry>();
+
+        int j = 5;
+        for(int i = 0; i < 5; i++){
+            data.add(new BarEntry(i,j));
+            j += 2;
+        }
+        BarDataSet DataSet = new BarDataSet(data, "Number Task");
+        DataSet.setColor(getActivity().getResources().getColor(R.color.color_barchart));
+        BarData barData = new BarData();
+        barData.addDataSet(DataSet);
+
+        return barData;
+    }
+    private LineData getDataLineChart(){
+        ArrayList<Entry> d = new ArrayList<Entry>();
+        int j = 5;
+        for(int i = 0; i < dayOfWeek; i++){
+            d.add(new Entry(i,j));
+            j += 2;
+        }
+        LineDataSet  lineDataSet = new LineDataSet(d,"data");
+        ArrayList<ILineDataSet> data = new ArrayList<>();
+        data.add(lineDataSet);
+        LineData lineData = new LineData(data);
+
+        return lineData;
+
+    }
+
+    private PieData getDataPieChart(){
+        ArrayList<PieEntry> d = new ArrayList<PieEntry>();
+        d.add(new PieEntry(100, "Mr 1"));
+        d.add(new PieEntry(20, "Mr 2"));
+        d.add(new PieEntry(10, "Mr 3"));
+        d.add(new PieEntry(60, "Mr 4"));
+        d.add(new PieEntry(40, "Mr 5"));
+        d.add(new PieEntry(90, "Mr 6"));
+        d.add(new PieEntry(50, "Mr 7"));
+        d.add(new PieEntry(70, "Mr 8"));
+        d.add(new PieEntry(10, "Mr 9"));
+        d.add(new PieEntry(80, "Mr 10"));
+        int[] color = new int[]{Color.BLUE, Color.CYAN, Color.GREEN, Color.RED, Color.GRAY, Color.MAGENTA, Color.DKGRAY, Color.YELLOW, Color.LTGRAY, Color.WHITE};
+        PieDataSet dataSet = new PieDataSet(d, "");
+        dataSet.setColors(color);
+        PieData pieData = new PieData(dataSet);
+        return pieData;
+
+    }
+
+
+
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_week_chart, container, false);
+        localDate = LocalDate.now();
+        dayOfWeek = localDate.getDayOfWeek().getValue();
+
+        View bcv[] = new View[3];
+        bcv[0] = view.findViewById(R.id.barchartWeek);
+        bcv[1] = view.findViewById(R.id.linechartWeek);
+        bcv[2] = view.findViewById(R.id.piechartWeek);
+
+        for (int j = 0; j < 3; j++){
+            if(selectedItems[j] == true){
+                bcv[j].setVisibility(View.VISIBLE);
+
+            }
+            else if(selectedItems[j]==false){
+                bcv[j].setVisibility(View.GONE);
+            }
+        }
+
+
         GroupBarChart();
-        contextmenubutton = view.findViewById(R.id.week_chart_context_menu_button);
-        registerForContextMenu(contextmenubutton);
+        //contextmenubutton = view.findViewById(R.id.week_chart_context_menu_button);
+        //registerForContextMenu(contextmenubutton);
+        selectedChartButton = view.findViewById(R.id.week_chart_select_chart_button);
+        selectedChartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(getActivity());
+                mBuilder.setTitle("Select chart to show");
+                mBuilder.setMultiChoiceItems(listItems, selectedItems, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i, boolean b) {
+
+                    }
+                });
+                mBuilder.setCancelable(false);
+                mBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        for (int j = 0; j < 3; j++){
+                            if(selectedItems[j] == true){
+                                bcv[j].setVisibility(View.VISIBLE);
+
+                            }
+                            else if(selectedItems[j]==false){
+                                bcv[j].setVisibility(View.GONE);
+                            }
+                        }
+                    }
+                });
+                mBuilder.show();
+            }
+        });
         return view;
     }
+
+
 }

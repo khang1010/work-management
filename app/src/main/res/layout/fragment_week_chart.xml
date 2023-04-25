@@ -1,29 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.WeekChartFragment"
-    >
+    android:orientation="vertical">
 
     <!-- TODO: Update blank fragment layout -->
     <Button
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:id="@+id/week_chart_context_menu_button"
+        android:id="@+id/week_chart_select_chart_button"
         android:layout_margin="10dp"
         android:text="Select chart"/>
 
 
-    <com.github.mikephil.charting.charts.BarChart
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:id="@+id/barchartWeek"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="80dp"
-        android:visibility="invisible"/>
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <com.github.mikephil.charting.charts.BarChart
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:id="@+id/barchartWeek"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:visibility="invisible"/>
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:id="@+id/linechartWeek"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                android:visibility="invisible"/>
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:id="@+id/piechartWeek"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                android:visibility="invisible"/>
+        </LinearLayout>
+    </ScrollView>
 
 
 
-</RelativeLayout>
+
+</LinearLayout>
