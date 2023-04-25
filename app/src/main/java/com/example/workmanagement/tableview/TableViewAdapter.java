@@ -60,7 +60,8 @@ public class TableViewAdapter extends AbstractTableAdapter<ColumnHeader, RowHead
 
     // Cell View Types by Column Position
     private static final int PERSON_CELL_TYPE = 1;
-    private static final int GENDER_CELL_TYPE = 2;
+    private static final int GENDER_CELL_TYPE = 3;
+    private static final int DEADLINE_CELL_TYPE = 2;
     // add new one if it necessary..
 
     private static final String LOG_TAG = TableViewAdapter.class.getSimpleName();
@@ -69,7 +70,6 @@ public class TableViewAdapter extends AbstractTableAdapter<ColumnHeader, RowHead
     private final TableViewModel mTableViewModel;
     private Context mContext;
     private LifecycleOwner lifecycleOwner;
-    private UserViewModel userViewModel;
     public TableViewAdapter(@NonNull TableViewModel tableViewModel) {
         super();
         this.mTableViewModel = tableViewModel;
@@ -145,21 +145,27 @@ public class TableViewAdapter extends AbstractTableAdapter<ColumnHeader, RowHead
             case PERSON_CELL_TYPE:
                 PersonCellViewHolder personViewHolder = (PersonCellViewHolder) holder;
 
-                personViewHolder.cell_image.setImageResource(mTableViewModel.getDrawable((int) cellItemModel
-                        .getData(), false));
+//                personViewHolder.cell_image.setImageResource(mTableViewModel.getDrawable((int) cellItemModel
+//                        .getData(), false));
                 personViewHolder.cell_container.setBackgroundResource(R.color.primary_4);
-                personViewHolder.cell_name.setText("Khang");
+                personViewHolder.cell_name.setText(cellItemModel.getText());
 
 //                userViewModel.getPhotoUrl().observe(lifecycleOwner, photoUrl -> Glide.with(mContext)
 //                .asBitmap()
 //                .load(photoUrl)
 //                .into(personViewHolder.cell_image));
+                Glide.with(mContext)
+                        .asBitmap()
+                        .load(String.valueOf(cellItemModel.getData()))
+                        .into(personViewHolder.cell_image);
                 break;
-            case GENDER_CELL_TYPE:
-                GenderCellViewHolder genderViewHolder = (GenderCellViewHolder) holder;
-
-                genderViewHolder.cell_image.setImageResource(mTableViewModel.getDrawable((int)
-                        cellItemModel.getData(), true));
+            case DEADLINE_CELL_TYPE:
+//                GenderCellViewHolder genderViewHolder = (GenderCellViewHolder) holder;
+//
+//                genderViewHolder.cell_image.setImageResource(mTableViewModel.getDrawable((int)
+//                        cellItemModel.getData(), true));
+                CellViewHolder viewHolder1 = (CellViewHolder) holder;
+                viewHolder1.setCellDeadline(cellItemModel);
                 break;
             default:
                 // Get the holder to update cell item text

@@ -35,6 +35,9 @@ import com.evrencoskun.tableview.adapter.recyclerview.holder.AbstractViewHolder;
 import com.example.workmanagement.R;
 import com.example.workmanagement.tableview.model.Cell;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 /**
  * Created by evrencoskun on 23/10/2017.
@@ -54,6 +57,14 @@ public class CellViewHolder extends AbstractViewHolder {
 
     public void setCell(@Nullable Cell cell) {
         cell_textview.setText(String.valueOf(cell.getData()));
+        cell_container.getLayoutParams().width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        cell_textview.requestLayout();
+    }
+    public void setCellDeadline(@Nullable Cell cell) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
+        Date date = new Date();
+        String text = String.valueOf(dateFormat.format(date));
+        cell_textview.setText(text);
         cell_container.getLayoutParams().width = LinearLayout.LayoutParams.WRAP_CONTENT;
         cell_textview.requestLayout();
     }

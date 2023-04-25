@@ -40,6 +40,7 @@ public class Cell implements ISortableModel, IFilterableModel {
     @Nullable
     private final Object mData;
     private final String mText;
+    private final String photoUrl;
     @NonNull
     private final String mFilterKeyword;
 
@@ -48,6 +49,7 @@ public class Cell implements ISortableModel, IFilterableModel {
         this.mData = data;
         this.mText = "";
         this.mFilterKeyword = String.valueOf(data);
+        this.photoUrl = "";
     }
 
     public Cell(@NonNull String mId, @Nullable Object mData, String mText) {
@@ -55,6 +57,7 @@ public class Cell implements ISortableModel, IFilterableModel {
         this.mData = mData;
         this.mText = mText;
         this.mFilterKeyword = String.valueOf(mData);
+        this.photoUrl = "";
     }
 
     /**
@@ -82,7 +85,7 @@ public class Cell implements ISortableModel, IFilterableModel {
         return mData;
     }
 
-    public String getmText() {
+    public String getText() {
         return mText;
     }
 

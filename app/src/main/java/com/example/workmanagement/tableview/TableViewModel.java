@@ -62,6 +62,10 @@ public class TableViewModel {
     // Constant size for dummy data sets
     private static final int COLUMN_SIZE = 3;
     private static final int ROW_SIZE = 5;
+    private int row = 0;
+    public void setRow(int row) {
+        this.row = row;
+    }
 
     // Drawables
     @DrawableRes
@@ -85,7 +89,7 @@ public class TableViewModel {
     @NonNull
     private List<RowHeader> getSimpleRowHeaderList() {
         List<RowHeader> list = new ArrayList<>();
-        for (int i = 0; i < ROW_SIZE; i++) {
+        for (int i = 0; i < row; i++) {
             RowHeader header = new RowHeader(String.valueOf(i),String.valueOf(i));
             list.add(header);
         }
