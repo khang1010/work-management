@@ -25,10 +25,13 @@
 package com.example.workmanagement.tableview;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -49,6 +52,10 @@ import com.example.workmanagement.tableview.model.Cell;
 import com.example.workmanagement.tableview.model.ColumnHeader;
 import com.example.workmanagement.tableview.model.RowHeader;
 import com.example.workmanagement.viewmodels.UserViewModel;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Created by evrencoskun on 11/06/2017.
@@ -154,10 +161,15 @@ public class TableViewAdapter extends AbstractTableAdapter<ColumnHeader, RowHead
 //                .asBitmap()
 //                .load(photoUrl)
 //                .into(personViewHolder.cell_image));
-                Glide.with(mContext)
-                        .asBitmap()
-                        .load(String.valueOf(cellItemModel.getData()))
-                        .into(personViewHolder.cell_image);
+//                Toast.makeText(mContext, String.valueOf(cellItemModel.getData()), Toast.LENGTH_SHORT).show();
+                if (String.valueOf(cellItemModel.getData()).equals("default")) {
+                    personViewHolder.cell_image.setImageResource(R.drawable.ic_launcher_foreground);
+                } else {
+                    Glide.with(mContext)
+                            .asBitmap()
+                            .load(String.valueOf(cellItemModel.getData()))
+                            .into(personViewHolder.cell_image);
+                }
                 break;
             case DEADLINE_CELL_TYPE:
 //                GenderCellViewHolder genderViewHolder = (GenderCellViewHolder) holder;

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LifecycleOwner;
@@ -109,10 +110,11 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
             TableViewModel tableViewModel = new TableViewModel();
             Cell cell = new Cell("1", "New task");
             Object url = "";
+            System.out.println(userViewModel.getPhotoUrl().getValue());
             if (!userViewModel.getPhotoUrl().getValue().equals("null")) {
                 url = userViewModel.getPhotoUrl().getValue();
             } else {
-                url = "https://images.app.goo.gl/q4xED4vGiaAJMQmy9";
+                url = "default";
             }
             Cell cell1 = new Cell("2", url, userViewModel.getDisplayName().getValue());
             SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
