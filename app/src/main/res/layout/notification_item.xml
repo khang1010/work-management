@@ -23,12 +23,22 @@
             app:civ_border_color="@color/disable"
             app:civ_border_width="2dp" />
 
+<!--        <TextView-->
+<!--            android:id="@+id/txtNotificationCongratulation"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="24dp"-->
+<!--            android:textColor="@color/primary_1"-->
+<!--            android:layout_toEndOf="@id/imgNotificationThumbnail"-->
+<!--            android:text="Congratulation!" />-->
+
         <TextView
             android:id="@+id/txtNotificationMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_centerVertical="true"
+            android:textColor="@color/black"
             android:layout_toEndOf="@id/imgNotificationThumbnail"
             android:text="Giang invited you to gr Quynh bi da" />
 

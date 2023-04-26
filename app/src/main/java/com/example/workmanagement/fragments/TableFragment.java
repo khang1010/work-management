@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.evrencoskun.tableview.TableView;
 import com.example.workmanagement.R;
@@ -39,6 +40,7 @@ public class TableFragment extends Fragment {
     private FragmentTableBinding binding;
 
     private BoardViewModel boardViewModel;
+
     private RecyclerView tableRecView;
     private RelativeLayout clockLayout;
     private ArrayList<String> temp = new ArrayList<>();
@@ -83,6 +85,7 @@ public class TableFragment extends Fragment {
 //                .getRowHeaderList(), tableViewModel.getCellList());
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
 
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -95,7 +98,6 @@ public class TableFragment extends Fragment {
                 adapter.setTables(temp);
                 clockLayout = view.findViewById(R.id.clock_container);
                 clockLayout.setVisibility(View.GONE);
-
             }
         }, 500);
         boardViewModel = new ViewModelProvider(requireActivity()).get(BoardViewModel.class);
