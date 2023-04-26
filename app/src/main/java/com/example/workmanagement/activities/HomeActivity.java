@@ -219,25 +219,16 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        try {
-            stompClient.disconnect();
-        } catch (Exception e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
     private void initSocketConnection(String token) {
-        stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, SystemConstant.BASE_URL + "ws/websocket");
-        stompClient.connect();
-        stompClient.topic("/notification/" + userViewModel.getId().getValue())
-                .subscribe(message -> {
-                    Moshi moshi = new Moshi.Builder().build();
-                    createNotification(moshi.adapter(NotificationDTO.class).fromJson(message.getPayload()));
-                });
+        if (stompClient == null || !stompClient.isConnected()) {
+            stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, SystemConstant.BASE_URL + "ws/websocket");
+            stompClient.connect();
+            stompClient.topic("/notification/" + userViewModel.getId().getValue())
+                    .subscribe(message -> {
+                        Moshi moshi = new Moshi.Builder().build();
+                        createNotification(moshi.adapter(NotificationDTO.class).fromJson(message.getPayload()));
+                    });
+        }
     }
 
     private void createNotification(NotificationDTO notification) {
