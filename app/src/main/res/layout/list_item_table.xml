@@ -21,7 +21,7 @@
         <RelativeLayout
             android:id="@+id/titleBar"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:padding="10dp">
             <RelativeLayout
                 android:id="@+id/ic_upDown_container"
@@ -50,10 +50,32 @@
                 android:text="Table 1"
                 android:layout_toRightOf="@+id/ic_upDown_container"
                 android:layout_centerVertical="true"
-                android:textSize="23sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                android:layout_marginLeft="15dp" />
+                android:layout_marginLeft="15dp"
+                android:visibility="visible"/>
+            <EditText
+                android:id="@+id/editTableName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Table 1"
+                android:layout_toRightOf="@+id/ic_upDown_container"
+                android:layout_centerVertical="true"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginLeft="15dp"
+                android:visibility="gone"/>
+            <ImageView
+                android:id="@+id/acceptBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_check"
+                android:layout_toEndOf="@+id/editTableName"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="20dp"
+                android:visibility="gone"/>
 
             <ImageView
                 android:id="@+id/iconDownload"
