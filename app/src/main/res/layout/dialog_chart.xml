@@ -7,40 +7,128 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp">
+        android:layout_marginEnd="10dp"
+        android:gravity="center">
         <CheckBox
             android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:text="Chart 1"/>
+            android:id="@+id/checkbox_barchart"
+            android:text="Bar chart"/>
         <Spinner
-            android:layout_width="80dp"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:id="@+id/spinner"/>
+            android:id="@+id/spinner_number_barchart"/>
         <Spinner
-            android:layout_width="80dp"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:id="@+id/spinner2"/>
+            android:id="@+id/spinner_unit_barchart"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp">
         <Button
-            android:layout_width="100dp"
+            android:layout_width="150dp"
             android:layout_height="match_parent"
-            android:id="@+id/btn_select_date_start"/>
+            android:id="@+id/btn_select_date_start_barchart"
+            android:layout_marginEnd="10dp"
+            style="?android:spinnerStyle"
+            android:textColor="@color/black"/>
         <Button
-            android:layout_width="100dp"
+            android:layout_width="150dp"
             android:layout_height="match_parent"
-            android:id="@+id/btn_select_date_end"/>
+            android:id="@+id/btn_select_date_end_barchart"
+            style="?android:spinnerStyle"
+            android:textColor="@color/black"/>
     </LinearLayout>
 
-    <CheckBox
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Chart 2"/>
-    <CheckBox
+        android:orientation="horizontal"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:gravity="center">
+        <CheckBox
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:id="@+id/checkbox_linechart"
+            android:text="Line chart"/>
+        <Spinner
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:id="@+id/spinner_number_linechart"/>
+        <Spinner
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:id="@+id/spinner_unit_linechart"/>
+    </LinearLayout>
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Chart 3"/>
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp">
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:id="@+id/btn_select_date_start_linechart"
+            android:layout_marginEnd="10dp"
+            style="?android:spinnerStyle"
+            android:textColor="@color/black"/>
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:id="@+id/btn_select_date_end_linechart"
+            style="?android:spinnerStyle"
+            android:textColor="@color/black"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:gravity="center">
+        <CheckBox
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:id="@+id/checkbox_piechart"
+            android:text="Pie chart"/>
+        <Spinner
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:id="@+id/spinner_number_piechart"/>
+        <Spinner
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:id="@+id/spinner_unit_piechart"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp">
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:id="@+id/btn_select_date_start_piechart"
+            android:layout_marginEnd="10dp"
+            style="?android:spinnerStyle"
+            android:textColor="@color/black"/>
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:id="@+id/btn_select_date_end_piechart"
+            style="?android:spinnerStyle"
+            android:textColor="@color/black"/>
+    </LinearLayout>
+
 </LinearLayout>
