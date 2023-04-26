@@ -6,35 +6,47 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.workmanagement.R;
 import com.example.workmanagement.utils.dto.NotificationDTO;
+import com.example.workmanagement.utils.services.impl.NotificationServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class NotificationRecViewAdapter extends RecyclerView.Adapter<NotificationRecViewAdapter.ViewHolder> {
 
     private Context mContext;
 
+    private String token;
+
     private List<NotificationDTO> notifications;
 
-    public NotificationRecViewAdapter(Context mContext) {
+    public NotificationRecViewAdapter(Context mContext, String token) {
         if (notifications == null)
             notifications = new ArrayList<>();
         this.mContext = mContext;
+        this.token = token;
     }
 
     public void setNotifications(List<NotificationDTO> notifications) {
         this.notifications = notifications;
+        notifyDataSetChanged();
+    }
+
+    public void addNotification(NotificationDTO notification) {
+        this.notifications.add(0, notification);
         notifyDataSetChanged();
     }
 
@@ -61,19 +73,54 @@ public class NotificationRecViewAdapter extends RecyclerView.Adapter<Notificatio
             holder.rejectLayout.setVisibility(View.GONE);
         } else {
             if (!notifications.get(position).isAccept() && !notifications.get(position).isReject()) {
-                System.out.println("btn");
                 holder.acceptLayout.setVisibility(View.GONE);
                 holder.rejectLayout.setVisibility(View.GONE);
             } else if (notifications.get(position).isAccept()) {
-                System.out.println("accept");
                 holder.replyBtnLayout.setVisibility(View.GONE);
                 holder.rejectLayout.setVisibility(View.GONE);
             } else if (notifications.get(position).isReject()) {
-                System.out.println("reject");
                 holder.replyBtnLayout.setVisibility(View.GONE);
                 holder.acceptLayout.setVisibility(View.GONE);
             }
         }
+        holder.btnAccept.setOnClickListener(v -> NotificationServiceImpl.getInstance().getService(token)
+                .acceptInvitation(notifications.get(position).getId())
+                .enqueue(new Callback<NotificationDTO>() {
+                    @Override
+                    public void onResponse(Call<NotificationDTO> call, Response<NotificationDTO> response) {
+                        if (response.isSuccessful() && response.code() == 200) {
+                            int index = IntStream.range(0, notifications.size())
+                                    .filter(i -> notifications.get(i).getId() == response.body().getId())
+                                    .findFirst().orElse(-1);
+                            notifications.set(index, response.body());
+                            notifyItemChanged(index);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<NotificationDTO> call, Throwable t) {
+                        Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }));
+        holder.btnReject.setOnClickListener(v -> NotificationServiceImpl.getInstance().getService(token)
+                .rejectInvitation(notifications.get(position).getId())
+                .enqueue(new Callback<NotificationDTO>() {
+                    @Override
+                    public void onResponse(Call<NotificationDTO> call, Response<NotificationDTO> response) {
+                        if (response.isSuccessful() && response.code() == 200) {
+                            int index = IntStream.range(0, notifications.size())
+                                    .filter(i -> notifications.get(i).getId() == response.body().getId())
+                                    .findFirst().orElse(-1);
+                            notifications.set(index, response.body());
+                            notifyItemChanged(index);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<NotificationDTO> call, Throwable t) {
+                        Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }));
     }
 
     @Override

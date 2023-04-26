@@ -1,7 +1,15 @@
 package com.example.workmanagement.activities;
 
+import android.Manifest;
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,12 +18,13 @@ import android.view.SubMenu;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -33,27 +42,24 @@ import com.example.workmanagement.fragments.ChatFragment;
 import com.example.workmanagement.fragments.HomeFragment;
 import com.example.workmanagement.fragments.SettingFragment;
 import com.example.workmanagement.utils.SystemConstant;
-import com.example.workmanagement.utils.dto.BoardDTO;
-import com.example.workmanagement.utils.dto.BoardInfo;
+import com.example.workmanagement.utils.dto.MessageDTO;
 import com.example.workmanagement.utils.dto.NotificationDTO;
 import com.example.workmanagement.utils.dto.SearchUserResponse;
 import com.example.workmanagement.utils.dto.UserDTO;
 import com.example.workmanagement.utils.services.impl.AuthServiceImpl;
-import com.example.workmanagement.utils.services.impl.BoardServiceImpl;
-import com.example.workmanagement.utils.services.impl.NotificationServiceImpl;
 import com.example.workmanagement.utils.services.impl.UserServiceImpl;
 import com.example.workmanagement.viewmodels.BoardViewModel;
-import com.example.workmanagement.viewmodels.NotificationViewModel;
 import com.example.workmanagement.viewmodels.UserViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.Scope;
+import com.squareup.moshi.Moshi;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -84,6 +90,7 @@ public class HomeActivity extends AppCompatActivity {
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
+                .requestScopes(new Scope("https://www.googleapis.com/auth/userinfo.profile"))
                 .build();
 
         gsc = GoogleSignIn.getClient(this, gso);
@@ -127,11 +134,15 @@ public class HomeActivity extends AppCompatActivity {
                             }
                         });
 
-                        userViewModel.getPhotoUrl().observe(HomeActivity.this, photoUrl -> Glide.with(HomeActivity.this)
-                                .asBitmap()
-                                .load(photoUrl)
-                                .into(binding.imgAvatar)
-                        );
+                        userViewModel.getPhotoUrl().observe(HomeActivity.this, photoUrl -> {
+                            if (!photoUrl.equals("null"))
+                                Glide.with(HomeActivity.this)
+                                        .asBitmap()
+                                        .load(photoUrl)
+                                        .into(binding.imgAvatar);
+                            else
+                                binding.imgAvatar.setImageResource(R.mipmap.ic_launcher);
+                        });
                         userViewModel.getToken().observe(HomeActivity.this, token -> initSocketConnection(token));
                     }
                 }
@@ -148,7 +159,7 @@ public class HomeActivity extends AppCompatActivity {
         binding.imgSideBar.setOnClickListener(v -> binding.drawableLayout.openDrawer(GravityCompat.START));
 
         binding.imgAvatar.setOnClickListener(v ->
-            startActivity(new Intent(HomeActivity.this, UserInforActivity.class))
+                startActivity(new Intent(this, UserInforActivity.class))
         );
 
         binding.navigationView.setNavigationItemSelectedListener(item -> {
@@ -203,17 +214,57 @@ public class HomeActivity extends AppCompatActivity {
         binding.imgNotifications.setOnClickListener(v -> {
             Intent intent = new Intent(this, NotificationActivity.class);
             intent.putExtra("TOKEN", userViewModel.getToken().getValue());
+            intent.putExtra("ID", userViewModel.getId().getValue());
             startActivity(intent);
         });
     }
 
     private void initSocketConnection(String token) {
-        stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, SystemConstant.BASE_URL + "ws/websocket");
-        stompClient.connect();
-        stompClient.topic("/notification/" + userViewModel.getId().getValue())
-                .subscribe(message ->
-                        runOnUiThread(() -> Toast.makeText(this, message.getPayload(), Toast.LENGTH_SHORT).show())
-                );
+        if (stompClient == null || !stompClient.isConnected()) {
+            stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, SystemConstant.BASE_URL + "ws/websocket");
+            stompClient.connect();
+            stompClient.topic("/notification/" + userViewModel.getId().getValue())
+                    .subscribe(message -> {
+                        Moshi moshi = new Moshi.Builder().build();
+                        createNotification(moshi.adapter(NotificationDTO.class).fromJson(message.getPayload()));
+                    });
+        }
+    }
+
+    private void createNotification(NotificationDTO notification) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("MY_NOTIFICATION",
+                    "My Notification", NotificationManager.IMPORTANCE_HIGH);
+            channel.enableVibration(true);
+            channel.setVibrationPattern(new long[]{100, 1000, 200, 340});
+            channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        Intent notificationIntent = new Intent(this, BlankActivity.class);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "MY_NOTIFICATION")
+                .setSmallIcon(R.mipmap.ic_logo)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_logo3x))
+                .setStyle(new NotificationCompat.BigPictureStyle())
+                .setContentTitle("Notification")
+                .setContentText(notification.getMessage())
+                .setFullScreenIntent(null, true)
+                .setVibrate(new long[]{100, 1000, 200, 340})
+                .setAutoCancel(false)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setTicker("Notification");
+        builder.setContentIntent(contentIntent);
+
+        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(getApplicationContext());
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        managerCompat.notify(new Random().nextInt(), builder.build());
     }
 
     private void showCreateBoardDialog() {

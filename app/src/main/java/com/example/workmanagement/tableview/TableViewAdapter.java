@@ -24,14 +24,20 @@
 
 package com.example.workmanagement.tableview;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LifecycleOwner;
 
+import com.bumptech.glide.Glide;
 import com.evrencoskun.tableview.adapter.AbstractTableAdapter;
 import com.evrencoskun.tableview.adapter.recyclerview.holder.AbstractViewHolder;
 import com.evrencoskun.tableview.sort.SortState;
@@ -45,6 +51,11 @@ import com.example.workmanagement.tableview.holder.RowHeaderViewHolder;
 import com.example.workmanagement.tableview.model.Cell;
 import com.example.workmanagement.tableview.model.ColumnHeader;
 import com.example.workmanagement.tableview.model.RowHeader;
+import com.example.workmanagement.viewmodels.UserViewModel;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Created by evrencoskun on 11/06/2017.
@@ -56,17 +67,30 @@ public class TableViewAdapter extends AbstractTableAdapter<ColumnHeader, RowHead
 
     // Cell View Types by Column Position
     private static final int PERSON_CELL_TYPE = 1;
-    private static final int GENDER_CELL_TYPE = 2;
+    private static final int GENDER_CELL_TYPE = 3;
+    private static final int DEADLINE_CELL_TYPE = 2;
     // add new one if it necessary..
 
     private static final String LOG_TAG = TableViewAdapter.class.getSimpleName();
 
     @NonNull
     private final TableViewModel mTableViewModel;
-
+    private Context mContext;
+    private LifecycleOwner lifecycleOwner;
     public TableViewAdapter(@NonNull TableViewModel tableViewModel) {
         super();
         this.mTableViewModel = tableViewModel;
+    }
+
+    public TableViewAdapter(@NonNull TableViewModel mTableViewModel, Context mContext) {
+        this.mTableViewModel = mTableViewModel;
+        this.mContext = mContext;
+    }
+
+    public TableViewAdapter(@NonNull TableViewModel mTableViewModel, Context mContext, LifecycleOwner lifecycleOwner) {
+        this.mTableViewModel = mTableViewModel;
+        this.mContext = mContext;
+        this.lifecycleOwner = lifecycleOwner;
     }
 
     /**
@@ -91,7 +115,7 @@ public class TableViewAdapter extends AbstractTableAdapter<ColumnHeader, RowHead
                 // Get image cell layout which has ImageView on the base instead of TextView.
                 layout = inflater.inflate(R.layout.table_view_image_cell_layout, parent, false);
 
-                return new PersonCellViewHolder(layout);
+                return new PersonCellViewHolder(layout, parent.getContext());
             case GENDER_CELL_TYPE:
                 // Get image cell layout which has ImageView instead of TextView.
                 layout = inflater.inflate(R.layout.table_view_image_cell_layout, parent, false);
@@ -128,16 +152,32 @@ public class TableViewAdapter extends AbstractTableAdapter<ColumnHeader, RowHead
             case PERSON_CELL_TYPE:
                 PersonCellViewHolder personViewHolder = (PersonCellViewHolder) holder;
 
-                personViewHolder.cell_image.setImageResource(mTableViewModel.getDrawable((int) cellItemModel
-                        .getData(), false));
+//                personViewHolder.cell_image.setImageResource(mTableViewModel.getDrawable((int) cellItemModel
+//                        .getData(), false));
                 personViewHolder.cell_container.setBackgroundResource(R.color.primary_4);
-                personViewHolder.cell_name.setText("Hello");
-                break;
-            case GENDER_CELL_TYPE:
-                GenderCellViewHolder genderViewHolder = (GenderCellViewHolder) holder;
+                personViewHolder.cell_name.setText(cellItemModel.getText());
 
-                genderViewHolder.cell_image.setImageResource(mTableViewModel.getDrawable((int)
-                        cellItemModel.getData(), true));
+//                userViewModel.getPhotoUrl().observe(lifecycleOwner, photoUrl -> Glide.with(mContext)
+//                .asBitmap()
+//                .load(photoUrl)
+//                .into(personViewHolder.cell_image));
+//                Toast.makeText(mContext, String.valueOf(cellItemModel.getData()), Toast.LENGTH_SHORT).show();
+                if (String.valueOf(cellItemModel.getData()).equals("default")) {
+                    personViewHolder.cell_image.setImageResource(R.drawable.ic_launcher_foreground);
+                } else {
+                    Glide.with(mContext)
+                            .asBitmap()
+                            .load(String.valueOf(cellItemModel.getData()))
+                            .into(personViewHolder.cell_image);
+                }
+                break;
+            case DEADLINE_CELL_TYPE:
+//                GenderCellViewHolder genderViewHolder = (GenderCellViewHolder) holder;
+//
+//                genderViewHolder.cell_image.setImageResource(mTableViewModel.getDrawable((int)
+//                        cellItemModel.getData(), true));
+                CellViewHolder viewHolder1 = (CellViewHolder) holder;
+                viewHolder1.setCellDeadline(cellItemModel);
                 break;
             default:
                 // Get the holder to update cell item text

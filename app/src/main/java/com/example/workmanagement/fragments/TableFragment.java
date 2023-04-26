@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.evrencoskun.tableview.TableView;
 import com.example.workmanagement.R;
@@ -29,6 +30,7 @@ import com.example.workmanagement.tableview.model.Cell;
 import com.example.workmanagement.tableview.model.ColumnHeader;
 import com.example.workmanagement.tableview.model.RowHeader;
 import com.example.workmanagement.viewmodels.BoardViewModel;
+import com.example.workmanagement.viewmodels.UserViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,9 +40,11 @@ public class TableFragment extends Fragment {
     private FragmentTableBinding binding;
 
     private BoardViewModel boardViewModel;
+
     private RecyclerView tableRecView;
     private RelativeLayout clockLayout;
     private ArrayList<String> temp = new ArrayList<>();
+    private UserViewModel userViewModel;
     public TableFragment() {
         // Required empty public constructor
     }
@@ -79,12 +83,14 @@ public class TableFragment extends Fragment {
 //        mTableView.setTableViewListener(new TableViewListener(mTableView));
 //        tableViewAdapter.setAllItems(tableViewModel.getColumnHeaderList(), tableViewModel
 //                .getRowHeaderList(), tableViewModel.getCellList());
+        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 tableRecView = view.findViewById(R.id.table_rec_view);
-                TableRecViewAdapter adapter = new TableRecViewAdapter(getActivity());
+                TableRecViewAdapter adapter = new TableRecViewAdapter(getActivity(), userViewModel);
                 tableRecView.setAdapter(adapter);
                 tableRecView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 temp.add("1");
@@ -92,7 +98,6 @@ public class TableFragment extends Fragment {
                 adapter.setTables(temp);
                 clockLayout = view.findViewById(R.id.clock_container);
                 clockLayout.setVisibility(View.GONE);
-
             }
         }, 500);
         boardViewModel = new ViewModelProvider(requireActivity()).get(BoardViewModel.class);
