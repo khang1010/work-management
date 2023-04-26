@@ -13,6 +13,12 @@ public class MessageDTO {
     @Json(name = "message")
     private String message;
 
+    public MessageDTO(String email, String photoUrl, String message) {
+        this.email = email;
+        this.photoUrl = photoUrl;
+        this.message = message;
+    }
+
     public String getEmail() {
         return email;
     }

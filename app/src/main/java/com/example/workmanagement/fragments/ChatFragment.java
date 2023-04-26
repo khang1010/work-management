@@ -3,12 +3,18 @@ package com.example.workmanagement.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.workmanagement.R;
+import com.example.workmanagement.adapter.BoardMessageRecViewAdapter;
+import com.example.workmanagement.utils.dto.MessageDTO;
+
+import java.util.ArrayList;
 
 public class ChatFragment extends Fragment {
 
@@ -16,14 +22,39 @@ public class ChatFragment extends Fragment {
         // Required empty public constructor
     }
 
+    private RecyclerView boardMessBoxRecView;
+    private ArrayList<String> messBox = new ArrayList<>();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
+        //boardMessBoxRecView = boardMessBoxRecView.findViewById(R.id.boardMessBoxRecView);
+
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_chat, container, false);
+
+        View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
+        boardMessBoxRecView = rootView.findViewById(R.id.boardMessBoxRecView);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+
+        boardMessBoxRecView.setLayoutManager(layoutManager);
+
+        ArrayList<MessageDTO> messageDTOS = new ArrayList<>();
+        messageDTOS.add(new MessageDTO("Zangbth@gmail.com", "https://scontent.fsgn5-2.fna.fbcdn.net/v/t39.30808-6/341694474_496163519267495_2965195482123986755_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=CVH65JLugRkAX_yXeAC&_nc_ht=scontent.fsgn5-2.fna&oh=00_AfA-t7f-Fu-h-KQQVxQFB8CCkMbsm4bIbXlh_HacakFiTA&oe=644EDA5E", "hiiiiiiiii"));
+
+        BoardMessageRecViewAdapter adapter = new BoardMessageRecViewAdapter();
+        adapter.setMessageDTOS(messageDTOS);
+
+        boardMessBoxRecView.setAdapter(adapter);
+        boardMessBoxRecView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        return rootView;
     }
 }

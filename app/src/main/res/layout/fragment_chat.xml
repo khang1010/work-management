@@ -1,16 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/disable"
     tools:context=".fragments.ChatFragment">
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Chat Screen"
-        android:layout_centerInParent="true"
-        android:textSize="26sp" />
+    <EditText
+        android:id="@+id/editTxtSearchUser"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="43dp"
+        android:background="@drawable/search_user_input_border"
+        android:hint="Search by name or email"
+        android:inputType="textPersonName"
+        android:padding="10dp"
+        android:textColor="@color/disable"
+        android:textColorHint="@color/disable"
+        android:textSize="15dp"
+        app:layout_constraintTop_toTopOf="parent" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="16dp"
+            android:id="@+id/boardMessBoxRecView"
+            android:layout_marginTop="16dp"
+            android:layout_below="@id/editTxtSearchUser"
+            android:layout_height="wrap_content"></androidx.recyclerview.widget.RecyclerView>
 
 </RelativeLayout>
+
+
+<!--        tools:ignore="MissingConstraints"-->
+<!--        ></androidx.recyclerview.widget.RecyclerView>-->
+
+
+    </ScrollView>
+
+
