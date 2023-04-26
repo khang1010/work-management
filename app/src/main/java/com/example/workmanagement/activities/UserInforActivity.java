@@ -43,71 +43,46 @@ public class UserInforActivity extends AppCompatActivity {
         imgEditWork=findViewById(R.id.img_edit_work);
         txtNothing = findViewById(R.id.txt_nothing);
 
-        txtNothing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(UserInforActivity.this, "Please enter board !!!", Toast.LENGTH_SHORT).show();
+        txtNothing.setOnClickListener(v ->
+                Toast.makeText(UserInforActivity.this, "Please enter board !!!", Toast.LENGTH_SHORT).show()
+        );
+        imgEditBio.setOnClickListener(v -> {
+            if(bio.isEnabled())
+            {
+                bio.setEnabled(false);
             }
-        });
-        imgEditBio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(bio.isEnabled())
-                {
-                    bio.setEnabled(false);
-                }
-                else
-                {
-                    bio.setEnabled(true);
-                }
-            }
-        });
-        imgEditPhone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(phone.isEnabled())
-                {
-                    phone.setEnabled(false);
-                }
-                else
-                {
-                    phone.setEnabled(true);
-                }
-            }
-        });
-        imgEditWork.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(work.isEnabled())
-                {
-                    work.setEnabled(false);
-                }
-                else
-                {
-                    work.setEnabled(true);
-                }
+            else
+            {
+                bio.setEnabled(true);
             }
         });
 
-
-
-
-
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
+        imgEditPhone.setOnClickListener(v -> {
+            if(phone.isEnabled())
+            {
+                phone.setEnabled(false);
+            }
+            else
+            {
+                phone.setEnabled(true);
+            }
+        });
+        imgEditWork.setOnClickListener(v -> {
+            if(work.isEnabled())
+            {
+                work.setEnabled(false);
+            }
+            else
+            {
+                work.setEnabled(true);
             }
         });
 
-        avatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btnBack.setOnClickListener(v -> onBackPressed());
 
-            }
+        avatar.setOnClickListener(v -> {
+
         });
-
-
 
     }
 }

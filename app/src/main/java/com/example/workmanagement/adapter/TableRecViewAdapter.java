@@ -233,6 +233,7 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
                     accept.setVisibility(View.GONE);
                 }
             });
+
         }
     }
 }
