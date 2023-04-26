@@ -32,6 +32,7 @@ import com.example.workmanagement.R;
 import com.example.workmanagement.tableview.model.Cell;
 import com.example.workmanagement.tableview.model.ColumnHeader;
 import com.example.workmanagement.tableview.model.RowHeader;
+import com.example.workmanagement.viewmodels.UserViewModel;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -61,6 +62,10 @@ public class TableViewModel {
     // Constant size for dummy data sets
     private static final int COLUMN_SIZE = 3;
     private static final int ROW_SIZE = 5;
+    private int row = 0;
+    public void setRow(int row) {
+        this.row = row;
+    }
 
     // Drawables
     @DrawableRes
@@ -71,6 +76,7 @@ public class TableViewModel {
     private final int mHappyDrawable;
     @DrawableRes
     private final int mSadDrawable;
+    private UserViewModel userViewModel;
 
     public TableViewModel() {
         // initialize drawables
@@ -83,7 +89,7 @@ public class TableViewModel {
     @NonNull
     private List<RowHeader> getSimpleRowHeaderList() {
         List<RowHeader> list = new ArrayList<>();
-        for (int i = 0; i < ROW_SIZE; i++) {
+        for (int i = 0; i < row; i++) {
             RowHeader header = new RowHeader(String.valueOf(i),String.valueOf(i));
             list.add(header);
         }

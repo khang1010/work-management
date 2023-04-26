@@ -44,6 +44,7 @@ public class TableFragment extends Fragment {
     private RecyclerView tableRecView;
     private RelativeLayout clockLayout;
     private ArrayList<String> temp = new ArrayList<>();
+    private UserViewModel userViewModel;
     public TableFragment() {
         // Required empty public constructor
     }
@@ -82,13 +83,14 @@ public class TableFragment extends Fragment {
 //        mTableView.setTableViewListener(new TableViewListener(mTableView));
 //        tableViewAdapter.setAllItems(tableViewModel.getColumnHeaderList(), tableViewModel
 //                .getRowHeaderList(), tableViewModel.getCellList());
+        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
 
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 tableRecView = view.findViewById(R.id.table_rec_view);
-                TableRecViewAdapter adapter = new TableRecViewAdapter(getActivity());
+                TableRecViewAdapter adapter = new TableRecViewAdapter(getActivity(), userViewModel);
                 tableRecView.setAdapter(adapter);
                 tableRecView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 temp.add("1");
