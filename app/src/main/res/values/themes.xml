@@ -19,4 +19,13 @@
         <item name="colorOnPrimary">@color/border_table</item>
         <item name="android:textColor">@color/border_table</item>
     </style>
+
+    <style name="Theme.WorkManagement.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.WorkManagement.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.WorkManagement.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
