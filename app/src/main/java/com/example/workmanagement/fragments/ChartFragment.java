@@ -1,5 +1,6 @@
 package com.example.workmanagement.fragments;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,8 @@ import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.Toast;
 
 
@@ -30,6 +33,7 @@ import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import com.example.workmanagement.R;
 import com.github.mikephil.charting.charts.BarChart;
@@ -66,6 +70,8 @@ public class ChartFragment extends Fragment {
     private LocalDate localDate;
 
     private int dayOfWeek;
+
+    private DatePickerDialog datePickerDialog;
 
     public ChartFragment() {
         // Required empty public constructor
@@ -147,11 +153,20 @@ public class ChartFragment extends Fragment {
 
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentChartBinding.inflate(inflater);
         view = binding.getRoot();
+
+
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DATE);
+
+
 
         localDate = LocalDate.now();
         dayOfWeek = localDate.getDayOfWeek().getValue();
@@ -173,8 +188,7 @@ public class ChartFragment extends Fragment {
 
 
         GroupBarChart();
-        //contextmenubutton = view.findViewById(R.id.week_chart_context_menu_button);
-        //registerForContextMenu(contextmenubutton);
+
         selectedChartButton = view.findViewById(R.id.week_chart_select_chart_button);
         selectedChartButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -208,15 +222,131 @@ public class ChartFragment extends Fragment {
                 View dialog_chart = inflater.inflate(R.layout.dialog_chart, null);
                 mBuilder.setView(dialog_chart);
 
-                Button btn_select_date_start = dialog_chart.findViewById(R.id.btn_select_date_start);
-                Button btn_select_date_end = dialog_chart.findViewById(R.id.btn_select_date_end);
-                btn_select_date_start.setText("Start");
-                btn_select_date_end.setText("End");
+                CheckBox checkBox_barchart = dialog_chart.findViewById(R.id.checkbox_barchart);
+                CheckBox checkBox_linechart = dialog_chart.findViewById(R.id.checkbox_linechart);
+                CheckBox checkBox_piechart = dialog_chart.findViewById(R.id.checkbox_piechart);
+
+                checkBox_barchart.setChecked(selectedItems[0]);
+                checkBox_linechart.setChecked(selectedItems[1]);
+                checkBox_piechart.setChecked(selectedItems[2]);
+
+                Button btn_select_date_start_barchart = dialog_chart.findViewById(R.id.btn_select_date_start_barchart);
+                Button btn_select_date_end_barchart = dialog_chart.findViewById(R.id.btn_select_date_end_barchart);
+                Button btn_select_date_start_linechart = dialog_chart.findViewById(R.id.btn_select_date_start_linechart);
+                Button btn_select_date_end_linechart = dialog_chart.findViewById(R.id.btn_select_date_end_linechart);
+                Button btn_select_date_start_piechart = dialog_chart.findViewById(R.id.btn_select_date_start_piechart);
+                Button btn_select_date_end_piechart = dialog_chart.findViewById(R.id.btn_select_date_end_piechart);
+
+
+                btn_select_date_start_barchart.setText(day+"/"+(month+1)+"/"+year);
+                btn_select_date_end_barchart.setText(day+"/"+(month+1)+"/"+year);
+                btn_select_date_start_linechart.setText(day+"/"+(month+1)+"/"+year);
+                btn_select_date_end_linechart.setText(day+"/"+(month+1)+"/"+year);
+                btn_select_date_start_piechart.setText(day+"/"+(month+1)+"/"+year);
+                btn_select_date_end_piechart.setText(day+"/"+(month+1)+"/"+year);
+
+
+                btn_select_date_start_barchart.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Calendar c = Calendar.getInstance();
+                        DatePickerDialog dpd = new DatePickerDialog(getActivity(),AlertDialog.THEME_HOLO_LIGHT, new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                                btn_select_date_start_barchart.setText(day + " " + month + " " + year);
+                            }
+                        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
+                        dpd.show();
+
+                    }
+                });
+                btn_select_date_end_barchart.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Calendar c = Calendar.getInstance();
+                        DatePickerDialog dpd = new DatePickerDialog(getActivity(),AlertDialog.THEME_HOLO_LIGHT, new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                                btn_select_date_end_barchart.setText(day + " " + month + " " + year);
+                            }
+                        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
+                        dpd.show();
+
+                    }
+                });
+                btn_select_date_start_linechart.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Calendar c = Calendar.getInstance();
+                        DatePickerDialog dpd = new DatePickerDialog(getActivity(),AlertDialog.THEME_HOLO_LIGHT, new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                                btn_select_date_start_linechart.setText(day + " " + (month+1) + " " + year);
+                            }
+                        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
+                        dpd.show();
+
+                    }
+                });
+                btn_select_date_end_linechart.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Calendar c = Calendar.getInstance();
+                        DatePickerDialog dpd = new DatePickerDialog(getActivity(),AlertDialog.THEME_HOLO_LIGHT, new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                                btn_select_date_end_linechart.setText(day + " " + month + " " + year);
+                            }
+                        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
+                        dpd.show();
+
+                    }
+                });
+                btn_select_date_start_piechart.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Calendar c = Calendar.getInstance();
+                        DatePickerDialog dpd = new DatePickerDialog(getActivity(),AlertDialog.THEME_HOLO_LIGHT, new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                                btn_select_date_start_piechart.setText(day + " " + month + " " + year);
+                            }
+                        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
+                        dpd.show();
+
+                    }
+                });
+                btn_select_date_end_piechart.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Calendar c = Calendar.getInstance();
+                        DatePickerDialog dpd = new DatePickerDialog(getActivity(),AlertDialog.THEME_HOLO_LIGHT, new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                                btn_select_date_end_piechart.setText(day + " " + month + " " + year);
+                            }
+                        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
+                        dpd.show();
+
+                    }
+                });
 
                 mBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(getActivity(), "Ok", Toast.LENGTH_SHORT).show();
+                        selectedItems[0] = checkBox_barchart.isChecked();
+                        selectedItems[1] = checkBox_linechart.isChecked();
+                        selectedItems[2] = checkBox_piechart.isChecked();
+
+                        for (int j = 0; j < 3; j++){
+                            if(selectedItems[j] == true){
+                                bcv[j].setVisibility(View.VISIBLE);
+
+                            }
+                            else if(selectedItems[j]==false){
+                                bcv[j].setVisibility(View.GONE);
+                            }
+                        }
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override

@@ -77,12 +77,7 @@ public class WeekChartFragment extends Fragment {
 
     }
 
-    @Override
-    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        getActivity().getMenuInflater().inflate(R.menu.chart_context_menu, menu);
 
-    }
 
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
