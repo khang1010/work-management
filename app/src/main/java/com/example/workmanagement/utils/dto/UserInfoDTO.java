@@ -10,6 +10,9 @@ public class UserInfoDTO {
     @Json(name = "email")
     private String email;
 
+    @Json(name = "displayName")
+    private String displayName;
+
     @Json(name = "photoUrl")
     private String photoUrl;
 
@@ -31,6 +34,14 @@ public class UserInfoDTO {
 
     public String getPhotoUrl() {
         return photoUrl;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public void setPhotoUrl(String photoUrl) {
