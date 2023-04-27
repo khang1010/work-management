@@ -77,7 +77,7 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
         tables.get(position).getTasks().forEach(t -> {
             List<Cell> list = new ArrayList<>();
             list.add(new Cell("1", t.getTextAttributes().get(0).getValue()));
-            list.add(new Cell("2", t.getUser().getPhotoUrl().equals("null") ? "default" : t.getUser().getPhotoUrl(), t.getUser().getEmail()));
+            list.add(new Cell("2", t.getUser().getPhotoUrl().equals("null") ? "default" : t.getUser().getPhotoUrl(), t.getUser().getDisplayName()));
             Date date = null;
             try {
                 date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(t.getDateAttributes().get(0).getValue());
