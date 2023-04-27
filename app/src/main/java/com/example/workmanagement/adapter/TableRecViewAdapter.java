@@ -139,7 +139,7 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
         btnCreateTask.setOnClickListener(view -> {
             if (!txtTaskName.getText().toString().equals("") && adapter.isChosen()) {
                 Cell cell1 = new Cell("1", txtTaskName);
-                Cell cell2 = new Cell("2", adapter.getUser().getPhotoUrl(), adapter.getUser().getEmail());
+                Cell cell2 = new Cell("2", adapter.getUser().getPhotoUrl(), adapter.getUser().getDisplayName());
                 SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
                 Date date = new Date();
                 String text = String.valueOf(dateFormat.format(date));
