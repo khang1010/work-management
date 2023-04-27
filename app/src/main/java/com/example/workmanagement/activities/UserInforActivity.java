@@ -12,8 +12,10 @@ import androidx.appcompat.widget.Toolbar;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.workmanagement.R;
+import com.example.workmanagement.viewmodels.UserViewModel;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -28,9 +30,12 @@ public class UserInforActivity extends AppCompatActivity {
     private ImageView imgEditWork;
     private TextView txtNothing;
 
+    private UserViewModel userViewModel;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         setContentView(R.layout.activity_user_infor);
         btnBack = findViewById(R.id.btn_back);
