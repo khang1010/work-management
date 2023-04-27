@@ -41,6 +41,8 @@ import com.example.workmanagement.tableview.model.Cell;
 import com.example.workmanagement.tableview.model.ColumnHeader;
 import com.example.workmanagement.tableview.model.RowHeader;
 import com.example.workmanagement.utils.dto.SearchUserResponse;
+import com.example.workmanagement.utils.dto.TableDetailsDTO;
+import com.example.workmanagement.utils.dto.UserInfoDTO;
 import com.example.workmanagement.utils.services.impl.UserServiceImpl;
 import com.example.workmanagement.viewmodels.BoardViewModel;
 import com.example.workmanagement.viewmodels.UserViewModel;
@@ -140,6 +142,18 @@ public class TableFragment extends Fragment {
         RecyclerView userRecView = dialog.findViewById(R.id.searchUserRecView);
         userRecView.setLayoutManager(new LinearLayoutManager(getActivity()));
         userRecView.setAdapter(adapter);
+
+        btnCreateTable.setOnClickListener(view -> {
+            if (!txtTableName.getText().toString().equals("")) {
+                List<TableDetailsDTO> tableDetailsDTOS = boardViewModel.getTables().getValue();
+                TableDetailsDTO newTable = new TableDetailsDTO();
+                newTable.setId(tableDetailsDTOS.get(tableDetailsDTOS.size() - 1).getId() + 1);
+                newTable.setName(txtTableName.getText().toString());
+                newTable.setTasks(new ArrayList<>());
+                newTable.setMembers(invitedAdapter.getUsers());
+                UserInfoDTO nowUser = new UserInfoDTO();
+            }
+        });
 
         txtSearchUser.addTextChangedListener(new TextWatcher() {
             @Override
