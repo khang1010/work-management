@@ -30,6 +30,7 @@ import com.example.workmanagement.tableview.TableViewModel;
 import com.example.workmanagement.tableview.model.Cell;
 import com.example.workmanagement.utils.dto.SearchUserResponse;
 import com.example.workmanagement.utils.dto.TableDetailsDTO;
+import com.example.workmanagement.utils.dto.UserInfoDTO;
 import com.example.workmanagement.utils.services.impl.UserServiceImpl;
 import com.example.workmanagement.viewmodels.UserViewModel;
 
@@ -38,6 +39,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -73,14 +75,13 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
         TableViewModel tableViewModel = new TableViewModel();
 
         List<List<Cell>> listCells = new ArrayList<>();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
         tables.get(position).getTasks().forEach(t -> {
             List<Cell> list = new ArrayList<>();
-            list.add(new Cell("1", t.getTextAttributes().get(0).getValue()));
+            list.add(new Cell("1", t.getTextAttributes().stream().filter(atr -> atr.getName().equals("name")).findFirst().get().getValue()));
             list.add(new Cell("2", t.getUser().getPhotoUrl().equals("null") ? "default" : t.getUser().getPhotoUrl(), t.getUser().getDisplayName()));
             Date date = null;
             try {
-                date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(t.getDateAttributes().get(0).getValue());
+                date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(t.getDateAttributes().stream().filter(atr -> atr.getName().equals("deadline")).findFirst().get().getValue());
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
@@ -95,7 +96,7 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
         holder.table.setTableViewListener(new TableViewListener(holder.table));
         tableViewAdapter.setAllItems(tableViewModel.getColumnHeaderList(), tableViewModel.getRowHeaderList(), tableViewModel.getCellList());
         tableViewAdapter.setCellItems(listCells);
-        holder.addTask.setOnClickListener(view -> showCreateTaskDialog(tableViewAdapter, listCells));
+        holder.addTask.setOnClickListener(view -> showCreateTaskDialog(position, tableViewAdapter, listCells));
 
         holder.tableName.setOnClickListener(view -> {
             holder.editTable.setVisibility(View.VISIBLE);
@@ -119,7 +120,7 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
         return tables.size();
     }
 
-    private void showCreateTaskDialog(TableViewAdapter TableAdapter, List<List<Cell>> listCells) {
+    private void showCreateTaskDialog(int pos, TableViewAdapter TableAdapter, List<List<Cell>> listCells) {
 
         Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -138,23 +139,22 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
 
         btnCreateTask.setOnClickListener(view -> {
             if (!txtTaskName.getText().toString().equals("") && adapter.isChosen()) {
-                Cell cell1 = new Cell("1", txtTaskName);
-                Cell cell2 = new Cell("2", adapter.getUser().getPhotoUrl(), adapter.getUser().getDisplayName());
-                SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
-                Date date = new Date();
-                String text = String.valueOf(dateFormat.format(date));
-                Cell cell3 = new Cell("3", text);
-                List<Cell> list = new ArrayList<>();
-                list.add(cell1);
-                list.add(cell2);
-                list.add(cell3);
-                listCells.add(list);
-                TableAdapter.setCellItems(listCells);
-                TableAdapter.notifyDataSetChanged();
+//                Cell cell1 = new Cell("1", txtTaskName);
+//                Cell cell2 = new Cell("2", adapter.getUser().getPhotoUrl(), adapter.getUser().getDisplayName());
+//                SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
+//                Date date = new Date();
+//                String text = String.valueOf(dateFormat.format(date));
+//                Cell cell3 = new Cell("3", text);
+//                List<Cell> list = new ArrayList<>();
+//                list.add(cell1);
+//                list.add(cell2);
+//                list.add(cell3);
+//                listCells.add(list);
+//                TableAdapter.setCellItems(listCells);
+//                TableAdapter.notifyDataSetChanged();
                 dialog.dismiss();
-            } else {
+            } else
                 Toast.makeText(context, "Please fill full information", Toast.LENGTH_SHORT).show();
-            }
 
         });
 
@@ -166,19 +166,15 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!charSequence.toString().isEmpty())
-                    UserServiceImpl.getInstance().getService(userViewModel.getToken().getValue()).searchUser(1, charSequence.toString()).enqueue(new Callback<SearchUserResponse>() {
-                        @Override
-                        public void onResponse(Call<SearchUserResponse> call, Response<SearchUserResponse> response) {
-                            if (response.isSuccessful() && response.code() == 200)
-                                adapter.setUsers(response.body().getUsers());
-                        }
-
-                        @Override
-                        public void onFailure(Call<SearchUserResponse> call, Throwable t) {
-                            Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                if (!charSequence.toString().isEmpty()) {
+                    List<UserInfoDTO> users = new ArrayList<>();
+                    users.addAll(tables.get(pos).getMembers());
+                    users.add(tables.get(pos).getCreatedBy());
+                    adapter.setUsers(users.stream()
+                            .filter(m -> m.getDisplayName().trim().toLowerCase().contains(charSequence.toString().trim())
+                                    || m.getEmail().trim().toLowerCase().contains(charSequence.toString().trim()))
+                            .collect(Collectors.toList()));
+                }
                 else adapter.setUsers(new ArrayList<>());
             }
 

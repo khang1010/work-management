@@ -10,7 +10,7 @@ public class TableDetailsDTO {
     private long id;
 
     @Json(name = "createdBy")
-    private String createdBy;
+    private UserInfoDTO createdBy;
 
     @Json(name = "name")
     private String name;
@@ -29,11 +29,11 @@ public class TableDetailsDTO {
         this.id = id;
     }
 
-    public String getCreatedBy() {
+    public UserInfoDTO getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(String createdBy) {
+    public void setCreatedBy(UserInfoDTO createdBy) {
         this.createdBy = createdBy;
     }
 
