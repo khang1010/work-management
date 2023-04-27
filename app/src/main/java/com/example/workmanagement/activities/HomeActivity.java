@@ -59,6 +59,7 @@ import com.squareup.moshi.Moshi;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import retrofit2.Call;
@@ -236,7 +237,49 @@ public class HomeActivity extends AppCompatActivity {
                         createNotification(moshi.adapter(NotificationDTO.class).fromJson(message.getPayload()));
                         runOnUiThread(() -> binding.notificationPoint.setVisibility(View.VISIBLE));
                     });
+            userViewModel.getBoards().getValue().forEach(b ->
+                    stompClient.topic("/chatroom/" + b.getId())
+                            .subscribe(message ->
+                                createNotification(new Moshi.Builder().build().adapter(MessageDTO.class).fromJson(message.getPayload()))
+                            )
+            );
         }
+    }
+
+    private void createNotification(MessageDTO message) throws ExecutionException, InterruptedException {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("MY_NOTIFICATION",
+                    "My Notification", NotificationManager.IMPORTANCE_HIGH);
+            channel.enableVibration(true);
+            channel.setVibrationPattern(new long[]{100, 1000, 200, 340});
+            channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        Intent notificationIntent = new Intent(this, BlankActivity.class);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "MY_NOTIFICATION")
+                .setSmallIcon(R.mipmap.ic_logo)
+                .setLargeIcon(Glide.with(HomeActivity.this).asBitmap().load(message.getPhotoUrl()).submit().get())
+                .setStyle(new NotificationCompat.BigPictureStyle())
+                .setContentTitle(message.getBoardName())
+                .setContentText(message.getDisplayName() + ": " + message.getMessage())
+                .setFullScreenIntent(null, true)
+                .setVibrate(new long[]{100, 1000, 200, 340})
+                .setAutoCancel(false)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setTicker("Notification");
+        builder.setContentIntent(contentIntent);
+
+        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(getApplicationContext());
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        managerCompat.notify(new Random().nextInt(), builder.build());
     }
 
     private void createNotification(NotificationDTO notification) {
