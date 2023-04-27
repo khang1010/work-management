@@ -35,6 +35,8 @@ public class ChatFragment extends Fragment {
 
 
     }
+    BoardMessageRecViewAdapter adapter = new BoardMessageRecViewAdapter();
+    ArrayList<MessageDTO> messageDTOS = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,15 +48,28 @@ public class ChatFragment extends Fragment {
 
         boardMessBoxRecView.setLayoutManager(layoutManager);
 
-        ArrayList<MessageDTO> messageDTOS = new ArrayList<>();
+        //ArrayList<MessageDTO> messageDTOS = new ArrayList<>();
         messageDTOS.add(new MessageDTO("Zangbth@gmail.com", "https://scontent.fsgn5-2.fna.fbcdn.net/v/t39.30808-6/341694474_496163519267495_2965195482123986755_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=CVH65JLugRkAX_yXeAC&_nc_ht=scontent.fsgn5-2.fna&oh=00_AfA-t7f-Fu-h-KQQVxQFB8CCkMbsm4bIbXlh_HacakFiTA&oe=644EDA5E", "hiiiiiiiii"));
 
-        BoardMessageRecViewAdapter adapter = new BoardMessageRecViewAdapter();
+        //BoardMessageRecViewAdapter adapter = new BoardMessageRecViewAdapter();
         adapter.setMessageDTOS(messageDTOS);
 
         boardMessBoxRecView.setAdapter(adapter);
         boardMessBoxRecView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+
+
+
         return rootView;
+    }
+
+    protected void loadData() {
+        // Perform network request to get data
+        // ...
+
+        // Update adapter with data and context
+        if (getContext() != null) {
+            adapter.setMessageDTOS(messageDTOS, getContext());
+        }
     }
 }

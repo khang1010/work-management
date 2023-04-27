@@ -4,11 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.workmanagement.R;
 import com.example.workmanagement.utils.dto.MessageDTO;
 
@@ -20,6 +22,10 @@ public class BoardMessageRecViewAdapter extends RecyclerView.Adapter<BoardMessag
     private ArrayList<MessageDTO> messageDTOS = new ArrayList<>();
 
     private Context context;
+    public Context getContext() {
+        return context;
+    }
+
 
     public BoardMessageRecViewAdapter() {
     }
@@ -40,6 +46,11 @@ public class BoardMessageRecViewAdapter extends RecyclerView.Adapter<BoardMessag
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.displayName.setText(messageDTOS.get(position).getEmail());
+        holder.displayMessage.setText(messageDTOS.get(position).getMessage());
+        if (context != null) {
+        Glide.with(context)
+                .load(messageDTOS.get(position).getPhotoUrl())
+                .into(holder.imageAvatar);}
     }
 
     @Override
@@ -49,16 +60,25 @@ public class BoardMessageRecViewAdapter extends RecyclerView.Adapter<BoardMessag
 
     public void setMessageDTOS(ArrayList<MessageDTO> messageDTOS) {
         this.messageDTOS = messageDTOS;
+        this.context = context;
         notifyDataSetChanged();
+    }
+
+    public void setMessageDTOS(ArrayList<MessageDTO> messageDTOS, Context context) {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         private TextView displayName;
+        private TextView displayMessage;
+        private ImageView imageAvatar;
+
 
         public ViewHolder (View itemView) {
             super (itemView);
             displayName = itemView.findViewById(R.id.displayName);
+            displayMessage = itemView.findViewById(R.id.displayMessage);
+            imageAvatar = itemView.findViewById(R.id.imageAvatar);
 
         }
 
