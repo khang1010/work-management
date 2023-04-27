@@ -132,7 +132,6 @@ public class TableFragment extends Fragment {
         dialog.setContentView(R.layout.create_table);
         EditText txtSearchUser = dialog.findViewById(R.id.editTxtSearchUserTable);
         EditText txtTableName = dialog.findViewById(R.id.editTxtCreateTableName);
-        EditText txtTableDescription = dialog.findViewById(R.id.editTxtTableDes);
         ConstraintLayout btnCreateTable = dialog.findViewById(R.id.btnCreateTable);
 
 
@@ -152,12 +151,12 @@ public class TableFragment extends Fragment {
                 TableDTO newTable = new TableDTO();
                 newTable.setName(txtTableName.getText().toString());
                 newTable.setBoardId(boardViewModel.getId().getValue());
-                ArrayList<Long> membersId = new ArrayList<>();
-                membersId.add(userViewModel.getId().getValue());
-                for (UserInfoDTO user: invitedAdapter.getUsers()) {
-                    membersId.add(user.getId());
-                }
-                newTable.setMemberIds(membersId);
+//                ArrayList<Long> membersId = new ArrayList<>();
+//                membersId.add(userViewModel.getId().getValue());
+//                for (UserInfoDTO user: invitedAdapter.getUsers()) {
+//                    membersId.add(user.getId());
+//                }
+                newTable.setMemberIds(invitedAdapter.getUsers().stream().map(u -> u.getId()).collect(Collectors.toList()));
                 TableServiceImpl.getInstance().getService(userViewModel.getToken().getValue()).createTable(newTable)
                         .enqueue(new Callback<TableDetailsDTO>() {
                             @Override

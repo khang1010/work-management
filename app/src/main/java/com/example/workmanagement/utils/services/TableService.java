@@ -13,13 +13,13 @@ import retrofit2.http.Path;
 
 public interface TableService {
 
-    @POST("tasks")
+    @POST("tables")
     Call<TableDetailsDTO> createTable(@Body TableDTO dto);
 
-    @PUT("tasks/{id}")
+    @PUT("tables/{id}")
     Call<TableDetailsDTO> updateTable(@Path("id") long id, @Body TaskDTO dto);
 
-    @DELETE("tasks/{id}")
+    @DELETE("tables/{id}")
     Call<Void> deleteTask(@Path("id") long id);
 
 }
