@@ -29,9 +29,11 @@ import com.example.workmanagement.tableview.TableViewListener;
 import com.example.workmanagement.tableview.TableViewModel;
 import com.example.workmanagement.tableview.model.Cell;
 import com.example.workmanagement.utils.dto.SearchUserResponse;
+import com.example.workmanagement.utils.dto.TableDetailsDTO;
 import com.example.workmanagement.utils.services.impl.UserServiceImpl;
 import com.example.workmanagement.viewmodels.UserViewModel;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,18 +45,21 @@ import retrofit2.Response;
 
 public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapter.ViewHolder> {
 
-    private ArrayList<String> tables = new ArrayList<>();
+    private List<TableDetailsDTO> tables = new ArrayList<>();
     private Context context;
     UserViewModel userViewModel;
     private String photoUrl;
     private String name;
+
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
     }
+
     public void setName(String name) {
         this.name = name;
     }
-    public void setTables(ArrayList<String> tables) {
+
+    public void setTables(List<TableDetailsDTO> tables) {
         this.tables = tables;
     }
 
@@ -76,32 +81,30 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.tableName.setText("Table " + tables.get(position));
+        holder.tableName.setText(tables.get(position).getName());
         holder.editTable.setText(holder.tableName.getText().toString());
 
         TableViewModel tableViewModel = new TableViewModel();
-        Cell cell = new Cell("1", "New task");
-        Object url = "";
-        System.out.println(userViewModel.getPhotoUrl().getValue());
-        if (!userViewModel.getPhotoUrl().getValue().equals("null")) {
-            url = userViewModel.getPhotoUrl().getValue();
-        } else {
-            url = "default";
-        }
-        List<List<Cell>> listCells = new ArrayList<>();
-        Cell cell1 = new Cell("2", url, userViewModel.getDisplayName().getValue());
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
-        Date date = new Date();
-        String text = String.valueOf(dateFormat.format(date));
-        Cell cell2 = new Cell("3", text);
-        List<Cell> list = new ArrayList<>();
-        list.add(cell);
-        list.add(cell1);
-        list.add(cell2);
-        listCells.add(list);
-        tableViewModel.setRow(listCells.size());
-        TableViewAdapter tableViewAdapter = new TableViewAdapter(tableViewModel, context);
 
+        List<List<Cell>> listCells = new ArrayList<>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
+        tables.get(position).getTasks().forEach(t -> {
+            List<Cell> list = new ArrayList<>();
+            list.add(new Cell("1", t.getTextAttributes().get(0).getValue()));
+            list.add(new Cell("2", t.getUser().getPhotoUrl().equals("null") ? "default" : t.getUser().getPhotoUrl(), t.getUser().getEmail()));
+            Date date = null;
+            try {
+                date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(t.getDateAttributes().get(0).getValue());
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+            list.add(new Cell("3", new SimpleDateFormat("HH:mm dd/MM/yyyy").format(date)));
+            listCells.add(list);
+        });
+
+        tableViewModel.setRow(listCells.size());
+
+        TableViewAdapter tableViewAdapter = new TableViewAdapter(tableViewModel, context);
         holder.table.setAdapter(tableViewAdapter);
         holder.table.setTableViewListener(new TableViewListener(holder.table));
         tableViewAdapter.setAllItems(tableViewModel.getColumnHeaderList(), tableViewModel.getRowHeaderList(), tableViewModel.getCellList());

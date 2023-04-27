@@ -34,6 +34,7 @@ import com.example.workmanagement.viewmodels.UserViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TableFragment extends Fragment {
 
@@ -43,11 +44,9 @@ public class TableFragment extends Fragment {
 
     private RecyclerView tableRecView;
     private RelativeLayout clockLayout;
-    private ArrayList<String> temp = new ArrayList<>();
+
     private UserViewModel userViewModel;
-    public TableFragment() {
-        // Required empty public constructor
-    }
+    public TableFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,7 +58,6 @@ public class TableFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentTableBinding.inflate(inflater, container, false);
-        View view = binding.getRoot();
 //        binding.tableTestContainer.setVisibility(View.GONE);
 //        TableView tableView = new TableView(getContext());
 //        TableViewModel tableViewModel =new TableViewModel();
@@ -69,7 +67,7 @@ public class TableFragment extends Fragment {
 //        tableView.setTableViewListener(new TableViewListener(tableView));
 //        adapter.setAllItems(tableViewModel.getColumnHeaderList(), tableViewModel.getRowHeaderList(), tableViewModel.getCellList());
 
-        return view;
+        return binding.getRoot();
     }
 
     @Override
@@ -84,23 +82,17 @@ public class TableFragment extends Fragment {
 //        tableViewAdapter.setAllItems(tableViewModel.getColumnHeaderList(), tableViewModel
 //                .getRowHeaderList(), tableViewModel.getCellList());
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
-
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
+        boardViewModel = new ViewModelProvider(requireActivity()).get(BoardViewModel.class);
+        boardViewModel.getTables().observe(getViewLifecycleOwner(), tables -> {
+            new Handler().postDelayed(() -> {
                 tableRecView = view.findViewById(R.id.table_rec_view);
                 TableRecViewAdapter adapter = new TableRecViewAdapter(getActivity(), userViewModel);
                 tableRecView.setAdapter(adapter);
                 tableRecView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                temp.add("1");
-                temp.add("2");
-                adapter.setTables(temp);
+                adapter.setTables(tables);
                 clockLayout = view.findViewById(R.id.clock_container);
                 clockLayout.setVisibility(View.GONE);
-            }
-        }, 500);
-        boardViewModel = new ViewModelProvider(requireActivity()).get(BoardViewModel.class);
-//        boardViewModel.getId().observe(getViewLifecycleOwner(), id -> binding.tableFragmentText.setText("Board with id: " + id));
+            }, 500);
+        });
     }
 }
