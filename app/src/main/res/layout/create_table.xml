@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="350dp"
+    android:padding="20dp"
+    android:layout_height="wrap_content">
+
+
+    <EditText
+        android:id="@+id/editTxtCreateTableName"
+        android:background="@null"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/primary_4"
+        android:textSize="30dp"
+        android:ems="10"
+        android:textColorHint="@color/primary_4"
+        android:textStyle="bold"
+        android:hint="Table Name"/>
+
+    <EditText
+        android:id="@+id/editTxtTableDes"
+        android:background="@null"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/primary_4"
+        android:textSize="20dp"
+        android:layout_below="@+id/editTxtCreateTableName"
+        android:textColorHint="@color/primary_4"
+        android:hint="Write your table description"/>
+
+    <TextView
+        android:id="@+id/txtInvite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/primary_2"
+        android:layout_below="@id/invitedUserRecView"
+        android:text="Who in this board can see this table?"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/invitedUserRecView"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTxtTableDes"/>
+
+    <EditText
+        android:id="@+id/editTxtSearchUserTable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textSize="13dp"
+        android:layout_centerHorizontal="true"
+        android:padding="10dp"
+        android:layout_below="@id/txtInvite"
+        android:inputType="textPersonName"
+        android:background="@drawable/search_user_input_border"
+        android:textColor="@color/disable"
+        android:textColorHint="@color/disable"
+        android:hint="Search by name or email" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/searchUserRecView"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/editTxtSearchUserTable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/btnCreateTable"
+        android:padding="7dp"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_add_board_border"
+        android:layout_below="@id/searchUserRecView">
+
+        <ImageView
+            android:id="@+id/plusImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/btn_add_board"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/createTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Create"
+            android:textColor="#ffff"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="155dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</RelativeLayout>
