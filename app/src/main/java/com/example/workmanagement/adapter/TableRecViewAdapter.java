@@ -47,24 +47,10 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
 
     private List<TableDetailsDTO> tables = new ArrayList<>();
     private Context context;
-    UserViewModel userViewModel;
-    private String photoUrl;
-    private String name;
-
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    private UserViewModel userViewModel;
 
     public void setTables(List<TableDetailsDTO> tables) {
         this.tables = tables;
-    }
-
-    public TableRecViewAdapter(Context context) {
-        this.context = context;
     }
 
     public TableRecViewAdapter(Context context, UserViewModel userViewModel) {
