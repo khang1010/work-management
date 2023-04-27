@@ -96,6 +96,22 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
         tableViewAdapter.setAllItems(tableViewModel.getColumnHeaderList(), tableViewModel.getRowHeaderList(), tableViewModel.getCellList());
         tableViewAdapter.setCellItems(listCells);
         holder.addTask.setOnClickListener(view -> showCreateTaskDialog(tableViewAdapter, listCells));
+
+        holder.tableName.setOnClickListener(view -> {
+            holder.editTable.setVisibility(View.VISIBLE);
+            holder.accept.setVisibility(View.VISIBLE);
+            holder.tableName.setVisibility(View.GONE);
+        });
+        holder.accept.setOnClickListener(view -> {
+            if (holder.editTable.getText().toString().equals("")) {
+                Toast.makeText(context, "Please fill information", Toast.LENGTH_SHORT).show();
+            } else {
+                holder.tableName.setVisibility(View.VISIBLE);
+                holder.editTable.setVisibility(View.GONE);
+                holder.accept.setVisibility(View.GONE);
+                holder.tableName.setText(holder.editTable.getText().toString());
+            }
+        });
     }
 
     @Override
@@ -206,21 +222,6 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
                 up.setVisibility(View.GONE);
                 table.setVisibility(View.GONE);
                 addTask.setVisibility(View.GONE);
-            });
-            tableName.setOnClickListener(view -> {
-                editTable.setVisibility(View.VISIBLE);
-                accept.setVisibility(View.VISIBLE);
-                tableName.setVisibility(View.GONE);
-            });
-            accept.setOnClickListener(view -> {
-                if (editTable.getText().toString().equals("")) {
-                    Toast.makeText(context, "Please fill information", Toast.LENGTH_SHORT).show();
-                } else {
-                    tableName.setText(editTable.getText().toString());
-                    tableName.setVisibility(View.VISIBLE);
-                    editTable.setVisibility(View.GONE);
-                    accept.setVisibility(View.GONE);
-                }
             });
 
         }
