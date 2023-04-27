@@ -28,10 +28,17 @@ import com.example.workmanagement.tableview.TableViewAdapter;
 import com.example.workmanagement.tableview.TableViewListener;
 import com.example.workmanagement.tableview.TableViewModel;
 import com.example.workmanagement.tableview.model.Cell;
+import com.example.workmanagement.utils.dto.DateAttributeDTO;
 import com.example.workmanagement.utils.dto.SearchUserResponse;
 import com.example.workmanagement.utils.dto.TableDetailsDTO;
+import com.example.workmanagement.utils.dto.TaskDTO;
+import com.example.workmanagement.utils.dto.TaskDetailsDTO;
+import com.example.workmanagement.utils.dto.TextAttributeDTO;
 import com.example.workmanagement.utils.dto.UserInfoDTO;
+import com.example.workmanagement.utils.services.TaskService;
+import com.example.workmanagement.utils.services.impl.TaskServiceImpl;
 import com.example.workmanagement.utils.services.impl.UserServiceImpl;
+import com.example.workmanagement.viewmodels.BoardViewModel;
 import com.example.workmanagement.viewmodels.UserViewModel;
 
 import java.text.ParseException;
@@ -51,13 +58,16 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
     private Context context;
     private UserViewModel userViewModel;
 
+    private BoardViewModel boardViewModel;
+
     public void setTables(List<TableDetailsDTO> tables) {
         this.tables = tables;
     }
 
-    public TableRecViewAdapter(Context context, UserViewModel userViewModel) {
+    public TableRecViewAdapter(Context context, UserViewModel userViewModel, BoardViewModel boardViewModel) {
         this.context = context;
         this.userViewModel = userViewModel;
+        this.boardViewModel = boardViewModel;
     }
 
     @NonNull
@@ -139,20 +149,40 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
 
         btnCreateTask.setOnClickListener(view -> {
             if (!txtTaskName.getText().toString().equals("") && adapter.isChosen()) {
-//                Cell cell1 = new Cell("1", txtTaskName);
-//                Cell cell2 = new Cell("2", adapter.getUser().getPhotoUrl(), adapter.getUser().getDisplayName());
-//                SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
-//                Date date = new Date();
-//                String text = String.valueOf(dateFormat.format(date));
-//                Cell cell3 = new Cell("3", text);
-//                List<Cell> list = new ArrayList<>();
-//                list.add(cell1);
-//                list.add(cell2);
-//                list.add(cell3);
-//                listCells.add(list);
-//                TableAdapter.setCellItems(listCells);
-//                TableAdapter.notifyDataSetChanged();
-                dialog.dismiss();
+                long tableId = tables.get(pos).getId();
+                List<TableDetailsDTO> tableDetailsDTOS = boardViewModel.getTables().getValue();
+                TaskDTO newTask = new TaskDTO();
+                newTask.setUserId(adapter.getUser().getId());
+                newTask.setTableId(tableId);
+                List<TextAttributeDTO> textAttributes = new ArrayList<>();
+                List<DateAttributeDTO> dateAttributes = new ArrayList<>();
+                TextAttributeDTO textAttribute = new TextAttributeDTO();
+                textAttribute.setName("name");
+                textAttribute.setValue(txtTaskName.getText().toString());
+                textAttributes.add(textAttribute);
+                DateAttributeDTO dateAttribute = new DateAttributeDTO();
+                dateAttribute.setName("deadline");
+                dateAttribute.setValue(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()));
+                dateAttributes.add(dateAttribute);
+                newTask.setTextAttributes(textAttributes);
+                newTask.setDateAttributes(dateAttributes);
+                TaskServiceImpl.getInstance().getService(userViewModel.getToken().getValue()).createTask(newTask)
+                        .enqueue(new Callback<TaskDetailsDTO>() {
+                            @Override
+                            public void onResponse(Call<TaskDetailsDTO> call, Response<TaskDetailsDTO> response) {
+                                if (response.isSuccessful() && response.code() == 201) {
+                                    tableDetailsDTOS.stream().filter(t -> t.getId() == tableId)
+                                            .findFirst().get().getTasks().add(response.body());
+                                    boardViewModel.setTables(tableDetailsDTOS);
+                                    dialog.dismiss();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<TaskDetailsDTO> call, Throwable t) {
+                                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
             } else
                 Toast.makeText(context, "Please fill full information", Toast.LENGTH_SHORT).show();
 
