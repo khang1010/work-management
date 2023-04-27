@@ -105,7 +105,7 @@ public class TableFragment extends Fragment {
         boardViewModel.getTables().observe(getViewLifecycleOwner(), tables -> {
             new Handler().postDelayed(() -> {
                 tableRecView = view.findViewById(R.id.table_rec_view);
-                TableRecViewAdapter adapter = new TableRecViewAdapter(getActivity(), userViewModel);
+                TableRecViewAdapter adapter = new TableRecViewAdapter(getActivity(), userViewModel, boardViewModel);
                 tableRecView.setAdapter(adapter);
                 tableRecView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 adapter.setTables(tables);

@@ -87,6 +87,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         binding.logoutBtn.setVisibility(View.GONE);
+        binding.notificationPoint.setVisibility(View.GONE);
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -219,6 +220,12 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        binding.notificationPoint.setVisibility(View.GONE);
+    }
+
     private void initSocketConnection(String token) {
         if (stompClient == null || !stompClient.isConnected()) {
             stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, SystemConstant.BASE_URL + "ws/websocket");
@@ -227,6 +234,7 @@ public class HomeActivity extends AppCompatActivity {
                     .subscribe(message -> {
                         Moshi moshi = new Moshi.Builder().build();
                         createNotification(moshi.adapter(NotificationDTO.class).fromJson(message.getPayload()));
+                        runOnUiThread(() -> binding.notificationPoint.setVisibility(View.VISIBLE));
                     });
         }
     }

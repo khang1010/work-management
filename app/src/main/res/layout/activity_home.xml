@@ -44,13 +44,36 @@
                     android:src="@drawable/search"
                     android:layout_toStartOf="@id/imgNotifications"/>
 
-                <ImageView
-                    android:id="@+id/imgNotifications"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:padding="10dp"
-                    android:src="@drawable/notification"
-                    android:layout_toStartOf="@id/imgAvatar"/>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@id/imgAvatar">
+
+                    <ImageView
+                        android:id="@+id/imgNotifications"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:padding="10dp"
+                        android:src="@drawable/notification"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/notificationPoint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="12dp"
+                        android:background="@drawable/circle_shape"
+                        android:maxWidth="6dp"
+                        android:maxHeight="6dp"
+                        android:minWidth="6dp"
+                        android:minHeight="6dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/imgAvatar"
@@ -63,10 +86,6 @@
                     app:civ_border_color="#FF000000"/>
 
             </LinearLayout>
-
-
-
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
