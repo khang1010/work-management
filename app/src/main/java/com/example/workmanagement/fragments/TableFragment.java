@@ -113,10 +113,10 @@ public class TableFragment extends Fragment {
                 clockLayout.setVisibility(View.GONE);
             }, 500);
         });
-//        btnAddTable = view.findViewById(R.id.addTableBtn);
-//        btnAddTable.setOnClickListener(view1 -> {
-//           showCreateTableDialog();
-//        });
+        btnAddTable = view.findViewById(R.id.addTableBtn);
+        btnAddTable.setOnClickListener(view1 -> {
+           showCreateTableDialog();
+        });
     }
 
     private void showCreateTableDialog() {

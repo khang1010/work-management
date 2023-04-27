@@ -94,6 +94,7 @@
             app:allow_click_inside_cell="true"
             app:allow_click_inside_column_header="true"
             app:allow_click_inside_row_header="true"
+            android:layout_centerVertical="true"
             app:separator_color="@color/border_table" />
         
         <TextView

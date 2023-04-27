@@ -2,16 +2,14 @@
 <RelativeLayout android:id="@+id/cell_container"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:layout_width="300dp"
     android:layout_height="@dimen/cell_height"
-    android:background="@color/white"
-    android:gravity="center">
+    android:background="@color/white">
 
     <RelativeLayout
         android:id="@+id/cell_background"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
         android:background="@color/white">
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -31,6 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/cell_image"
             android:text="Khang"
+            android:maxLines="1"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
             android:layout_centerVertical="true"
