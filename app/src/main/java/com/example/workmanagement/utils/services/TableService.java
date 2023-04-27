@@ -1,5 +1,6 @@
 package com.example.workmanagement.utils.services;
 
+import com.example.workmanagement.utils.dto.TableDTO;
 import com.example.workmanagement.utils.dto.TableDetailsDTO;
 import com.example.workmanagement.utils.dto.TaskDTO;
 
@@ -13,7 +14,7 @@ import retrofit2.http.Path;
 public interface TableService {
 
     @POST("tasks")
-    Call<TableDetailsDTO> createTable(@Body TaskDTO dto);
+    Call<TableDetailsDTO> createTable(@Body TableDTO dto);
 
     @PUT("tasks/{id}")
     Call<TableDetailsDTO> updateTable(@Path("id") long id, @Body TaskDTO dto);

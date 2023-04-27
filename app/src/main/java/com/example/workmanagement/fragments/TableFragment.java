@@ -41,8 +41,11 @@ import com.example.workmanagement.tableview.model.Cell;
 import com.example.workmanagement.tableview.model.ColumnHeader;
 import com.example.workmanagement.tableview.model.RowHeader;
 import com.example.workmanagement.utils.dto.SearchUserResponse;
+import com.example.workmanagement.utils.dto.TableDTO;
 import com.example.workmanagement.utils.dto.TableDetailsDTO;
 import com.example.workmanagement.utils.dto.UserInfoDTO;
+import com.example.workmanagement.utils.services.TableService;
+import com.example.workmanagement.utils.services.impl.TableServiceImpl;
 import com.example.workmanagement.utils.services.impl.UserServiceImpl;
 import com.example.workmanagement.viewmodels.BoardViewModel;
 import com.example.workmanagement.viewmodels.UserViewModel;
@@ -144,14 +147,35 @@ public class TableFragment extends Fragment {
         userRecView.setAdapter(adapter);
 
         btnCreateTable.setOnClickListener(view -> {
-            if (!txtTableName.getText().toString().equals("")) {
+            if (!txtTableName.getText().toString().isEmpty()) {
                 List<TableDetailsDTO> tableDetailsDTOS = boardViewModel.getTables().getValue();
-                TableDetailsDTO newTable = new TableDetailsDTO();
-                newTable.setId(tableDetailsDTOS.get(tableDetailsDTOS.size() - 1).getId() + 1);
+                TableDTO newTable = new TableDTO();
                 newTable.setName(txtTableName.getText().toString());
-                newTable.setTasks(new ArrayList<>());
-                newTable.setMembers(invitedAdapter.getUsers());
-                UserInfoDTO nowUser = new UserInfoDTO();
+                newTable.setBoardId(boardViewModel.getId().getValue());
+                ArrayList<Long> membersId = new ArrayList<>();
+                membersId.add(userViewModel.getId().getValue());
+                for (UserInfoDTO user: invitedAdapter.getUsers()) {
+                    membersId.add(user.getId());
+                }
+                newTable.setMemberIds(membersId);
+                TableServiceImpl.getInstance().getService(userViewModel.getToken().getValue()).createTable(newTable)
+                        .enqueue(new Callback<TableDetailsDTO>() {
+                            @Override
+                            public void onResponse(Call<TableDetailsDTO> call, Response<TableDetailsDTO> response) {
+                                if (response.isSuccessful() && response.code() == 201) {
+                                    tableDetailsDTOS.add(response.body());
+                                    boardViewModel.setTables(tableDetailsDTOS);
+                                    dialog.dismiss();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<TableDetailsDTO> call, Throwable t) {
+                                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            } else {
+                Toast.makeText(getActivity(), "Please fill information", Toast.LENGTH_SHORT).show();
             }
         });
 
