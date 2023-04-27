@@ -186,19 +186,17 @@ public class TableFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!charSequence.toString().isEmpty())
-                    UserServiceImpl.getInstance().getService(userViewModel.getToken().getValue()).searchUser(1, charSequence.toString()).enqueue(new Callback<SearchUserResponse>() {
-                        @Override
-                        public void onResponse(Call<SearchUserResponse> call, Response<SearchUserResponse> response) {
-                            if (response.isSuccessful() && response.code() == 200)
-                                adapter.setUsers(response.body().getUsers());
-                        }
-
-                        @Override
-                        public void onFailure(Call<SearchUserResponse> call, Throwable t) {
-                            Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                if (!charSequence.toString().isEmpty()) {
+                    List<UserInfoDTO> users = new ArrayList<>();
+                    users.addAll(boardViewModel.getMembers().getValue());
+                    users.add(boardViewModel.getAdmin().getValue());
+                    adapter.setUsers(users.stream()
+                            .filter(m -> m.getId() != userViewModel.getId().getValue()
+                                    && (m.getDisplayName().trim().toLowerCase().contains(charSequence.toString().trim())
+                                    || m.getEmail().trim().toLowerCase().contains(charSequence.toString().trim()))
+                            )
+                            .collect(Collectors.toList()));
+                }
                 else adapter.setUsers(new ArrayList<>());
             }
 

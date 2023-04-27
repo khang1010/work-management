@@ -202,7 +202,8 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
                     users.add(tables.get(pos).getCreatedBy());
                     adapter.setUsers(users.stream()
                             .filter(m -> m.getDisplayName().trim().toLowerCase().contains(charSequence.toString().trim())
-                                    || m.getEmail().trim().toLowerCase().contains(charSequence.toString().trim()))
+                                    || m.getEmail().trim().toLowerCase().contains(charSequence.toString().trim())
+                            )
                             .collect(Collectors.toList()));
                 }
                 else adapter.setUsers(new ArrayList<>());
