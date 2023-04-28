@@ -4,12 +4,130 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/text_field"
     tools:context=".activities.MessageActivity">
-    <TextView
+
+    <RelativeLayout
+        android:id="@+id/standard"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/backMessageBoxBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="17dp"
+            android:background="@drawable/ic_previous"
+            android:maxWidth="40dp"
+            android:layout_marginTop="3dp"
+            android:minWidth="40dp"
+            android:minHeight="14.5dp"></Button>
+
+        <ImageView
+            android:id="@+id/displayAvatarMessageBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/backMessageBoxBtn"
+            android:background="@drawable/bg"
+            android:maxWidth="32dp"
+            android:layout_marginTop="6dp"
+            android:minWidth="32dp"
+            android:minHeight="32dp"></ImageView>
+
+        <TextView
+            android:id="@+id/displayNameMessageBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
+            android:layout_toEndOf="@+id/displayAvatarMessageBox"
+            android:maxWidth="32dp"
+            android:text="Zang chu che pho mai que"
+            android:textColor="@color/black"
+            android:layout_marginTop="13dp"
+            android:textSize="14dp"
+            android:minWidth="32dp"
+            android:minHeight="32dp"
+            ></TextView>
+    </RelativeLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/displayDayTimeMessageBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:layout_below="@+id/standard"
+        android:maxWidth="32dp"
+        android:layout_marginTop="50dp"
+        android:text="Mar 16, 0:00"
+        android:textColor="@color/disable"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="Zangchuche lam Message" ></TextView>
+        android:textAlignment="center"
+        android:textSize="12dp"
+        android:minWidth="32dp"
+        android:minHeight="32dp"
+        ></TextView></ScrollView>
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:minHeight="70dp"
+    android:layout_alignParentBottom="true"
+    >
+
+    <Button
+        android:id="@+id/addInputMessageBoxBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="17dp"
+        android:background="@drawable/add_input_message_board_box"
+        android:minHeight="32dp"
+        android:maxHeight="32dp"
+        android:maxWidth="32dp"
+        android:minWidth="32dp"
+        android:layout_marginTop="11dp"
+        ></Button>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_toEndOf="@+id/addInputMessageBoxBtn"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/inputMessage"
+            android:layout_centerInParent="true"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/search_user_input_border"
+            android:hint="Aa"
+            android:inputType="textLongMessage"
+            android:padding="10dp"
+            android:textColor="@color/disable"
+            android:textColorHint="@color/disable"
+            android:textSize="15dp"
+            ></EditText>
+
+        <Button
+            android:id="@+id/stickerIconMessageBoxBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@id/inputMessage"
+            android:layout_alignBottom="@id/inputMessage"
+            android:layout_centerInParent="true"
+            android:background="@drawable/ic_sticker"
+            android:maxWidth="30dp"
+            android:layout_marginEnd="8dp"
+            android:maxHeight="30dp"
+            android:minWidth="30dp"
+            android:minHeight="30dp"></Button></RelativeLayout>
+
+
+</RelativeLayout>
 
 </RelativeLayout>
