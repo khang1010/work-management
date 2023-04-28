@@ -29,7 +29,9 @@
             android:exported="false" />
         <activity
             android:name=".activities.HomeActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="adjustNothing"/>
         <activity
             android:name=".activities.LoginActivity"
             android:exported="false" />

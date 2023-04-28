@@ -124,19 +124,22 @@
             android:textStyle="bold"/>
 
         <RelativeLayout
+            android:id="@+id/clock_container"
             android:layout_width="170dp"
             android:layout_height="170dp"
-            android:id="@+id/clock_container"
             android:layout_below="@+id/addTableBtn"
-            android:background="@drawable/background_table"
-            android:layout_centerInParent="true">
+            android:layout_centerInParent="true"
+            android:background="@drawable/background_table">
+
             <pl.droidsonroids.gif.GifImageView
                 android:id="@+id/gif_clock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/clock"
-                android:layout_centerInParent="true"/>
+                android:layout_centerInParent="true"
+                android:src="@drawable/clock" />
+
         </RelativeLayout>
+
     </RelativeLayout>
 
 </ScrollView>

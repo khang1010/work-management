@@ -1,6 +1,7 @@
 package com.example.workmanagement.fragments;
 
 import android.app.Dialog;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -70,7 +72,9 @@ public class TableFragment extends Fragment {
     private RelativeLayout clockLayout;
     private Button btnAddTable;
     private UserViewModel userViewModel;
-    public TableFragment() {}
+
+    public TableFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,6 +82,7 @@ public class TableFragment extends Fragment {
     }
 
     TableView mTableView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -107,21 +112,18 @@ public class TableFragment extends Fragment {
 //                .getRowHeaderList(), tableViewModel.getCellList());
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         boardViewModel = new ViewModelProvider(requireActivity()).get(BoardViewModel.class);
-        boardViewModel.getTables().observe(getViewLifecycleOwner(), tables -> {
-            new Handler().postDelayed(() -> {
-                tableRecView = view.findViewById(R.id.table_rec_view);
-                TableRecViewAdapter adapter = new TableRecViewAdapter(getActivity(), userViewModel, boardViewModel);
-                tableRecView.setAdapter(adapter);
-                tableRecView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                adapter.setTables(tables);
-                clockLayout = view.findViewById(R.id.clock_container);
-                clockLayout.setVisibility(View.GONE);
-            }, 500);
-        });
+        boardViewModel.getTables().observe(getViewLifecycleOwner(), tables ->
+                new Handler().postDelayed(() -> {
+                    tableRecView = view.findViewById(R.id.table_rec_view);
+                    TableRecViewAdapter adapter = new TableRecViewAdapter(getActivity(), userViewModel, boardViewModel);
+                    tableRecView.setAdapter(adapter);
+                    tableRecView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    adapter.setTables(tables);
+                    clockLayout = view.findViewById(R.id.clock_container);
+                    clockLayout.setVisibility(View.GONE);
+                }, 500));
         btnAddTable = view.findViewById(R.id.addTableBtn);
-        btnAddTable.setOnClickListener(view1 -> {
-           showCreateTableDialog();
-        });
+        btnAddTable.setOnClickListener(v -> showCreateTableDialog());
     }
 
     private void showCreateTableDialog() {
@@ -133,7 +135,6 @@ public class TableFragment extends Fragment {
         EditText txtSearchUser = dialog.findViewById(R.id.editTxtSearchUserTable);
         EditText txtTableName = dialog.findViewById(R.id.editTxtCreateTableName);
         ConstraintLayout btnCreateTable = dialog.findViewById(R.id.btnCreateTable);
-
 
         UserInvitedRecViewAdapter invitedAdapter = new UserInvitedRecViewAdapter(getActivity());
         RecyclerView userInvitedRecView = dialog.findViewById(R.id.invitedUserRecView);
@@ -151,12 +152,9 @@ public class TableFragment extends Fragment {
                 TableDTO newTable = new TableDTO();
                 newTable.setName(txtTableName.getText().toString());
                 newTable.setBoardId(boardViewModel.getId().getValue());
-//                ArrayList<Long> membersId = new ArrayList<>();
-//                membersId.add(userViewModel.getId().getValue());
-//                for (UserInfoDTO user: invitedAdapter.getUsers()) {
-//                    membersId.add(user.getId());
-//                }
                 newTable.setMemberIds(invitedAdapter.getUsers().stream().map(u -> u.getId()).collect(Collectors.toList()));
+                if (userViewModel.getId().getValue() != boardViewModel.getAdmin().getValue().getId())
+                    newTable.getMemberIds().add(boardViewModel.getAdmin().getValue().getId());
                 TableServiceImpl.getInstance().getService(userViewModel.getToken().getValue()).createTable(newTable)
                         .enqueue(new Callback<TableDetailsDTO>() {
                             @Override
@@ -173,9 +171,8 @@ public class TableFragment extends Fragment {
                                 Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
-            } else {
+            } else
                 Toast.makeText(getActivity(), "Please fill information", Toast.LENGTH_SHORT).show();
-            }
         });
 
         txtSearchUser.addTextChangedListener(new TextWatcher() {
@@ -187,17 +184,14 @@ public class TableFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (!charSequence.toString().isEmpty()) {
-                    List<UserInfoDTO> users = new ArrayList<>();
-                    users.addAll(boardViewModel.getMembers().getValue());
-                    users.add(boardViewModel.getAdmin().getValue());
+                    List<UserInfoDTO> users = boardViewModel.getMembers().getValue();
                     adapter.setUsers(users.stream()
                             .filter(m -> m.getId() != userViewModel.getId().getValue()
                                     && (m.getDisplayName().trim().toLowerCase().contains(charSequence.toString().trim())
                                     || m.getEmail().trim().toLowerCase().contains(charSequence.toString().trim()))
                             )
                             .collect(Collectors.toList()));
-                }
-                else adapter.setUsers(new ArrayList<>());
+                } else adapter.setUsers(new ArrayList<>());
             }
 
             @Override
