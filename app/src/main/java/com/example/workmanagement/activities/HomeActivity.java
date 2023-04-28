@@ -8,6 +8,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,9 +18,11 @@ import android.view.Menu;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
@@ -169,7 +172,8 @@ public class HomeActivity extends AppCompatActivity {
             for (int i = 0; i < menu.size(); i++)
                 menu.getItem(i).setChecked(false);
             item.setChecked(true);
-            long id = userViewModel.getBoards().getValue().stream().filter(b -> b.getName() == item.getTitle()).findFirst().get().getId();
+            long id = userViewModel.getBoards().getValue().stream().filter(b -> b.getName() == item.getTitle())
+                    .findFirst().get().getId();
             userViewModel.setCurrentBoardId(id);
             return false;
         });

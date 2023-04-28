@@ -17,7 +17,7 @@ public interface TableService {
     Call<TableDetailsDTO> createTable(@Body TableDTO dto);
 
     @PUT("tables/{id}")
-    Call<TableDetailsDTO> updateTable(@Path("id") long id, @Body TaskDTO dto);
+    Call<TableDetailsDTO> updateTable(@Path("id") long id, @Body TableDTO dto);
 
     @DELETE("tables/{id}")
     Call<Void> deleteTask(@Path("id") long id);
