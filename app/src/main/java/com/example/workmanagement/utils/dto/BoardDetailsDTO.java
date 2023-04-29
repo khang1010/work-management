@@ -2,6 +2,7 @@ package com.example.workmanagement.utils.dto;
 
 import com.squareup.moshi.Json;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class BoardDetailsDTO {

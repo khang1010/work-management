@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.EditBoardActivity"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp">
+
+        <ImageView
+            android:id="@+id/imgEditBoardBackToHome"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:src="@drawable/btn_back"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/editTxtEditBoardName"
+            android:visibility="gone"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:padding="5dp"
+            android:background="@drawable/search_user_input_border"
+            app:layout_constraintBottom_toBottomOf="@+id/imgEditBoardBackToHome"
+            app:layout_constraintStart_toEndOf="@+id/imgEditBoardBackToHome"
+            app:layout_constraintTop_toTopOf="@+id/imgEditBoardBackToHome" />
+
+        <TextView
+            android:id="@+id/txtBoardName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:text="Board name"
+            android:textSize="23dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/imgEditBoardBackToHome"
+            app:layout_constraintStart_toEndOf="@id/imgEditBoardBackToHome"
+            app:layout_constraintTop_toTopOf="@id/imgEditBoardBackToHome" />
+
+        <ImageView
+            android:id="@+id/imgEditBoard"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/image_edit_user_profile"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/btnDoneEditBoard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textColor="@color/white"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingRight="20dp"
+            android:paddingLeft="20dp"
+            android:text="OK"
+            android:background="@drawable/btn_add_board_border"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#EFEFEF">
+
+        <TextView
+            android:id="@+id/txtMembers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:padding="20dp"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_1"
+            android:text="Members"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/adminLayout"
+            android:padding="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtMembers">
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:text="Owner"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imgAdminAvatar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:src="@mipmap/ic_launcher"
+                app:civ_border_color="@color/disable"
+                app:civ_border_width="2dp"
+                app:layout_constraintEnd_toEndOf="@+id/textView3"
+                app:layout_constraintStart_toStartOf="@+id/textView3"
+                app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+            <TextView
+                android:id="@+id/txtAdminName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:text="Giang"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="@+id/imgAdminAvatar"
+                app:layout_constraintStart_toEndOf="@+id/imgAdminAvatar"
+                app:layout_constraintTop_toTopOf="@+id/imgAdminAvatar" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/txtListMembers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/adminLayout"
+            android:layout_marginLeft="47dp"
+            android:textColor="@color/black"
+            android:text="Members" />
+
+        <TextView
+            android:id="@+id/btnInviteMember"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/adminLayout"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="20dp"
+            android:text="Invite"
+            android:textColor="@color/primary_0"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/membersRecView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="47dp"
+            android:layout_below="@id/txtListMembers"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/editMembersRecView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="47dp"
+            android:layout_below="@id/txtListMembers"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

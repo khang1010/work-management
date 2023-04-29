@@ -7,7 +7,7 @@
     android:layout_height="wrap_content">
 
     <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/imgAvatarSearchUser"
+        android:id="@+id/imgAvatarBoardMember"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginRight="10dp"
@@ -19,24 +19,15 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/txtEmailSearchUser"
+        android:id="@+id/txtBoardMemberName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:text="Giang"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="@+id/imgAvatarSearchUser"
-        app:layout_constraintStart_toEndOf="@+id/imgAvatarSearchUser"
-        app:layout_constraintTop_toTopOf="@+id/imgAvatarSearchUser" />
-
-    <CheckBox
-        android:id="@+id/cbxSearchUser"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:buttonTint="@color/primary_0"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@+id/imgAvatarBoardMember"
+        app:layout_constraintStart_toEndOf="@+id/imgAvatarBoardMember"
+        app:layout_constraintTop_toTopOf="@+id/imgAvatarBoardMember" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

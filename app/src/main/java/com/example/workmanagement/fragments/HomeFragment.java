@@ -2,6 +2,10 @@ package com.example.workmanagement.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,16 +13,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.example.workmanagement.R;
-import com.example.workmanagement.activities.HomeActivity;
+import com.example.workmanagement.activities.EditBoardActivity;
 import com.example.workmanagement.activities.LoginActivity;
-import com.example.workmanagement.databinding.ActivityHomeBinding;
 import com.example.workmanagement.databinding.FragmentHomeBinding;
 import com.example.workmanagement.utils.dto.BoardDetailsDTO;
 import com.example.workmanagement.utils.services.impl.BoardServiceImpl;
@@ -29,7 +26,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -81,7 +81,21 @@ public class HomeFragment extends Fragment {
             }
             return false;
         });
-
+        binding.btnEdit.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), EditBoardActivity.class);
+            intent.putExtra("BOARD_NAME", boardViewModel.getName().getValue());
+            intent.putExtra("BOARD_ADMIN", boardViewModel.getAdmin().getValue());
+            intent.putExtra("BOARD_MEMBERS", (ArrayList) boardViewModel.getMembers().getValue());
+            intent.putExtra("USER_ID", userViewModel.getId().getValue());
+            List<Long> ids = new ArrayList<>();
+            boardViewModel.getTables().getValue().forEach(t ->
+                    ids.addAll(t.getMembers()
+                            .stream().map(m -> m.getId())
+                            .collect(Collectors.toList()))
+            );
+            intent.putExtra("IDS", (ArrayList) ids.stream().distinct().collect(Collectors.toList()));
+            startActivity(intent);
+        });
         return view;
     }
 
