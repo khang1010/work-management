@@ -50,8 +50,5 @@ public class BoardDTO {
         this.membersIds = membersIds;
     }
 
-    public BoardDTO(String name, List<Long> membersIds) {
-        this.name = name;
-        this.membersIds = membersIds;
-    }
+    public BoardDTO() {}
 }

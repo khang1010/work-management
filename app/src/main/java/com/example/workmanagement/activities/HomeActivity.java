@@ -227,6 +227,12 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        stompClient.disconnect();
+    }
+
+    @Override
     protected void onPostResume() {
         super.onPostResume();
         binding.notificationPoint.setVisibility(View.GONE);
@@ -245,7 +251,7 @@ public class HomeActivity extends AppCompatActivity {
             userViewModel.getBoards().getValue().forEach(b ->
                     stompClient.topic("/chatroom/" + b.getId())
                             .subscribe(message ->
-                                createNotification(new Moshi.Builder().build().adapter(MessageDTO.class).fromJson(message.getPayload()))
+                                    createNotification(new Moshi.Builder().build().adapter(MessageDTO.class).fromJson(message.getPayload()))
                             )
             );
         }

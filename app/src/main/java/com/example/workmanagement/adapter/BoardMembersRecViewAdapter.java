@@ -33,6 +33,10 @@ public class BoardMembersRecViewAdapter extends RecyclerView.Adapter<BoardMember
         notifyDataSetChanged();
     }
 
+    public List<UserInfoDTO> getMembers() {
+        return members;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

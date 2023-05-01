@@ -83,10 +83,14 @@ public class HomeFragment extends Fragment {
         });
         binding.btnEdit.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), EditBoardActivity.class);
+            intent.putExtra("BOARD_IDS", (ArrayList) userViewModel.getBoards().getValue()
+                    .stream().map(b -> b.getId()).collect(Collectors.toList()));
+            intent.putExtra("BOARD_ID", boardViewModel.getId().getValue());
             intent.putExtra("BOARD_NAME", boardViewModel.getName().getValue());
             intent.putExtra("BOARD_ADMIN", boardViewModel.getAdmin().getValue());
             intent.putExtra("BOARD_MEMBERS", (ArrayList) boardViewModel.getMembers().getValue());
             intent.putExtra("USER_ID", userViewModel.getId().getValue());
+            intent.putExtra("TOKEN", userViewModel.getToken().getValue());
             List<Long> ids = new ArrayList<>();
             boardViewModel.getTables().getValue().forEach(t ->
                     ids.addAll(t.getMembers()
@@ -135,11 +139,6 @@ public class HomeFragment extends Fragment {
     }
 
     private void goSignOut() {
-        gsc.signOut().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                startActivity(new Intent(getActivity(), LoginActivity.class));
-            }
-        });
+        gsc.signOut().addOnSuccessListener(unused -> startActivity(new Intent(getActivity(), LoginActivity.class)));
     }
 }
