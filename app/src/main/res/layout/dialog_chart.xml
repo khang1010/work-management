@@ -4,7 +4,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:orientation="horizontal"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
@@ -14,11 +14,25 @@
             android:layout_height="match_parent"
             android:id="@+id/checkbox_barchart"
             android:text="Bar chart"/>
-        <SeekBar
+        <LinearLayout
             android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:progress="5"
-            android:id="@+id/seekbar_number_barchart"/>
+            android:orientation="vertical">
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:progress="5"
+                android:id="@+id/seekbar_number_barchart"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_barchart"
+                android:textSize="10dp"
+                android:text="10/100"
+                android:textColor="@color/black"
+                />
+        </LinearLayout>
         <Spinner
             android:layout_width="100dp"
             android:layout_height="match_parent"
@@ -58,11 +72,25 @@
             android:layout_height="match_parent"
             android:id="@+id/checkbox_linechart"
             android:text="Line chart"/>
-        <SeekBar
+        <LinearLayout
             android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:progress="1"
-            android:id="@+id/seekbar_number_linechart"/>
+            android:orientation="vertical">
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:progress="5"
+                android:id="@+id/seekbar_number_linechart"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_linechart"
+                android:textSize="10dp"
+                android:text="10/100"
+                android:textColor="@color/black"
+                />
+        </LinearLayout>
         <Spinner
             android:layout_width="100dp"
             android:layout_height="match_parent"
@@ -102,10 +130,27 @@
             android:layout_height="match_parent"
             android:id="@+id/checkbox_piechart"
             android:text="Pie chart"/>
-        <SeekBar
+
+        <LinearLayout
             android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:id="@+id/seekbar_number_piechart"/>
+            android:orientation="vertical">
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:progress="5"
+                android:id="@+id/seekbar_number_piechart"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_piechart"
+                android:textSize="10dp"
+                android:text="10/100"
+                android:textColor="@color/black"
+                />
+        </LinearLayout>
+
         <Spinner
             android:layout_width="100dp"
             android:layout_height="match_parent"

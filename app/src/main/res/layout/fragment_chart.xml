@@ -28,6 +28,14 @@
         android:id="@+id/week_chart_select_chart_button"
         android:layout_margin="10dp"
         android:text="Select chart"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="300dp"
+        android:layout_marginEnd="10dp"
+        android:text="Export"
+        android:visibility="gone"
+        android:id="@+id/btn_save_date_file_excel"/>
 
 
     <ScrollView
