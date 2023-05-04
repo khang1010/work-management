@@ -4,16 +4,51 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:paddingStart="5dp"
+
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@color/primary_1">
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:text="Type chart"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_marginStart="10dp"
+            android:gravity="center"/>
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:text="Number"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_marginStart="10dp"
+            android:gravity="center"/>
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:text="Unit"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_marginStart="5dp"
+            android:gravity="center"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="60dp"
         android:orientation="horizontal"
         android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
+
         android:gravity="center">
         <CheckBox
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:id="@+id/checkbox_barchart"
-            android:text="Bar chart"/>
+            android:text="Bar chart"
+            android:theme="@style/checkbox_dialog_chart"/>
         <LinearLayout
             android:layout_width="100dp"
             android:layout_height="match_parent"
@@ -23,7 +58,8 @@
                 android:layout_height="30dp"
                 android:progress="5"
                 android:id="@+id/seekbar_number_barchart"
-                />
+                android:thumbTint="@color/primary_1"
+                android:progressTint="@color/primary_1"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -31,10 +67,11 @@
                 android:textSize="10dp"
                 android:text="10/100"
                 android:textColor="@color/black"
+                android:paddingStart="10dp"
                 />
         </LinearLayout>
         <Spinner
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:id="@+id/spinner_unit_barchart"/>
     </LinearLayout>
@@ -64,14 +101,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginStart="5dp"
+
         android:gravity="center">
         <CheckBox
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:id="@+id/checkbox_linechart"
-            android:text="Line chart"/>
+            android:text="Line chart"
+            android:theme="@style/checkbox_dialog_chart"/>
         <LinearLayout
             android:layout_width="100dp"
             android:layout_height="match_parent"
@@ -81,7 +119,8 @@
                 android:layout_height="30dp"
                 android:progress="5"
                 android:id="@+id/seekbar_number_linechart"
-                />
+                android:thumbTint="@color/primary_1"
+                android:progressTint="@color/primary_1"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -89,10 +128,11 @@
                 android:textSize="10dp"
                 android:text="10/100"
                 android:textColor="@color/black"
+                android:paddingStart="10dp"
                 />
         </LinearLayout>
         <Spinner
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:id="@+id/spinner_unit_linechart"/>
     </LinearLayout>
@@ -101,8 +141,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp">
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp">
         <Button
             android:layout_width="150dp"
             android:layout_height="match_parent"
@@ -123,13 +163,14 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
+
         android:gravity="center">
         <CheckBox
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:id="@+id/checkbox_piechart"
-            android:text="Pie chart"/>
+            android:text="Pie chart"
+            android:theme="@style/checkbox_dialog_chart"/>
 
         <LinearLayout
             android:layout_width="100dp"
@@ -140,7 +181,8 @@
                 android:layout_height="30dp"
                 android:progress="5"
                 android:id="@+id/seekbar_number_piechart"
-                />
+                android:thumbTint="@color/primary_1"
+                android:progressTint="@color/primary_1"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -148,11 +190,12 @@
                 android:textSize="10dp"
                 android:text="10/100"
                 android:textColor="@color/black"
+                android:paddingStart="10dp"
                 />
         </LinearLayout>
 
         <Spinner
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:id="@+id/spinner_unit_piechart"/>
     </LinearLayout>
@@ -161,8 +204,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp">
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp">
         <Button
             android:layout_width="150dp"
             android:layout_height="match_parent"
