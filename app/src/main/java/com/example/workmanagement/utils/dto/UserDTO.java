@@ -30,6 +30,17 @@ public class UserDTO {
     @Json(name = "boards")
     private List<BoardInfo> boards;
 
+    @Json(name = "hasNonReadNotification")
+    private boolean hasNonReadNotification;
+
+    public boolean isHasNonReadNotification() {
+        return hasNonReadNotification;
+    }
+
+    public void setHasNonReadNotification(boolean hasNonReadNotification) {
+        this.hasNonReadNotification = hasNonReadNotification;
+    }
+
     public List<BoardInfo> getBoards() {
         return boards;
     }

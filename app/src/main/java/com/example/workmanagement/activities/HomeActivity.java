@@ -123,6 +123,7 @@ public class HomeActivity extends AppCompatActivity {
                         userViewModel.setPhotoUrl(response.body().getPhotoUrl());
                         userViewModel.setToken(response.body().getToken());
                         userViewModel.setBoards(response.body().getBoards());
+                        userViewModel.setHasNonReadNotification(response.body().isHasNonReadNotification());
 
                         SubMenu subMenu = binding.navigationView.getMenu().addSubMenu("Your boards");
 
@@ -150,6 +151,12 @@ public class HomeActivity extends AppCompatActivity {
                                 binding.imgAvatar.setImageResource(R.mipmap.ic_launcher);
                         });
                         userViewModel.getToken().observe(HomeActivity.this, token -> initSocketConnection(token));
+                        userViewModel.getHasNonReadNotification().observe(HomeActivity.this, hasNonRead -> {
+                            if (hasNonRead)
+                                binding.notificationPoint.setVisibility(View.VISIBLE);
+                            else
+                                binding.notificationPoint.setVisibility(View.GONE);
+                        });
                     }
                 }
 

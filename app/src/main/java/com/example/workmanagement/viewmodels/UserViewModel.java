@@ -23,6 +23,16 @@ public class UserViewModel extends ViewModel {
 
     private MutableLiveData<Long> currentBoardId = new MutableLiveData<>();
 
+    private MutableLiveData<Boolean> hasNonReadNotification = new MutableLiveData<>();
+
+    public MutableLiveData<Boolean> getHasNonReadNotification() {
+        return hasNonReadNotification;
+    }
+
+    public void setHasNonReadNotification(Boolean hasNonReadNotification) {
+        this.hasNonReadNotification.postValue(hasNonReadNotification);
+    }
+
     public MutableLiveData<List<BoardInfo>> getBoards() {
         return boards;
     }
