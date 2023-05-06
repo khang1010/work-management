@@ -174,13 +174,13 @@ public class EditBoardActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<BoardDetailsDTO> call, Throwable t) {
-                            Toast.makeText(EditBoardActivity.this,  t.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EditBoardActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
 
         });
 
-        binding.btnInviteMember.setOnClickListener(v -> showCreateBoardDialog(token, boardId, userId, binding.txtBoardName.getText().toString()));
+        binding.btnInviteMember.setOnClickListener(v -> showInviteUserDialog(token, boardId, userId, binding.txtBoardName.getText().toString()));
     }
 
     @Override
@@ -279,7 +279,7 @@ public class EditBoardActivity extends AppCompatActivity {
         managerCompat.notify(new Random().nextInt(), builder.build());
     }
 
-    private void showCreateBoardDialog(String token, long boardId, long userId, String boardName) {
+    private void showInviteUserDialog(String token, long boardId, long userId, String boardName) {
 
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -318,7 +318,7 @@ public class EditBoardActivity extends AppCompatActivity {
                                 adapter.setUsers(response.body().getUsers()
                                         .stream().filter(u ->
                                                 membersAdapter.getMembers().stream().noneMatch(m -> m.getId() == u.getId())
-                                                && u.getId() != userId
+                                                        && u.getId() != userId
                                         ).collect(Collectors.toList())
                                 );
                         }
@@ -338,30 +338,26 @@ public class EditBoardActivity extends AppCompatActivity {
         });
 
         btnCreateBoard.setOnClickListener(v -> {
-//            if (txtBoardName.getText().toString().isEmpty())
-//                Toast.makeText(this, "Please enter board name", Toast.LENGTH_SHORT).show();
-//            else
-//                BoardServiceImpl.getInstance().getService(userViewModel.getToken().getValue())
-//                        .createBoard(new BoardDTO(txtBoardName.getText().toString(),
-//                                invitedAdapter.getUsers().stream().map(u -> u.getId()).collect(Collectors.toList()))
-//                        )
-//                        .enqueue(new Callback<BoardInfo>() {
-//                            @Override
-//                            public void onResponse(Call<BoardInfo> call, Response<BoardInfo> response) {
-//                                if (response.isSuccessful() && response.code() == 201) {
-//                                    List<BoardInfo> boards = userViewModel.getBoards().getValue();
-//                                    boards.add(0, response.body());
-//                                    userViewModel.setBoards(boards);
-//                                    dialog.dismiss();
-//                                    //binding.drawableLayout.closeDrawer(GravityCompat.START);
-//                                }
-//                            }
-//
-//                            @Override
-//                            public void onFailure(Call<BoardInfo> call, Throwable t) {
-//                                Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-//                            }
-//                        });
+            BoardDTO dto = new BoardDTO();
+            dto.setMembersIds(invitedAdapter.getUsers().stream().map(u -> u.getId()).collect(Collectors.toList()));
+            BoardServiceImpl.getInstance().getService(token)
+                    .updateBoard(boardId, dto)
+                    .enqueue(new Callback<BoardDetailsDTO>() {
+                        @Override
+                        public void onResponse(Call<BoardDetailsDTO> call, Response<BoardDetailsDTO> response) {
+                            if (response.isSuccessful() && response.code() == 200)
+                                Toast.makeText(EditBoardActivity.this, "Invite successful", Toast.LENGTH_SHORT).show();
+                            else
+                                Toast.makeText(EditBoardActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }
+
+                        @Override
+                        public void onFailure(Call<BoardDetailsDTO> call, Throwable t) {
+                            Toast.makeText(EditBoardActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }
+                    });
         });
         dialog.show();
     }
