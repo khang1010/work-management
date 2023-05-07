@@ -25,7 +25,7 @@ public class UserSearchInTaskAdapter extends RecyclerView.Adapter<UserSearchInTa
     private UserInfoDTO user;
 
     private Context mContext;
-    private boolean chosen = false;
+    private boolean chosen;
 
     private UserInvitedRecViewAdapter invitedRecViewAdapter;
 
@@ -34,12 +34,14 @@ public class UserSearchInTaskAdapter extends RecyclerView.Adapter<UserSearchInTa
             users = new ArrayList<>();
         this.mContext = mContext;
         this.invitedRecViewAdapter = invitedRecViewAdapter;
+        chosen = false;
     }
 
     public UserSearchInTaskAdapter(Context mContext) {
         if (users == null)
             users = new ArrayList<>();
         this.mContext = mContext;
+        chosen = false;
     }
 
     public UserSearchInTaskAdapter(UserInfoDTO user, Context mContext) {
@@ -47,6 +49,12 @@ public class UserSearchInTaskAdapter extends RecyclerView.Adapter<UserSearchInTa
             users = new ArrayList<>();
         this.user = user;
         this.mContext = mContext;
+        chosen = false;
+    }
+
+    public UserSearchInTaskAdapter(Context mContext, boolean chosen) {
+        this.mContext = mContext;
+        this.chosen = chosen;
     }
 
     public void setUsers(List<UserInfoDTO> users) {
@@ -64,6 +72,10 @@ public class UserSearchInTaskAdapter extends RecyclerView.Adapter<UserSearchInTa
 
     public boolean isChosen() {
         return chosen;
+    }
+
+    public void setChosen(boolean chosen) {
+        this.chosen = chosen;
     }
 
     @NonNull

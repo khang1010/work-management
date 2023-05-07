@@ -136,7 +136,7 @@ public class TableViewListener implements ITableViewListener {
     public void onCellClicked(@NonNull RecyclerView.ViewHolder cellView, int column, int row) {
 
         // Do what you want.
-        showToast("Cell " + column + " " + row + " has been clicked.");
+//        showToast("Cell " + column + " " + row + " has been clicked.");
         if (column == 2) {
             TextView cell_name = cellView.itemView.findViewById(R.id.cell_data);
             openDialog(cell_name);
@@ -212,6 +212,7 @@ public class TableViewListener implements ITableViewListener {
         RecyclerView userRecView = dialog.findViewById(R.id.searchRecView);
         userRecView.setLayoutManager(new LinearLayoutManager(mContext));
         userRecView.setAdapter(adapter);
+        adapter.setChosen(true);
 
         txtTaskName.setText(String.valueOf(listCells.get(row).get(0).getData()));
         if (String.valueOf(listCells.get(row).get(1).getText()).equals("")) {
