@@ -25,26 +25,54 @@
 package com.example.workmanagement.tableview;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.Window;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.evrencoskun.tableview.TableView;
 import com.evrencoskun.tableview.listener.ITableViewListener;
+import com.example.workmanagement.adapter.UserSearchInTaskAdapter;
 import com.example.workmanagement.tableview.holder.ColumnHeaderViewHolder;
 import com.example.workmanagement.tableview.holder.PersonCellViewHolder;
 import com.example.workmanagement.R;
+import com.example.workmanagement.tableview.model.Cell;
 import com.example.workmanagement.tableview.popup.ColumnHeaderLongPressPopup;
 import com.example.workmanagement.tableview.popup.RowHeaderLongPressPopup;
+import com.example.workmanagement.utils.dto.DateAttributeDTO;
+import com.example.workmanagement.utils.dto.TableDetailsDTO;
+import com.example.workmanagement.utils.dto.TaskDTO;
+import com.example.workmanagement.utils.dto.TaskDetailsDTO;
+import com.example.workmanagement.utils.dto.TextAttributeDTO;
+import com.example.workmanagement.utils.dto.UserInfoDTO;
+import com.example.workmanagement.utils.services.impl.TaskServiceImpl;
+import com.example.workmanagement.viewmodels.BoardViewModel;
+import com.example.workmanagement.viewmodels.UserViewModel;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by evrencoskun on 21/09/2017.
@@ -56,9 +84,40 @@ public class TableViewListener implements ITableViewListener {
     @NonNull
     private final TableView mTableView;
 
+    private BoardViewModel boardViewModel;
+    private UserViewModel userViewModel;
+    private List<TableDetailsDTO> tables = new ArrayList<>();
+    public void setTables(List<TableDetailsDTO> tables) {
+        this.tables = tables;
+    }
+    private int position = -1;
     public TableViewListener(@NonNull TableView tableView) {
         this.mContext = tableView.getContext();
         this.mTableView = tableView;
+    }
+
+    public TableViewListener(@NonNull TableView mTableView, BoardViewModel boardViewModel, UserViewModel userViewModel) {
+        this.mTableView = mTableView;
+        this.boardViewModel = boardViewModel;
+        this.userViewModel = userViewModel;
+        this.mContext = mTableView.getContext();
+    }
+
+    public TableViewListener(@NonNull TableView mTableView, BoardViewModel boardViewModel, UserViewModel userViewModel, List<TableDetailsDTO> tables) {
+        this.mTableView = mTableView;
+        this.boardViewModel = boardViewModel;
+        this.userViewModel = userViewModel;
+        this.tables = tables;
+        this.mContext = mTableView.getContext();
+    }
+
+    public TableViewListener(@NonNull TableView mTableView, BoardViewModel boardViewModel, UserViewModel userViewModel, List<TableDetailsDTO> tables, int position) {
+        this.mTableView = mTableView;
+        this.boardViewModel = boardViewModel;
+        this.userViewModel = userViewModel;
+        this.tables = tables;
+        this.position = position;
+        this.mContext = mTableView.getContext();
     }
 
     /**
@@ -77,6 +136,8 @@ public class TableViewListener implements ITableViewListener {
         if (column == 2) {
             TextView cell_name = cellView.itemView.findViewById(R.id.cell_data);
             openDialog(cell_name);
+        } else {
+            showUpdateTaskDialog(position, column, row);
         }
 
     }
@@ -109,6 +170,129 @@ public class TableViewListener implements ITableViewListener {
                 Toast.makeText(mContext, cell_name.getText().toString(), Toast.LENGTH_SHORT).show();
             }
         }, mHour, mMinute, true);
+        dialog.show();
+    }
+
+    private void showUpdateTaskDialog(int pos, int column, int row) {
+
+        Dialog dialog = new Dialog(mContext);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.create_task);
+        EditText txtSearchUser = dialog.findViewById(R.id.editTxtSearch);
+        EditText txtTaskName = dialog.findViewById(R.id.editTxtCreateTaskName);
+//        TextView txtEmail = dialog.findViewById(R.id.txtEmail);
+//        TextView txtPhoto = dialog.findViewById(R.id.txtPhotoUrl);
+        ConstraintLayout btnCreateTask = dialog.findViewById(R.id.btnCreateTask);
+
+        List<List<Cell>> listCells = new ArrayList<>();
+        tables.get(pos).getTasks().forEach(t -> {
+            List<Cell> list = new ArrayList<>();
+            list.add(new Cell("1", t.getTextAttributes().stream().filter(atr -> atr.getName().equals("name")).findFirst().get().getValue()));
+            list.add(new Cell("2", t.getUser().getPhotoUrl().equals("null") ? "default" : t.getUser().getPhotoUrl(), t.getUser().getDisplayName()));
+            Date date = null;
+            try {
+                date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(t.getDateAttributes().stream().filter(atr -> atr.getName().equals("deadline")).findFirst().get().getValue());
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+            list.add(new Cell("3", new SimpleDateFormat("HH:mm dd/MM/yyyy").format(date)));
+            listCells.add(list);
+        });
+
+        UserSearchInTaskAdapter adapter = new UserSearchInTaskAdapter(tables.get(pos).getTasks().get(row).getUser(), mContext);
+        RecyclerView userRecView = dialog.findViewById(R.id.searchRecView);
+        userRecView.setLayoutManager(new LinearLayoutManager(mContext));
+        userRecView.setAdapter(adapter);
+
+        txtTaskName.setText(String.valueOf(listCells.get(row).get(0).getData()));
+        if (String.valueOf(listCells.get(row).get(1).getText()).equals("")) {
+            txtSearchUser.setText("");
+            List<UserInfoDTO> userList = new ArrayList<>();
+            userList.addAll(tables.get(pos).getMembers());
+            adapter.setUsers(userList);
+        } else {
+            txtSearchUser.setText(String.valueOf(tables.get(pos).getTasks().get(row).getUser().getEmail()));
+            List<UserInfoDTO> users = new ArrayList<>();
+            users.addAll(tables.get(pos).getMembers());
+            users.add(tables.get(pos).getCreatedBy());
+            adapter.setUsers(users.stream()
+                    .filter(m -> m.getDisplayName().trim().toLowerCase().contains(txtSearchUser.getText().toString().trim())
+                            || m.getEmail().trim().toLowerCase().contains(txtSearchUser.getText().toString().trim())
+                    )
+                    .collect(Collectors.toList()));
+        }
+
+//        btnCreateTask.setOnClickListener(view -> {
+//            if (!txtTaskName.getText().toString().isEmpty() && adapter.isChosen()) {
+//                long tableId = tables.get(pos).getId();
+//                List<TableDetailsDTO> tableDetailsDTOS = boardViewModel.getTables().getValue();
+//                TaskDTO newTask = new TaskDTO();
+//                newTask.setUserId(adapter.getUser().getId());
+//                newTask.setTableId(tableId);
+//                List<TextAttributeDTO> textAttributes = new ArrayList<>();
+//                List<DateAttributeDTO> dateAttributes = new ArrayList<>();
+//                TextAttributeDTO textAttribute = new TextAttributeDTO();
+//                textAttribute.setName("name");
+//                textAttribute.setValue(txtTaskName.getText().toString());
+//                textAttributes.add(textAttribute);
+//                DateAttributeDTO dateAttribute = new DateAttributeDTO();
+//                dateAttribute.setName("deadline");
+//                dateAttribute.setValue(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()));
+//                dateAttributes.add(dateAttribute);
+//                newTask.setTextAttributes(textAttributes);
+//                newTask.setDateAttributes(dateAttributes);
+//                TaskServiceImpl.getInstance().getService(userViewModel.getToken().getValue()).updateTask(tables.get(pos).getTasks().get(row).getId(), newTask)
+//                        .enqueue(new Callback<TaskDetailsDTO>() {
+//                            @Override
+//                            public void onResponse(Call<TaskDetailsDTO> call, Response<TaskDetailsDTO> response) {
+//                                if (response.isSuccessful() && response.code() == 201) {
+//                                    tableDetailsDTOS.stream().filter(t -> t.getId() == tableId)
+//                                            .findFirst().get().getTasks().add(response.body());
+//                                    boardViewModel.setTables(tableDetailsDTOS);
+//                                    dialog.dismiss();
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onFailure(Call<TaskDetailsDTO> call, Throwable t) {
+//                                Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
+//            } else
+//                Toast.makeText(mContext, "Please fill full information", Toast.LENGTH_SHORT).show();
+//
+//        });
+        txtSearchUser.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!charSequence.toString().isEmpty()) {
+                    List<UserInfoDTO> users = new ArrayList<>();
+                    users.addAll(tables.get(pos).getMembers());
+                    users.add(tables.get(pos).getCreatedBy());
+                    adapter.setUsers(users.stream()
+                            .filter(m -> m.getDisplayName().trim().toLowerCase().contains(charSequence.toString().trim())
+                                    || m.getEmail().trim().toLowerCase().contains(charSequence.toString().trim())
+                            )
+                            .collect(Collectors.toList()));
+                }
+                else {
+                    List<UserInfoDTO> userList = new ArrayList<>();
+                    userList.addAll(tables.get(pos).getMembers());
+                    adapter.setUsers(userList);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         dialog.show();
     }
 

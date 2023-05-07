@@ -42,6 +42,13 @@ public class UserSearchInTaskAdapter extends RecyclerView.Adapter<UserSearchInTa
         this.mContext = mContext;
     }
 
+    public UserSearchInTaskAdapter(UserInfoDTO user, Context mContext) {
+        if (users == null)
+            users = new ArrayList<>();
+        this.user = user;
+        this.mContext = mContext;
+    }
+
     public void setUsers(List<UserInfoDTO> users) {
         this.users = users;
         notifyDataSetChanged();
