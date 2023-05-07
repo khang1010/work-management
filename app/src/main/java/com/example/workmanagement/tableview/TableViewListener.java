@@ -28,12 +28,12 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Window;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -45,10 +45,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.evrencoskun.tableview.TableView;
 import com.evrencoskun.tableview.listener.ITableViewListener;
+import com.example.workmanagement.R;
 import com.example.workmanagement.adapter.UserSearchInTaskAdapter;
 import com.example.workmanagement.tableview.holder.ColumnHeaderViewHolder;
-import com.example.workmanagement.tableview.holder.PersonCellViewHolder;
-import com.example.workmanagement.R;
 import com.example.workmanagement.tableview.model.Cell;
 import com.example.workmanagement.tableview.popup.ColumnHeaderLongPressPopup;
 import com.example.workmanagement.tableview.popup.RowHeaderLongPressPopup;
@@ -69,6 +68,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -87,10 +87,13 @@ public class TableViewListener implements ITableViewListener {
     private BoardViewModel boardViewModel;
     private UserViewModel userViewModel;
     private List<TableDetailsDTO> tables = new ArrayList<>();
+
     public void setTables(List<TableDetailsDTO> tables) {
         this.tables = tables;
     }
+
     private int position = -1;
+
     public TableViewListener(@NonNull TableView tableView) {
         this.mContext = tableView.getContext();
         this.mTableView = tableView;
@@ -128,6 +131,7 @@ public class TableViewListener implements ITableViewListener {
      * @param row      : Y (Row) position of Clicked Cell item.
      */
     String date_time = "";
+
     @Override
     public void onCellClicked(@NonNull RecyclerView.ViewHolder cellView, int column, int row) {
 
@@ -147,7 +151,7 @@ public class TableViewListener implements ITableViewListener {
         int mYear = c.get(Calendar.YEAR);
         int mMonth = c.get(Calendar.MONTH);
         int mDay = c.get(Calendar.DAY_OF_MONTH);
-        DatePickerDialog dialog = new DatePickerDialog(mContext,R.style.DialogTheme, new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog dialog = new DatePickerDialog(mContext, R.style.DialogTheme, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 date_time = String.valueOf(day) + "/" + String.valueOf(month) + "/" + String.valueOf(year);
@@ -162,7 +166,7 @@ public class TableViewListener implements ITableViewListener {
         final Calendar c = Calendar.getInstance();
         int mHour = c.get(Calendar.HOUR_OF_DAY);
         int mMinute = c.get(Calendar.MINUTE);
-        TimePickerDialog dialog = new TimePickerDialog(mContext,R.style.DialogTheme, new TimePickerDialog.OnTimeSetListener() {
+        TimePickerDialog dialog = new TimePickerDialog(mContext, R.style.DialogTheme, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hours, int minutes) {
                 date_time = (String.format("%02d", hours) + ":" + String.format("%02d", minutes) + " " + date_time);
@@ -184,6 +188,10 @@ public class TableViewListener implements ITableViewListener {
 //        TextView txtEmail = dialog.findViewById(R.id.txtEmail);
 //        TextView txtPhoto = dialog.findViewById(R.id.txtPhotoUrl);
         ConstraintLayout btnCreateTask = dialog.findViewById(R.id.btnCreateTask);
+        ImageView btnIcon = btnCreateTask.findViewById(R.id.imagePlus);
+        TextView btnText = btnCreateTask.findViewById(R.id.createTxt);
+        btnText.setText("Done");
+        btnIcon.setImageResource(R.drawable.ic_check);
 
         List<List<Cell>> listCells = new ArrayList<>();
         tables.get(pos).getTasks().forEach(t -> {
@@ -223,46 +231,54 @@ public class TableViewListener implements ITableViewListener {
                     .collect(Collectors.toList()));
         }
 
-//        btnCreateTask.setOnClickListener(view -> {
-//            if (!txtTaskName.getText().toString().isEmpty() && adapter.isChosen()) {
-//                long tableId = tables.get(pos).getId();
-//                List<TableDetailsDTO> tableDetailsDTOS = boardViewModel.getTables().getValue();
-//                TaskDTO newTask = new TaskDTO();
-//                newTask.setUserId(adapter.getUser().getId());
-//                newTask.setTableId(tableId);
-//                List<TextAttributeDTO> textAttributes = new ArrayList<>();
-//                List<DateAttributeDTO> dateAttributes = new ArrayList<>();
-//                TextAttributeDTO textAttribute = new TextAttributeDTO();
-//                textAttribute.setName("name");
-//                textAttribute.setValue(txtTaskName.getText().toString());
-//                textAttributes.add(textAttribute);
-//                DateAttributeDTO dateAttribute = new DateAttributeDTO();
-//                dateAttribute.setName("deadline");
+        btnCreateTask.setOnClickListener(view -> {
+            if (!txtTaskName.getText().toString().isEmpty() && adapter.isChosen()) {
+                long tableId = tables.get(pos).getId();
+                List<TableDetailsDTO> tableDetailsDTOS = boardViewModel.getTables().getValue();
+                TaskDetailsDTO task = tables.get(pos).getTasks().get(row);
+                TaskDTO newTask = new TaskDTO();
+                newTask.setUserId(adapter.getUser().getId());
+                List<TextAttributeDTO> textAttributes = new ArrayList<>();
+                List<DateAttributeDTO> dateAttributes = new ArrayList<>();
+                TextAttributeDTO textAttribute = new TextAttributeDTO();
+                textAttribute.setId(task.getTextAttributes().stream().filter(atr -> atr.getName().equals("name")).findFirst().get().getId());
+                textAttribute.setName("name");
+                textAttribute.setValue(txtTaskName.getText().toString());
+                textAttributes.add(textAttribute);
+                DateAttributeDTO dateAttribute = new DateAttributeDTO();
+                dateAttribute.setId(task.getDateAttributes().stream().filter(atr -> atr.getName().equals("deadline")).findFirst().get().getId());
+                dateAttribute.setName("deadline");
 //                dateAttribute.setValue(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()));
-//                dateAttributes.add(dateAttribute);
-//                newTask.setTextAttributes(textAttributes);
-//                newTask.setDateAttributes(dateAttributes);
-//                TaskServiceImpl.getInstance().getService(userViewModel.getToken().getValue()).updateTask(tables.get(pos).getTasks().get(row).getId(), newTask)
-//                        .enqueue(new Callback<TaskDetailsDTO>() {
-//                            @Override
-//                            public void onResponse(Call<TaskDetailsDTO> call, Response<TaskDetailsDTO> response) {
-//                                if (response.isSuccessful() && response.code() == 201) {
-//                                    tableDetailsDTOS.stream().filter(t -> t.getId() == tableId)
-//                                            .findFirst().get().getTasks().add(response.body());
-//                                    boardViewModel.setTables(tableDetailsDTOS);
-//                                    dialog.dismiss();
-//                                }
-//                            }
-//
-//                            @Override
-//                            public void onFailure(Call<TaskDetailsDTO> call, Throwable t) {
-//                                Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
-//                            }
-//                        });
-//            } else
-//                Toast.makeText(mContext, "Please fill full information", Toast.LENGTH_SHORT).show();
-//
-//        });
+                dateAttribute.setValue(task.getDateAttributes().stream().filter(atr -> atr.getName().equals("deadline")).findFirst().get().getValue());
+                dateAttributes.add(dateAttribute);
+                newTask.setTextAttributes(textAttributes);
+                newTask.setDateAttributes(dateAttributes);
+                TaskServiceImpl.getInstance().getService(userViewModel.getToken().getValue()).updateTask(task.getId(), newTask)
+                        .enqueue(new Callback<TaskDetailsDTO>() {
+                            @Override
+                            public void onResponse(Call<TaskDetailsDTO> call, Response<TaskDetailsDTO> response) {
+                                if (response.isSuccessful() && response.code() == 200) {
+                                    int index = IntStream.range(0, tables.get(pos).getTasks().size())
+                                            .filter(i -> response.body().getId() == tables.get(pos).getTasks().get(i).getId())
+                                            .findFirst().orElse(-1);
+                                    tableDetailsDTOS.stream().filter(t -> t.getId() == tableId)
+                                            .findFirst().get().getTasks()
+                                            .set(index, response.body());
+                                    boardViewModel.setTables(tableDetailsDTOS);
+                                    dialog.dismiss();
+                                } else
+                                    Toast.makeText(mContext, response.raw().toString(), Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(Call<TaskDetailsDTO> call, Throwable t) {
+                                Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            } else
+                Toast.makeText(mContext, "Please fill full information", Toast.LENGTH_SHORT).show();
+
+        });
         txtSearchUser.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -280,8 +296,7 @@ public class TableViewListener implements ITableViewListener {
                                     || m.getEmail().trim().toLowerCase().contains(charSequence.toString().trim())
                             )
                             .collect(Collectors.toList()));
-                }
-                else {
+                } else {
                     List<UserInfoDTO> userList = new ArrayList<>();
                     userList.addAll(tables.get(pos).getMembers());
                     adapter.setUsers(userList);
