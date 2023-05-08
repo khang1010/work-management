@@ -42,6 +42,7 @@ import com.example.workmanagement.viewmodels.UserViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import retrofit2.Call;
@@ -77,6 +78,7 @@ public class RowHeaderLongPressPopup extends PopupMenu implements PopupMenu
 
         initialize();
     }
+
     public RowHeaderLongPressPopup(@NonNull RecyclerView.ViewHolder viewHolder, @NonNull TableView tableView, BoardViewModel boardViewModel, UserViewModel userViewModel, int id, List<TableDetailsDTO> tables, int position) {
         super(viewHolder.itemView.getContext(), viewHolder.itemView);
 
@@ -127,28 +129,29 @@ public class RowHeaderLongPressPopup extends PopupMenu implements PopupMenu
 
                 break;
             case REMOVE_ROW:
-                mTableView.getAdapter().removeRow(mRowPosition);
                 List<TableDetailsDTO> tableDetailsDTOS = boardViewModel.getTables().getValue();
-//                TaskServiceImpl.getInstance().getService(userViewModel.getToken().getValue()).deleteTask(id).enqueue(new Callback<Void>() {
-//                    @Override
-//                    public void onResponse(Call<Void> call, Response<Void> response) {
-//                        if (response.isSuccessful() && response.code() == 200) {
-//                            int index = IntStream.range(0, tables.get(pos).getTasks().size())
-//                                    .filter(i -> response.body().getId() == tables.get(pos).getTasks().get(i).getId())
-//                                    .findFirst().orElse(-1);
-//                            tableDetailsDTOS.stream().filter(t -> t.getId() == tableId)
-//                                    .findFirst().get().getTasks()
-//                                    .set(index, response.body());
-//                            boardViewModel.setTables(tableDetailsDTOS);
-//                        }
-//
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<Void> call, Throwable t) {
-//
-//                    }
-//                });
+                TaskServiceImpl.getInstance().getService(userViewModel.getToken().getValue()).deleteTask(id).enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.isSuccessful() && response.code() == 200) {
+                            //mTableView.getAdapter().removeRow(mRowPosition);
+                            int index = IntStream.range(0, tables.get(pos).getTasks().size())
+                                    .filter(i -> id == tables.get(pos).getTasks().get(i).getId())
+                                    .findFirst().orElse(-1);
+                            tableDetailsDTOS.get(pos).setTasks(tables.get(pos).getTasks().stream()
+                                    .filter(t -> t.getId() != id)
+                                    .collect(Collectors.toList())
+                            );
+                            boardViewModel.setTables(tableDetailsDTOS);
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+
+                    }
+                });
                 break;
         }
         return true;
