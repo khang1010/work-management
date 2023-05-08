@@ -35,12 +35,12 @@ import retrofit2.Response;
 public class UserInforActivity extends AppCompatActivity {
     private Button btnBack;
     private CircleImageView avatar;
-    private EditText bio;
-    private EditText phone;
-    private EditText work;
-    private ImageView imgEditBio;
-    private ImageView imgEditPhone;
-    private ImageView imgEditWork;
+//    private EditText bio;
+//    private EditText phone;
+//    private EditText work;
+//    private ImageView imgEditBio;
+//    private ImageView imgEditPhone;
+//    private ImageView imgEditWork;
     private TextView txtNothing, txtName, txtEmail;
 
 
@@ -54,15 +54,17 @@ public class UserInforActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_infor);
         btnBack = findViewById(R.id.btn_back);
         avatar = findViewById(R.id.img_avater_user_profiler);
-        bio = findViewById(R.id.edit_text_bio);
-        phone=findViewById(R.id.edit_text_phone);
-        work=findViewById(R.id.edit_text_work);
-        imgEditBio= findViewById(R.id.img_edit_bio);
-        imgEditPhone=findViewById(R.id.img_edit_phone);
-        imgEditWork=findViewById(R.id.img_edit_work);
+
+//        bio = findViewById(R.id.edit_text_bio);
+//        phone=findViewById(R.id.edit_text_phone);
+//        work=findViewById(R.id.edit_text_work);
+//        imgEditBio= findViewById(R.id.img_edit_bio);
+//        imgEditPhone=findViewById(R.id.img_edit_phone);
+//        imgEditWork=findViewById(R.id.img_edit_work);
+
         txtNothing = findViewById(R.id.txt_nothing);
         txtName = findViewById(R.id.txt_username_user_profiler);
-        txtEmail = findViewById(R.id.text_view_email);
+        txtEmail = findViewById(R.id.txt_email_user_profiler);
 
 
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
@@ -97,37 +99,36 @@ public class UserInforActivity extends AppCompatActivity {
 
 
 
-        imgEditBio.setOnClickListener(v -> {
-            if(bio.isEnabled())
-            {
-                bio.setEnabled(false);
-            }
-            else
-            {
-                bio.setEnabled(true);
-            }
-        });
-
-        imgEditPhone.setOnClickListener(v -> {
-            if(phone.isEnabled())
-            {
-                phone.setEnabled(false);
-            }
-            else
-            {
-                phone.setEnabled(true);
-            }
-        });
-        imgEditWork.setOnClickListener(v -> {
-            if(work.isEnabled())
-            {
-                work.setEnabled(false);
-            }
-            else
-            {
-                work.setEnabled(true);
-            }
-        });
+//        imgEditBio.setOnClickListener(v -> {
+//            if(bio.isEnabled())
+//            {
+//                bio.setEnabled(false);
+//            }
+//            else
+//            {
+//                bio.setEnabled(true);
+//            }
+//        });
+//        imgEditPhone.setOnClickListener(v -> {
+//            if(phone.isEnabled())
+//            {
+//                phone.setEnabled(false);
+//            }
+//            else
+//            {
+//                phone.setEnabled(true);
+//            }
+//        });
+//        imgEditWork.setOnClickListener(v -> {
+//            if(work.isEnabled())
+//            {
+//                work.setEnabled(false);
+//            }
+//            else
+//            {
+//                work.setEnabled(true);
+//            }
+//        });
 
         btnBack.setOnClickListener(v -> onBackPressed());
 
