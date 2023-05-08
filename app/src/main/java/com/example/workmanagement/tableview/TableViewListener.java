@@ -417,7 +417,7 @@ public class TableViewListener implements ITableViewListener {
     public void onRowHeaderLongPressed(@NonNull RecyclerView.ViewHolder rowHeaderView, int row) {
 
         // Create Long Press Popup
-        RowHeaderLongPressPopup popup = new RowHeaderLongPressPopup(rowHeaderView, mTableView);
+        RowHeaderLongPressPopup popup = new RowHeaderLongPressPopup(rowHeaderView, mTableView, boardViewModel, userViewModel, (int) tables.get(position).getTasks().get(row).getId(), tables, position);
         // Show
         popup.show();
     }
