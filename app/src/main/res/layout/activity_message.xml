@@ -4,130 +4,124 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/text_field"
+    android:background="@color/white"
     tools:context=".activities.MessageActivity">
 
-    <RelativeLayout
-        android:id="@+id/standard"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/messageViewHeader"
         android:layout_width="match_parent"
-
         android:layout_height="wrap_content">
-
-        <Button
-            android:id="@+id/backMessageBoxBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="17dp"
-            android:background="@drawable/ic_previous"
-            android:maxWidth="40dp"
-            android:layout_marginTop="3dp"
-            android:minWidth="40dp"
-            android:minHeight="14.5dp"></Button>
 
         <ImageView
-            android:id="@+id/displayAvatarMessageBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/backMessageBoxBtn"
-            android:background="@drawable/bg"
-            android:maxWidth="32dp"
-            android:layout_marginTop="6dp"
-            android:minWidth="32dp"
-            android:minHeight="32dp"></ImageView>
+            android:id="@+id/messageViewBtnBack"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/btn_back"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imgBoard"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="8dp"
+            android:padding="10dp"
+            android:src="@mipmap/ic_launcher"
+            app:civ_border_color="#FF000000"
+            app:civ_border_width="2dp"
+            app:layout_constraintBottom_toBottomOf="@+id/messageViewBtnBack"
+            app:layout_constraintStart_toEndOf="@+id/messageViewBtnBack"
+            app:layout_constraintTop_toTopOf="@+id/messageViewBtnBack" />
 
         <TextView
-            android:id="@+id/displayNameMessageBox"
-            android:layout_width="match_parent"
+            android:id="@+id/messageViewBoardName"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:layout_toEndOf="@+id/displayAvatarMessageBox"
-            android:maxWidth="32dp"
-            android:text="Zang chu che pho mai que"
+            android:layout_marginStart="8dp"
+            android:text="Board name"
             android:textColor="@color/black"
-            android:layout_marginTop="13dp"
-            android:textSize="14dp"
-            android:minWidth="32dp"
-            android:minHeight="32dp"
-            ></TextView>
-    </RelativeLayout>
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+            app:layout_constraintBottom_toBottomOf="@+id/imgBoard"
+            app:layout_constraintStart_toEndOf="@+id/imgBoard"
+            app:layout_constraintTop_toTopOf="@+id/imgBoard" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <TextView
         android:id="@+id/displayDayTimeMessageBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="18dp"
-        android:layout_below="@+id/standard"
-        android:maxWidth="32dp"
-        android:layout_marginTop="50dp"
-        android:text="Mar 16, 0:00"
-        android:textColor="@color/disable"
+        android:layout_below="@id/messageViewHeader"
         android:layout_centerHorizontal="true"
+        android:text="Mar 16, 0:00"
         android:textAlignment="center"
-        android:textSize="12dp"
-        android:minWidth="32dp"
-        android:minHeight="32dp"
-        ></TextView></ScrollView>
+        android:textColor="@color/disable"
+        android:textSize="12dp" />
 
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:minHeight="70dp"
-    android:layout_alignParentBottom="true"
-    >
-
-    <Button
-        android:id="@+id/addInputMessageBoxBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="17dp"
-        android:background="@drawable/add_input_message_board_box"
-        android:minHeight="32dp"
-        android:maxHeight="32dp"
-        android:maxWidth="32dp"
-        android:minWidth="32dp"
-        android:layout_marginTop="11dp"
-        ></Button>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/messagesRecView"
+        android:layout_below="@id/displayDayTimeMessageBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_toEndOf="@+id/addInputMessageBoxBtn"
-        android:layout_height="wrap_content">
-
-        <EditText
-            android:id="@+id/inputMessage"
-            android:layout_centerInParent="true"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/search_user_input_border"
-            android:hint="Aa"
-            android:inputType="textLongMessage"
-            android:padding="10dp"
-            android:textColor="@color/disable"
-            android:textColorHint="@color/disable"
-            android:textSize="15dp"
-            ></EditText>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:minHeight="70dp">
 
         <Button
-            android:id="@+id/stickerIconMessageBoxBtn"
+            android:id="@+id/addInputMessageBoxBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@id/inputMessage"
-            android:layout_alignBottom="@id/inputMessage"
-            android:layout_centerInParent="true"
-            android:background="@drawable/ic_sticker"
-            android:maxWidth="30dp"
-            android:layout_marginEnd="8dp"
-            android:maxHeight="30dp"
-            android:minWidth="30dp"
-            android:minHeight="30dp"></Button></RelativeLayout>
+            android:layout_marginStart="17dp"
+            android:layout_marginTop="11dp"
+            android:background="@drawable/add_input_message_board_box"
+            android:maxWidth="32dp"
+            android:maxHeight="32dp"
+            android:minWidth="32dp"
+            android:minHeight="32dp"></Button>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/addInputMessageBoxBtn">
+
+            <EditText
+                android:id="@+id/inputMessage"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/search_user_input_border"
+                android:hint="Aa"
+                android:inputType="textLongMessage"
+                android:padding="10dp"
+                android:textColor="@color/disable"
+                android:textColorHint="@color/disable"
+                android:textSize="15dp"></EditText>
+
+            <Button
+                android:id="@+id/stickerIconMessageBoxBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@id/inputMessage"
+                android:layout_alignBottom="@id/inputMessage"
+                android:layout_centerInParent="true"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/ic_sticker"
+                android:maxWidth="30dp"
+                android:maxHeight="30dp"
+                android:minWidth="30dp"
+                android:minHeight="30dp"></Button>
+        </RelativeLayout>
 
 
-</RelativeLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

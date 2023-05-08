@@ -21,6 +21,7 @@ import com.example.workmanagement.databinding.FragmentChartBinding;
 import com.example.workmanagement.databinding.FragmentChatBinding;
 import com.example.workmanagement.databinding.FragmentTableBinding;
 import com.example.workmanagement.utils.dto.MessageDTO;
+import com.example.workmanagement.utils.services.store.MessageStorage;
 import com.example.workmanagement.viewmodels.UserViewModel;
 
 import java.util.ArrayList;
@@ -54,6 +55,8 @@ public class ChatFragment extends Fragment {
         adapter = new BoardMessageRecViewAdapter(getActivity());
         binding.boardMessBoxRecView.setAdapter(adapter);
         binding.boardMessBoxRecView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        userViewModel.getBoards().observe(getViewLifecycleOwner(), boards -> adapter.setBoards(boards));
+        userViewModel.getBoards().observe(getViewLifecycleOwner(), boards ->
+                adapter.setBoards(MessageStorage.getInstance().getBoardMessages())
+        );
     }
 }
