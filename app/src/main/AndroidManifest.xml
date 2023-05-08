@@ -22,6 +22,9 @@
             android:name=".activities.EditBoardActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.OnBoardingActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.MessageActivity"
             android:exported="false" />
         <activity

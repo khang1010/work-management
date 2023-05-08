@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.workmanagement.activities.LoginActivity;
+import com.example.workmanagement.activities.OnBoardingActivity;
 
 public class MainActivity extends AppCompatActivity {
     @Override
