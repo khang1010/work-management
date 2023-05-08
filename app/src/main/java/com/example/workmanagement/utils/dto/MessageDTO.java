@@ -4,6 +4,9 @@ import com.squareup.moshi.Json;
 
 public class MessageDTO {
 
+    @Json(name = "boardId")
+    private long boardId;
+
     @Json(name = "boardName")
     private String boardName;
 
@@ -27,6 +30,14 @@ public class MessageDTO {
         this.displayName = displayName;
         this.photoUrl = photoUrl;
         this.message = message;
+    }
+
+    public long getBoardId() {
+        return boardId;
+    }
+
+    public void setBoardId(long boardId) {
+        this.boardId = boardId;
     }
 
     public String getEmail() {

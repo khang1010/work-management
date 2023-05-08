@@ -52,6 +52,8 @@ import com.example.workmanagement.utils.dto.SearchUserResponse;
 import com.example.workmanagement.utils.dto.UserDTO;
 import com.example.workmanagement.utils.services.impl.AuthServiceImpl;
 import com.example.workmanagement.utils.services.impl.UserServiceImpl;
+import com.example.workmanagement.utils.services.store.BoardMessages;
+import com.example.workmanagement.utils.services.store.MessageStorage;
 import com.example.workmanagement.viewmodels.BoardViewModel;
 import com.example.workmanagement.viewmodels.UserViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -138,6 +140,7 @@ public class HomeActivity extends AppCompatActivity {
                                 subMenu.getItem(0).setChecked(true);
                                 boardViewModel = new ViewModelProvider(HomeActivity.this).get(BoardViewModel.class);
                                 userViewModel.setCurrentBoardId(boards.get(0).getId());
+                                initSocketConnection(userViewModel.getToken().getValue());
                             }
                         });
 
@@ -150,7 +153,7 @@ public class HomeActivity extends AppCompatActivity {
                             else
                                 binding.imgAvatar.setImageResource(R.mipmap.ic_launcher);
                         });
-                        userViewModel.getToken().observe(HomeActivity.this, token -> initSocketConnection(token));
+                        //userViewModel.getToken().observe(HomeActivity.this, token -> initSocketConnection(token));
                         userViewModel.getHasNonReadNotification().observe(HomeActivity.this, hasNonRead -> {
                             if (hasNonRead)
                                 binding.notificationPoint.setVisibility(View.VISIBLE);
@@ -246,22 +249,27 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void initSocketConnection(String token) {
-        if (stompClient == null || !stompClient.isConnected()) {
-            stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, SystemConstant.BASE_URL + "ws/websocket");
-            stompClient.connect();
-            stompClient.topic("/notification/" + userViewModel.getId().getValue())
+//        if (stompClient == null || !stompClient.isConnected()) {
+        if (stompClient != null)
+            stompClient.disconnect();
+        stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, SystemConstant.BASE_URL + "ws/websocket");
+        stompClient.connect();
+        stompClient.topic("/notification/" + userViewModel.getId().getValue())
+                .subscribe(message -> {
+                    Moshi moshi = new Moshi.Builder().build();
+                    createNotification(moshi.adapter(NotificationDTO.class).fromJson(message.getPayload()));
+                    runOnUiThread(() -> binding.notificationPoint.setVisibility(View.VISIBLE));
+                });
+        MessageStorage.getInstance().setBoardMessages(new ArrayList<>());
+        userViewModel.getBoards().getValue().forEach(b -> {
+            MessageStorage.getInstance().getBoardMessages().add(new BoardMessages(b.getId(), b.getName()));
+            stompClient.topic("/chatroom/" + b.getId())
                     .subscribe(message -> {
-                        Moshi moshi = new Moshi.Builder().build();
-                        createNotification(moshi.adapter(NotificationDTO.class).fromJson(message.getPayload()));
-                        runOnUiThread(() -> binding.notificationPoint.setVisibility(View.VISIBLE));
+                        createNotification(new Moshi.Builder().build().adapter(MessageDTO.class).fromJson(message.getPayload()));
+                        MessageStorage.getInstance().addMessage(new Moshi.Builder().build().adapter(MessageDTO.class).fromJson(message.getPayload()));
                     });
-            userViewModel.getBoards().getValue().forEach(b ->
-                    stompClient.topic("/chatroom/" + b.getId())
-                            .subscribe(message ->
-                                    createNotification(new Moshi.Builder().build().adapter(MessageDTO.class).fromJson(message.getPayload()))
-                            )
-            );
-        }
+        });
+//        }
     }
 
     private void createNotification(MessageDTO message) throws ExecutionException, InterruptedException {
