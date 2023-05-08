@@ -28,12 +28,25 @@ import android.content.Context;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.evrencoskun.tableview.TableView;
 import com.example.workmanagement.R;
+import com.example.workmanagement.utils.dto.TableDetailsDTO;
+import com.example.workmanagement.utils.services.impl.TaskServiceImpl;
+import com.example.workmanagement.viewmodels.BoardViewModel;
+import com.example.workmanagement.viewmodels.UserViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.IntStream;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by evrencoskun on 21.01.2018.
@@ -47,9 +60,14 @@ public class RowHeaderLongPressPopup extends PopupMenu implements PopupMenu
     private static final int SHOWHIDE_COLUMN = 2;
     private static final int REMOVE_ROW = 3;
 
+    private BoardViewModel boardViewModel;
+    private UserViewModel userViewModel;
     @NonNull
     private final TableView mTableView;
     private final int mRowPosition;
+    private int id;
+    private List<TableDetailsDTO> tables = new ArrayList<>();
+    private int pos = -1;
 
     public RowHeaderLongPressPopup(@NonNull RecyclerView.ViewHolder viewHolder, @NonNull TableView tableView) {
         super(viewHolder.itemView.getContext(), viewHolder.itemView);
@@ -59,6 +77,20 @@ public class RowHeaderLongPressPopup extends PopupMenu implements PopupMenu
 
         initialize();
     }
+    public RowHeaderLongPressPopup(@NonNull RecyclerView.ViewHolder viewHolder, @NonNull TableView tableView, BoardViewModel boardViewModel, UserViewModel userViewModel, int id, List<TableDetailsDTO> tables, int position) {
+        super(viewHolder.itemView.getContext(), viewHolder.itemView);
+
+        this.mTableView = tableView;
+        this.mRowPosition = viewHolder.getAdapterPosition();
+        this.boardViewModel = boardViewModel;
+        this.userViewModel = userViewModel;
+        this.tables = tables;
+        this.pos = position;
+        this.id = id;
+
+        initialize();
+    }
+
 
     private void initialize() {
         createMenuItem();
@@ -68,10 +100,10 @@ public class RowHeaderLongPressPopup extends PopupMenu implements PopupMenu
 
     private void createMenuItem() {
         Context context = mTableView.getContext();
-        this.getMenu().add(Menu.NONE, SCROLL_COLUMN, 0, context.getString(R.string
-                .scroll_to_column_position));
-        this.getMenu().add(Menu.NONE, SHOWHIDE_COLUMN, 1, context.getString(R.string
-                .show_hide_the_column));
+//        this.getMenu().add(Menu.NONE, SCROLL_COLUMN, 0, context.getString(R.string
+//                .scroll_to_column_position));
+//        this.getMenu().add(Menu.NONE, SHOWHIDE_COLUMN, 1, context.getString(R.string
+//                .show_hide_the_column));
         this.getMenu().add(Menu.NONE, REMOVE_ROW, 2, "Remove " + mRowPosition + " position");
         // add new one ...
 
@@ -96,6 +128,27 @@ public class RowHeaderLongPressPopup extends PopupMenu implements PopupMenu
                 break;
             case REMOVE_ROW:
                 mTableView.getAdapter().removeRow(mRowPosition);
+                List<TableDetailsDTO> tableDetailsDTOS = boardViewModel.getTables().getValue();
+//                TaskServiceImpl.getInstance().getService(userViewModel.getToken().getValue()).deleteTask(id).enqueue(new Callback<Void>() {
+//                    @Override
+//                    public void onResponse(Call<Void> call, Response<Void> response) {
+//                        if (response.isSuccessful() && response.code() == 200) {
+//                            int index = IntStream.range(0, tables.get(pos).getTasks().size())
+//                                    .filter(i -> response.body().getId() == tables.get(pos).getTasks().get(i).getId())
+//                                    .findFirst().orElse(-1);
+//                            tableDetailsDTOS.stream().filter(t -> t.getId() == tableId)
+//                                    .findFirst().get().getTasks()
+//                                    .set(index, response.body());
+//                            boardViewModel.setTables(tableDetailsDTOS);
+//                        }
+//
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<Void> call, Throwable t) {
+//
+//                    }
+//                });
                 break;
         }
         return true;
