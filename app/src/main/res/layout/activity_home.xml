@@ -103,7 +103,7 @@
             android:layout_above="@+id/bottomNavigation"
             android:layout_below="@id/headerLayout"
             android:layout_marginBottom="-1dp"
-            android:background="@color/primary_5"/>
+            android:background="@color/background_color"/>
 
         <com.etebarian.meowbottomnavigation.MeowBottomNavigation
             android:id="@+id/bottomNavigation"
@@ -119,7 +119,7 @@
             app:mbn_rippleColor="#2f424242"
             app:mbn_selectedIconColor="@color/main_02"
             app:mbn_shadowColor="#1f212121"
-            android:background="@color/primary_5"/>
+            android:background="@color/background_color"/>
 
     </RelativeLayout>
 

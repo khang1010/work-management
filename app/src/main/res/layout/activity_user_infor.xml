@@ -72,7 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Overview"
-                android:textSize="25dp"
+                android:textSize="@dimen/button_text"
                 android:textStyle="normal"
                 android:textColor="@color/black"/>
             <LinearLayout
@@ -97,7 +97,8 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/body_text"/>
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -105,6 +106,7 @@
                     android:gravity="center_vertical"
                     android:text="Something..."
                     android:textColor="@color/text_user_profile"
+                    android:textSize="@dimen/body_text"
                     android:layout_marginStart="20dp"
                     android:enabled="false"
                     android:inputType="textMultiLine"
@@ -136,6 +138,7 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
+                    android:textSize="@dimen/body_text"
                     android:textColor="@color/black"/>
                 <EditText
                     android:layout_width="match_parent"
@@ -144,6 +147,7 @@
                     android:gravity="center_vertical"
                     android:text="Something..."
                     android:textColor="@color/text_user_profile"
+                    android:textSize="@dimen/body_text"
                     android:layout_marginStart="20dp"
                     android:enabled="false"
                     android:maxLines="1"
@@ -172,6 +176,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
                     android:text="Work"
+                    android:textSize="@dimen/body_text"
                     android:textColor="@color/black"/>
                 <EditText
                     android:layout_width="match_parent"
@@ -180,6 +185,7 @@
                     android:gravity="center_vertical"
                     android:text="Something..."
                     android:textColor="@color/text_user_profile"
+                    android:textSize="@dimen/body_text"
                     android:layout_marginStart="20dp"
                     android:enabled="false"
                     android:inputType="textMultiLine"
@@ -203,6 +209,7 @@
                     android:layout_marginStart="35dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
+                    android:textSize="@dimen/body_text"
                     android:textColor="@color/black"/>
                 <TextView
                     android:layout_width="match_parent"
@@ -210,6 +217,7 @@
                     android:gravity="center_vertical"
                     android:text="Something..."
                     android:textColor="@color/text_user_profile"
+                    android:textSize="@dimen/body_text"
                     android:layout_marginStart="20dp"/>
             </LinearLayout>
 
@@ -218,7 +226,7 @@
                 android:layout_height="wrap_content"
                 android:text="Group"
                 android:textColor="@color/black"
-                android:textSize="25dp"
+                android:textSize="@dimen/button_text"
                 android:textStyle="normal"
                 android:layout_marginTop="10dp"/>
             <TextView
@@ -226,6 +234,7 @@
                 android:layout_height="35dp"
                 android:background="@drawable/background_overview_element"
                 android:text="Not thing..."
+                android:textSize="@dimen/body_text"
                 android:layout_marginTop="5dp"
                 android:id="@+id/txt_nothing"
                 android:gravity="center"

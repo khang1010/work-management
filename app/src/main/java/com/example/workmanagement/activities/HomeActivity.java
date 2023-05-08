@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -350,6 +352,7 @@ public class HomeActivity extends AppCompatActivity {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.create_board);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         EditText txtSearchUser = dialog.findViewById(R.id.editTxtSearchUser);
         EditText txtBoardName = dialog.findViewById(R.id.editTxtCreateBoardName);
         ConstraintLayout btnCreateBoard = dialog.findViewById(R.id.btnCreateBoard);
