@@ -174,9 +174,9 @@ public class HomeActivity extends AppCompatActivity {
 
         binding.imgSideBar.setOnClickListener(v -> binding.drawableLayout.openDrawer(GravityCompat.START));
 
-        binding.imgAvatar.setOnClickListener(v ->
-                startActivity(new Intent(this, UserInforActivity.class))
-        );
+        binding.imgAvatar.setOnClickListener(v -> {
+            startActivity(new Intent(this, UserInforActivity.class));
+        });
 
         binding.navigationView.setNavigationItemSelectedListener(item -> {
             Menu menu = binding.navigationView.getMenu().getItem(0).getSubMenu();
