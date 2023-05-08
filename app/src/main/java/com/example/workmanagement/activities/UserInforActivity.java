@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,7 +41,8 @@ public class UserInforActivity extends AppCompatActivity {
     private ImageView imgEditBio;
     private ImageView imgEditPhone;
     private ImageView imgEditWork;
-    private TextView txtNothing, txtName;
+    private TextView txtNothing, txtName, txtEmail;
+
 
     private UserViewModel userViewModel;
 
@@ -60,6 +62,8 @@ public class UserInforActivity extends AppCompatActivity {
         imgEditWork=findViewById(R.id.img_edit_work);
         txtNothing = findViewById(R.id.txt_nothing);
         txtName = findViewById(R.id.txt_username_user_profiler);
+        txtEmail = findViewById(R.id.text_view_email);
+
 
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
@@ -74,6 +78,8 @@ public class UserInforActivity extends AppCompatActivity {
             userDTO.setPhotoUrl(String.valueOf(account.getPhotoUrl()));
 
             txtName.setText(account.getDisplayName());
+            txtEmail.setText(account.getEmail());
+
             if (!String.valueOf(account.getPhotoUrl()).equals("null"))
                 Glide.with(UserInforActivity.this)
                         .asBitmap()
@@ -86,6 +92,11 @@ public class UserInforActivity extends AppCompatActivity {
         txtNothing.setOnClickListener(v ->
                 Toast.makeText(UserInforActivity.this, "Please enter board !!!", Toast.LENGTH_SHORT).show()
         );
+
+
+
+
+
         imgEditBio.setOnClickListener(v -> {
             if(bio.isEnabled())
             {
