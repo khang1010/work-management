@@ -95,7 +95,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_centerInParent="true"
-                android:layout_centerHorizontal="true"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/search_user_input_border"
@@ -118,7 +117,22 @@
                 android:maxWidth="30dp"
                 android:maxHeight="30dp"
                 android:minWidth="30dp"
-                android:minHeight="30dp"></Button>
+                android:minHeight="30dp"/>
+
+            <Button
+                android:id="@+id/btnSend"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@id/inputMessage"
+                android:layout_alignBottom="@id/inputMessage"
+                android:layout_centerInParent="true"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/btn_send"
+                android:maxWidth="30dp"
+                android:maxHeight="30dp"
+                android:minWidth="30dp"
+                android:minHeight="30dp"/>
         </RelativeLayout>
 
 

@@ -21,9 +21,11 @@ import com.example.workmanagement.activities.MessageActivity;
 import com.example.workmanagement.utils.dto.BoardInfo;
 import com.example.workmanagement.utils.dto.MessageDTO;
 import com.example.workmanagement.utils.services.store.BoardMessages;
+import com.example.workmanagement.viewmodels.UserViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BoardMessageRecViewAdapter extends RecyclerView.Adapter<BoardMessageRecViewAdapter.ViewHolder> {
 
@@ -31,15 +33,14 @@ public class BoardMessageRecViewAdapter extends RecyclerView.Adapter<BoardMessag
 
     private Context context;
 
-    public Context getContext() {
-        return context;
-    }
+    private UserViewModel userViewModel;
 
 
-    public BoardMessageRecViewAdapter(Context context) {
+    public BoardMessageRecViewAdapter(Context context, UserViewModel userViewModel) {
         if (boards == null)
             boards = new ArrayList<>();
         this.context = context;
+        this.userViewModel = userViewModel;
     }
 
     @NonNull
@@ -53,10 +54,19 @@ public class BoardMessageRecViewAdapter extends RecyclerView.Adapter<BoardMessag
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.displayName.setText(boards.get(position).getName());
-        Glide.with(context).asBitmap().load("https://scontent.fsgn5-2.fna.fbcdn.net/v/t39.30808-6/341694474_496163519267495_2965195482123986755_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=CVH65JLugRkAX_yXeAC&_nc_ht=scontent.fsgn5-2.fna&oh=00_AfA-t7f-Fu-h-KQQVxQFB8CCkMbsm4bIbXlh_HacakFiTA&oe=644EDA5E")
+        Glide.with(context).asBitmap().load("https://scontent.fsgn5-14.fna.fbcdn.net/v/t39.30808-6/340746646_137283612616338_5424412554452308706_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=We-EPxOzK3EAX-V5kmM&_nc_ht=scontent.fsgn5-14.fna&oh=00_AfB4daIlHoCLxyVbVcJUXKstp7HdJHRqyAG3_--8k1Vl1g&oe=645F7678")
                 .into(holder.imageAvatar);
-        holder.boardBox.setOnClickListener(view ->
-                view.getContext().startActivity(new Intent(view.getContext(), MessageActivity.class)));
+        holder.boardBox.setOnClickListener(view -> {
+            Intent intent = new Intent(view.getContext(), MessageActivity.class);
+            intent.putExtra("USER_ID", userViewModel.getId().getValue());
+            intent.putExtra("USER_EMAIL", userViewModel.getEmail().getValue());
+            intent.putExtra("USER_NAME", userViewModel.getDisplayName().getValue());
+            intent.putExtra("PHOTO_URL", userViewModel.getPhotoUrl().getValue());
+            intent.putExtra("BOARD_ID", boards.get(position).getId());
+            intent.putExtra("BOARD_NAME", boards.get(position).getName());
+            intent.putExtra("IDS", (ArrayList) userViewModel.getBoards().getValue().stream().map(b -> b.getId()).collect(Collectors.toList()));
+            view.getContext().startActivity(intent);
+        });
         if (boards.get(position).getMessages().size() > 0)
             holder.displayMessage.setText(boards.get(position).getLatestMessage().getMessage());
     }

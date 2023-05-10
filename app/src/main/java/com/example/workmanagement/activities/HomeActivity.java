@@ -140,9 +140,10 @@ public class HomeActivity extends AppCompatActivity {
                                 subMenu.getItem(0).setChecked(true);
                                 boardViewModel = new ViewModelProvider(HomeActivity.this).get(BoardViewModel.class);
                                 userViewModel.setCurrentBoardId(boards.get(0).getId());
-                                initSocketConnection(userViewModel.getToken().getValue());
                             }
                         });
+
+                        userViewModel.getId().observe(HomeActivity.this, id -> initSocketConnection(""));
 
                         userViewModel.getPhotoUrl().observe(HomeActivity.this, photoUrl -> {
                             if (!photoUrl.equals("null"))
@@ -239,7 +240,8 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        stompClient.disconnect();
+        if (stompClient != null)
+            stompClient.disconnect();
     }
 
     @Override

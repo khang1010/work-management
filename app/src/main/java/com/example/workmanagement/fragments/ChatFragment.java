@@ -52,7 +52,7 @@ public class ChatFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
-        adapter = new BoardMessageRecViewAdapter(getActivity());
+        adapter = new BoardMessageRecViewAdapter(getActivity(), userViewModel);
         binding.boardMessBoxRecView.setAdapter(adapter);
         binding.boardMessBoxRecView.setLayoutManager(new LinearLayoutManager(getActivity()));
         userViewModel.getBoards().observe(getViewLifecycleOwner(), boards ->

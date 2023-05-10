@@ -2,6 +2,9 @@ package com.example.workmanagement.utils.dto;
 
 import com.squareup.moshi.Json;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MessageDTO {
 
     @Json(name = "boardId")
@@ -25,11 +28,14 @@ public class MessageDTO {
     @Json(name = "timestamp")
     private String timestamp;
 
-    public MessageDTO(String email, String displayName, String photoUrl, String message) {
+    public MessageDTO(long boardId, String boardName, String email, String displayName, String photoUrl, String message) {
+        this.boardId = boardId;
+        this.boardName = boardName;
         this.email = email;
         this.displayName = displayName;
         this.photoUrl = photoUrl;
         this.message = message;
+        this.timestamp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date());
     }
 
     public long getBoardId() {
