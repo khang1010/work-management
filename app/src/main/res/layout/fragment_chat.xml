@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary_5"
+    android:background="@color/background_color"
     tools:context=".fragments.ChatFragment">
 <RelativeLayout
     android:layout_width="match_parent"
@@ -13,7 +13,7 @@
     <EditText
         android:id="@+id/editTxtSearchUser"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="43dp"
@@ -21,9 +21,9 @@
         android:hint="Search by name or email"
         android:inputType="textPersonName"
         android:padding="10dp"
-        android:textColor="@color/disable"
+        android:textColor="@color/black"
         android:textColorHint="@color/disable"
-        android:textSize="15dp"
+        android:textSize="@dimen/body_text"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView

@@ -2,7 +2,10 @@
 <resources>
     <dimen name="cell_height">40dp</dimen>
     <dimen name="text_size">12sp</dimen>
-
     <dimen name="default_row_header_width">55dp</dimen>
     <dimen name="default_column_header_height">40dp</dimen>
+    <dimen name="body_text">16sp</dimen>
+    <dimen name="subTitle_text">30sp</dimen>
+    <dimen name="caption_text">14sp</dimen>
+    <dimen name="button_text">20sp</dimen>
 </resources>

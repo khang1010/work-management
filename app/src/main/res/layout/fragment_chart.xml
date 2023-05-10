@@ -22,12 +22,7 @@
 <!--        app:itemTextAppearanceInactive="@style/textStyle_chartNav_inactive"-->
 <!--        app:menu="@menu/chart_navigation" />-->
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:id="@+id/week_chart_select_chart_button"
-        android:layout_margin="10dp"
-        android:text="Select chart"/>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -51,8 +46,7 @@
                 android:id="@+id/barchartWeek"
                 android:layout_marginEnd="10dp"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:visibility="invisible"/>
+                android:layout_marginTop="10dp"/>
 
             <com.github.mikephil.charting.charts.LineChart
                 android:layout_width="match_parent"
@@ -60,8 +54,7 @@
                 android:id="@+id/linechartWeek"
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginStart="10dp"
-                android:visibility="invisible"/>
+                android:layout_marginStart="10dp"/>
 
             <com.github.mikephil.charting.charts.PieChart
                 android:layout_width="match_parent"
@@ -69,8 +62,7 @@
                 android:id="@+id/piechartWeek"
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginStart="10dp"
-                android:visibility="invisible"/>
+                android:layout_marginStart="10dp"/>
         </LinearLayout>
     </ScrollView>
 

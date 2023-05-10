@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -74,6 +76,7 @@ public class OnBoardingActivity extends AppCompatActivity {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.create_board);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         EditText txtSearchUser = dialog.findViewById(R.id.editTxtSearchUser);
         EditText txtBoardName = dialog.findViewById(R.id.editTxtCreateBoardName);
         ConstraintLayout btnCreateBoard = dialog.findViewById(R.id.btnCreateBoard);
