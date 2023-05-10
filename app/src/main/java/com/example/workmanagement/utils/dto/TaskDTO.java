@@ -10,6 +10,8 @@ public class TaskDTO {
 
     private long tableId;
 
+    private String status;
+
     private List<TextAttributeDTO> textAttributes;
 
     private List<NumberAttributeDTO> numberAttributes;
@@ -40,6 +42,14 @@ public class TaskDTO {
 
     public void setTableId(long tableId) {
         this.tableId = tableId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public List<TextAttributeDTO> getTextAttributes() {

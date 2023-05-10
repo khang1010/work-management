@@ -2,12 +2,16 @@ package com.example.workmanagement.utils.dto;
 
 import com.squareup.moshi.Json;
 
+import java.util.Date;
 import java.util.List;
 
 public class UserDTO {
 
     @Json(name = "id")
     private long id;
+
+    @Json(name = "isNew")
+    private boolean isNew;
 
     @Json(name = "token")
     private String token;
@@ -32,6 +36,14 @@ public class UserDTO {
 
     @Json(name = "hasNonReadNotification")
     private boolean hasNonReadNotification;
+
+    public boolean isNew() {
+        return isNew;
+    }
+
+    public void setNew(boolean aNew) {
+        isNew = aNew;
+    }
 
     public boolean isHasNonReadNotification() {
         return hasNonReadNotification;

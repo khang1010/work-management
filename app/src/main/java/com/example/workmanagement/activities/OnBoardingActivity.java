@@ -16,6 +16,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
@@ -23,12 +24,16 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.workmanagement.R;
 import com.example.workmanagement.adapter.UserInvitedRecViewAdapter;
 import com.example.workmanagement.adapter.UserSearchRecViewAdapter;
 import com.example.workmanagement.databinding.ActivityOnBoardingBinding;
 import com.example.workmanagement.utils.dto.SearchUserResponse;
+import com.example.workmanagement.utils.dto.UserDTO;
+import com.example.workmanagement.utils.services.impl.AuthServiceImpl;
 import com.example.workmanagement.utils.services.impl.UserServiceImpl;
+import com.example.workmanagement.viewmodels.BoardViewModel;
 import com.example.workmanagement.viewmodels.UserViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -37,6 +42,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.Scope;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,7 +50,6 @@ import retrofit2.Response;
 
 public class OnBoardingActivity extends AppCompatActivity {
 
-    private UserViewModel userViewModel;
     private ActivityOnBoardingBinding binding;
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
@@ -54,7 +59,7 @@ public class OnBoardingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityOnBoardingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .requestScopes(new Scope("https://www.googleapis.com/auth/userinfo.profile"))
@@ -67,11 +72,36 @@ public class OnBoardingActivity extends AppCompatActivity {
         if (account == null) {
             goSignOut();
         } else {
+            UserDTO userDTO = new UserDTO();
+            userDTO.setEmail(account.getEmail());
+            userDTO.setDisplayName(account.getDisplayName());
+            userDTO.setFamilyName(account.getFamilyName());
+            userDTO.setGivenName(account.getGivenName());
+            userDTO.setPhotoUrl(String.valueOf(account.getPhotoUrl()));
+
+            AuthServiceImpl.getInstance().getService().loginUser(userDTO).enqueue(new Callback<UserDTO>() {
+                @Override
+                public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
+                    if (response.isSuccessful() && response.code() == 200) {
+                        if (!response.body().isNew())
+                            goToHome();
+                        else {
+                            binding.progressBarHelpFragment.setVisibility(View.GONE);
+                            binding.btnCreate1st.setVisibility(View.VISIBLE);
+                            binding.btnCreate1st.setOnClickListener(v -> showCreateBoardDialog(response.body().getToken()));
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<UserDTO> call, Throwable t) {
+                    Toast.makeText(OnBoardingActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
             binding.acctName.setText(getFirstWord(account.getDisplayName().toString()));
         }
-        binding.btnCreate1st.setOnClickListener(v -> showCreateBoardDialog());
     }
-    private void showCreateBoardDialog() {
+    private void showCreateBoardDialog(String token) {
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
@@ -101,7 +131,7 @@ public class OnBoardingActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (!charSequence.toString().isEmpty())
-                    UserServiceImpl.getInstance().getService(userViewModel.getToken().getValue()).searchUser(1, charSequence.toString()).enqueue(new Callback<SearchUserResponse>() {
+                    UserServiceImpl.getInstance().getService(token).searchUser(1, charSequence.toString()).enqueue(new Callback<SearchUserResponse>() {
                         @Override
                         public void onResponse(Call<SearchUserResponse> call, Response<SearchUserResponse> response) {
                             if (response.isSuccessful() && response.code() == 200)
@@ -122,7 +152,7 @@ public class OnBoardingActivity extends AppCompatActivity {
             }
         });
         btnCreateBoard.setOnClickListener(v -> {
-            goTohome();
+            goToHome();
         });
         dialog.show();
     }
@@ -134,8 +164,7 @@ public class OnBoardingActivity extends AppCompatActivity {
             return text; // Text is the first word itself.
         }
     }
-    private void goTohome() {
-
+    private void goToHome() {
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
         finish();
