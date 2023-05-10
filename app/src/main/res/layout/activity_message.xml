@@ -60,11 +60,18 @@
         android:textColor="@color/disable"
         android:textSize="12dp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/messagesRecView"
-        android:layout_below="@id/displayDayTimeMessageBox"
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@id/displayDayTimeMessageBox">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/messagesRecView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </ScrollView>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -99,7 +106,7 @@
                 android:layout_marginTop="5dp"
                 android:background="@drawable/search_user_input_border"
                 android:hint="Aa"
-                android:inputType="textLongMessage"
+                android:inputType="textMultiLine"
                 android:padding="10dp"
                 android:textColor="@color/disable"
                 android:textColorHint="@color/disable"
