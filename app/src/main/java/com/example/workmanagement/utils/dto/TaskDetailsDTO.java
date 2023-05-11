@@ -9,6 +9,9 @@ public class TaskDetailsDTO {
     @Json(name = "id")
     private long id;
 
+    @Json(name = "status")
+    private String status;
+
     @Json(name = "user")
     private UserInfoDTO user;
 
@@ -70,5 +73,13 @@ public class TaskDetailsDTO {
 
     public void setLabelAttributes(List<LabelAttributeDTO> labelAttributes) {
         this.labelAttributes = labelAttributes;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

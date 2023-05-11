@@ -30,10 +30,14 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -185,8 +189,24 @@ public class TableViewListener implements ITableViewListener {
         dialog.setContentView(R.layout.create_task);
         EditText txtSearchUser = dialog.findViewById(R.id.editTxtSearch);
         EditText txtTaskName = dialog.findViewById(R.id.editTxtCreateTaskName);
-//        TextView txtEmail = dialog.findViewById(R.id.txtEmail);
-//        TextView txtPhoto = dialog.findViewById(R.id.txtPhotoUrl);
+        Spinner status = dialog.findViewById(R.id.statusSpinner);
+        status.setVisibility(View.VISIBLE);
+        String[] items = {"DONE", "PENDING", "STUCK"};
+        ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_dropdown_item, items);
+        status.setAdapter(statusAdapter);
+
+        final int[] taskStatus = {0};
+        status.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                taskStatus[0] = i;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         ConstraintLayout btnCreateTask = dialog.findViewById(R.id.btnCreateTask);
         ImageView btnIcon = btnCreateTask.findViewById(R.id.imagePlus);
         TextView btnText = btnCreateTask.findViewById(R.id.createTxt);
@@ -238,6 +258,7 @@ public class TableViewListener implements ITableViewListener {
                 List<TableDetailsDTO> tableDetailsDTOS = boardViewModel.getTables().getValue();
                 TaskDetailsDTO task = tables.get(pos).getTasks().get(row);
                 TaskDTO newTask = new TaskDTO();
+                newTask.setStatus(taskStatus[0]);
                 newTask.setUserId(adapter.getUser().getId());
                 List<TextAttributeDTO> textAttributes = new ArrayList<>();
                 List<DateAttributeDTO> dateAttributes = new ArrayList<>();

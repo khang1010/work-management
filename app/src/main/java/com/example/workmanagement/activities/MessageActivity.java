@@ -1,6 +1,7 @@
 package com.example.workmanagement.activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -11,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -74,16 +76,20 @@ public class MessageActivity extends AppCompatActivity {
         binding.stickerIconMessageBoxBtn.setOnClickListener(v -> {
             if (!binding.inputMessage.getText().toString().isEmpty()) {
                 MessageDTO message = new MessageDTO(boardId, boardName, email, displayName, photoUrl, binding.inputMessage.getText().toString());
+                binding.inputMessage.setText("");
                 stompClient.send("/app/message/" + boardId, new Moshi.Builder().build().adapter(MessageDTO.class).toJson(message)).subscribe();
                 binding.scrollView.fullScroll(View.FOCUS_DOWN);
             }
         });
+
     }
+
 
     @Override
     protected void onStop() {
         super.onStop();
-        stompClient.disconnect();
+        if (stompClient != null)
+            stompClient.disconnect();
     }
 
     private void initSocketConnection(long userId, long boardId, List<Long> ids) {

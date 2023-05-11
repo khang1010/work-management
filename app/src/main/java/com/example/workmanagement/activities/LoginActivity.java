@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
         if (account != null) {
-            goTohome();
+            goToHome();
         }
 
         binding.googleSignInButton.setOnClickListener(view -> {
@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
         startActivityForResult(intent, 1234);
     }
 
-    private void goTohome() {
+    private void goToHome() {
 
         Intent intent = new Intent(this, OnBoardingActivity.class);
         startActivity(intent);
@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
                 task.getResult(ApiException.class);
                 GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
-                goTohome();
+                goToHome();
 
             } catch (ApiException e) {
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();

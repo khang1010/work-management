@@ -16,30 +16,25 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.evrencoskun.tableview.TableView;
 import com.example.workmanagement.R;
-import com.example.workmanagement.activities.HomeActivity;
 import com.example.workmanagement.tableview.TableViewAdapter;
 import com.example.workmanagement.tableview.TableViewListener;
 import com.example.workmanagement.tableview.TableViewModel;
 import com.example.workmanagement.tableview.model.Cell;
+import com.example.workmanagement.utils.SystemConstant;
 import com.example.workmanagement.utils.dto.DateAttributeDTO;
-import com.example.workmanagement.utils.dto.SearchUserResponse;
 import com.example.workmanagement.utils.dto.TableDTO;
 import com.example.workmanagement.utils.dto.TableDetailsDTO;
 import com.example.workmanagement.utils.dto.TaskDTO;
 import com.example.workmanagement.utils.dto.TaskDetailsDTO;
 import com.example.workmanagement.utils.dto.TextAttributeDTO;
 import com.example.workmanagement.utils.dto.UserInfoDTO;
-import com.example.workmanagement.utils.services.TaskService;
 import com.example.workmanagement.utils.services.impl.TableServiceImpl;
 import com.example.workmanagement.utils.services.impl.TaskServiceImpl;
-import com.example.workmanagement.utils.services.impl.UserServiceImpl;
 import com.example.workmanagement.viewmodels.BoardViewModel;
 import com.example.workmanagement.viewmodels.UserViewModel;
 
@@ -49,7 +44,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -110,11 +104,14 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
         tableViewAdapter.setCellItems(listCells);
         holder.addTask.setOnClickListener(view -> showCreateTaskDialog(position));
 
-        holder.tableName.setOnClickListener(view -> {
-            holder.editTable.setVisibility(View.VISIBLE);
-            holder.accept.setVisibility(View.VISIBLE);
-            holder.tableName.setVisibility(View.GONE);
-        });
+        if (tables.get(position).getCreatedBy().getEmail().equals(userViewModel.getEmail().getValue()))
+            holder.tableName.setOnClickListener(view -> {
+                holder.editTable.setVisibility(View.VISIBLE);
+                holder.accept.setVisibility(View.VISIBLE);
+                holder.tableName.setVisibility(View.GONE);
+            });
+
+
         holder.accept.setOnClickListener(view -> {
             if (holder.editTable.getText().toString().isEmpty())
                 Toast.makeText(context, "Please fill information", Toast.LENGTH_SHORT).show();
@@ -122,28 +119,29 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
                 TableDTO dto = new TableDTO();
                 dto.setName(holder.editTable.getText().toString());
                 TableServiceImpl.getInstance().getService(userViewModel.getToken().getValue())
-                                .updateTable(tables.get(position).getId(), dto)
-                                        .enqueue(new Callback<TableDetailsDTO>() {
-                                            @Override
-                                            public void onResponse(Call<TableDetailsDTO> call, Response<TableDetailsDTO> response) {
-                                                if (response.isSuccessful() && response.code() == 200) {
-                                                    List<TableDetailsDTO> tableDetailsDTOS = boardViewModel.getTables().getValue();
-                                                    tableDetailsDTOS.set(holder.getAdapterPosition(), response.body());
-                                                    holder.tableName.setVisibility(View.VISIBLE);
-                                                    holder.editTable.setVisibility(View.GONE);
-                                                    holder.accept.setVisibility(View.GONE);
-                                                    boardViewModel.setTables(tableDetailsDTOS);
-                                                } else
-                                                    Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show();
-                                            }
+                        .updateTable(tables.get(position).getId(), dto)
+                        .enqueue(new Callback<TableDetailsDTO>() {
+                            @Override
+                            public void onResponse(Call<TableDetailsDTO> call, Response<TableDetailsDTO> response) {
+                                if (response.isSuccessful() && response.code() == 200) {
+                                    List<TableDetailsDTO> tableDetailsDTOS = boardViewModel.getTables().getValue();
+                                    tableDetailsDTOS.set(holder.getAdapterPosition(), response.body());
+                                    holder.tableName.setVisibility(View.VISIBLE);
+                                    holder.editTable.setVisibility(View.GONE);
+                                    holder.accept.setVisibility(View.GONE);
+                                    boardViewModel.setTables(tableDetailsDTOS);
+                                } else
+                                    Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show();
+                            }
 
-                                            @Override
-                                            public void onFailure(Call<TableDetailsDTO> call, Throwable t) {
-                                                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
+                            @Override
+                            public void onFailure(Call<TableDetailsDTO> call, Throwable t) {
+                                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
             }
         });
+
     }
 
     @Override
@@ -159,8 +157,6 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
         dialog.setContentView(R.layout.create_task);
         EditText txtSearchUser = dialog.findViewById(R.id.editTxtSearch);
         EditText txtTaskName = dialog.findViewById(R.id.editTxtCreateTaskName);
-//        TextView txtEmail = dialog.findViewById(R.id.txtEmail);
-//        TextView txtPhoto = dialog.findViewById(R.id.txtPhotoUrl);
         ConstraintLayout btnCreateTask = dialog.findViewById(R.id.btnCreateTask);
 
         UserSearchInTaskAdapter adapter = new UserSearchInTaskAdapter(context);
@@ -173,6 +169,7 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
                 long tableId = tables.get(pos).getId();
                 List<TableDetailsDTO> tableDetailsDTOS = boardViewModel.getTables().getValue();
                 TaskDTO newTask = new TaskDTO();
+                newTask.setStatus(SystemConstant.DONE_STATUS);
                 newTask.setUserId(adapter.getUser().getId());
                 newTask.setTableId(tableId);
                 List<TextAttributeDTO> textAttributes = new ArrayList<>();
@@ -226,8 +223,7 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
                                     || m.getEmail().trim().toLowerCase().contains(charSequence.toString().trim())
                             )
                             .collect(Collectors.toList()));
-                }
-                else adapter.setUsers(new ArrayList<>());
+                } else adapter.setUsers(new ArrayList<>());
             }
 
             @Override
