@@ -97,7 +97,7 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
 
         tableViewModel.setRow(listCells.size());
 
-        TableViewAdapter tableViewAdapter = new TableViewAdapter(tableViewModel, context);
+        TableViewAdapter tableViewAdapter = new TableViewAdapter(tableViewModel, context, boardViewModel, position);
         holder.table.setAdapter(tableViewAdapter);
         holder.table.setTableViewListener(new TableViewListener(holder.table, boardViewModel, userViewModel, tables, position));
         tableViewAdapter.setAllItems(tableViewModel.getColumnHeaderList(), tableViewModel.getRowHeaderList(), tableViewModel.getCellList());

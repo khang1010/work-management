@@ -51,6 +51,7 @@ import com.example.workmanagement.tableview.holder.RowHeaderViewHolder;
 import com.example.workmanagement.tableview.model.Cell;
 import com.example.workmanagement.tableview.model.ColumnHeader;
 import com.example.workmanagement.tableview.model.RowHeader;
+import com.example.workmanagement.viewmodels.BoardViewModel;
 import com.example.workmanagement.viewmodels.UserViewModel;
 
 import java.io.IOException;
@@ -77,6 +78,8 @@ public class TableViewAdapter extends AbstractTableAdapter<ColumnHeader, RowHead
     private final TableViewModel mTableViewModel;
     private Context mContext;
     private LifecycleOwner lifecycleOwner;
+    private BoardViewModel boardViewModel;
+    private int tablePosition;
     public TableViewAdapter(@NonNull TableViewModel tableViewModel) {
         super();
         this.mTableViewModel = tableViewModel;
@@ -85,6 +88,19 @@ public class TableViewAdapter extends AbstractTableAdapter<ColumnHeader, RowHead
     public TableViewAdapter(@NonNull TableViewModel mTableViewModel, Context mContext) {
         this.mTableViewModel = mTableViewModel;
         this.mContext = mContext;
+    }
+
+    public TableViewAdapter(@NonNull TableViewModel mTableViewModel, Context mContext, BoardViewModel boardViewModel) {
+        this.mTableViewModel = mTableViewModel;
+        this.mContext = mContext;
+        this.boardViewModel = boardViewModel;
+    }
+
+    public TableViewAdapter(@NonNull TableViewModel mTableViewModel, Context mContext, BoardViewModel boardViewModel, int pos) {
+        this.mTableViewModel = mTableViewModel;
+        this.mContext = mContext;
+        this.boardViewModel = boardViewModel;
+        this.tablePosition = pos;
     }
 
     public TableViewAdapter(@NonNull TableViewModel mTableViewModel, Context mContext, LifecycleOwner lifecycleOwner) {
@@ -154,7 +170,16 @@ public class TableViewAdapter extends AbstractTableAdapter<ColumnHeader, RowHead
 
 //                personViewHolder.cell_image.setImageResource(mTableViewModel.getDrawable((int) cellItemModel
 //                        .getData(), false));
-                personViewHolder.cell_container.setBackgroundResource(R.color.primary_4);
+                String temp = boardViewModel.getTables().getValue().get(tablePosition).getTasks().get(rowPosition).getStatus();
+                if (temp.equals("DONE")) {
+                    personViewHolder.cell_container.setBackgroundResource(R.color.blue);
+                } else if (temp.equals("PENDING")) {
+                    personViewHolder.cell_container.setBackgroundResource(R.color.yellow);
+                } else if (temp.equals("STUCK")) {
+                    personViewHolder.cell_container.setBackgroundResource(R.color.red);
+                } else {
+                    personViewHolder.cell_container.setBackgroundResource(R.color.primary_4);
+                }
                 personViewHolder.cell_name.setText(cellItemModel.getText());
 
 //                userViewModel.getPhotoUrl().observe(lifecycleOwner, photoUrl -> Glide.with(mContext)
