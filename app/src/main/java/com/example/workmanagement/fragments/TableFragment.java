@@ -87,6 +87,7 @@ public class TableFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentTableBinding.inflate(inflater, container, false);
+
 //        binding.tableTestContainer.setVisibility(View.GONE);
 //        TableView tableView = new TableView(getContext());
 //        TableViewModel tableViewModel =new TableViewModel();

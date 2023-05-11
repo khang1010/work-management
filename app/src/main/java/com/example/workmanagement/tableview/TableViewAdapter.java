@@ -171,12 +171,13 @@ public class TableViewAdapter extends AbstractTableAdapter<ColumnHeader, RowHead
 //                personViewHolder.cell_image.setImageResource(mTableViewModel.getDrawable((int) cellItemModel
 //                        .getData(), false));
                 String temp = boardViewModel.getTables().getValue().get(tablePosition).getTasks().get(rowPosition).getStatus();
+
                 if (temp.equals("DONE")) {
-                    personViewHolder.cell_container.setBackgroundResource(R.color.blue);
+                    personViewHolder.cell_container.setBackgroundResource(R.color.done);
                 } else if (temp.equals("PENDING")) {
-                    personViewHolder.cell_container.setBackgroundResource(R.color.yellow);
+                    personViewHolder.cell_container.setBackgroundResource(R.color.pending);
                 } else if (temp.equals("STUCK")) {
-                    personViewHolder.cell_container.setBackgroundResource(R.color.red);
+                    personViewHolder.cell_container.setBackgroundResource(R.color.stuck);
                 } else {
                     personViewHolder.cell_container.setBackgroundResource(R.color.primary_4);
                 }
