@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -66,6 +67,7 @@ public class MessageActivity extends AppCompatActivity {
         binding.messagesRecView.setLayoutManager(new LinearLayoutManager(this));
         binding.messageViewBoardName.setText(boardName);
         binding.messageViewBtnBack.setOnClickListener(v -> onBackPressed());
+        binding.scrollView.fullScroll(View.FOCUS_DOWN);
 
         initSocketConnection(userId, boardId, ids);
 
@@ -73,6 +75,7 @@ public class MessageActivity extends AppCompatActivity {
             if (!binding.inputMessage.getText().toString().isEmpty()) {
                 MessageDTO message = new MessageDTO(boardId, boardName, email, displayName, photoUrl, binding.inputMessage.getText().toString());
                 stompClient.send("/app/message/" + boardId, new Moshi.Builder().build().adapter(MessageDTO.class).toJson(message)).subscribe();
+                binding.scrollView.fullScroll(View.FOCUS_DOWN);
             }
         });
     }
