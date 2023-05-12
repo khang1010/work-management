@@ -45,6 +45,7 @@ import java.util.Random;
 
 import com.example.workmanagement.R;
 import com.example.workmanagement.utils.dto.BoardDetailsDTO;
+import com.example.workmanagement.utils.dto.ChartDTO;
 import com.example.workmanagement.utils.services.impl.BoardServiceImpl;
 import com.example.workmanagement.viewmodels.BoardViewModel;
 import com.example.workmanagement.viewmodels.UserViewModel;
@@ -260,27 +261,22 @@ public class ChartFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        boardViewModel = new ViewModelProvider(getActivity()).get(BoardViewModel.class);
         userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
-        userViewModel.getCurrentBoardId().observe(getViewLifecycleOwner(), id -> {
-            if (id > 0)
-                BoardServiceImpl.getInstance().getService(userViewModel.getToken().getValue()).getBoardDetails(id).enqueue(new Callback<BoardDetailsDTO>() {
-                    @Override
-                    public void onResponse(Call<BoardDetailsDTO> call, Response<BoardDetailsDTO> response) {
-                        if (response.isSuccessful() && response.code() == 200) {
-                            boardViewModel.setId(response.body().getId());
-                            boardViewModel.setName(response.body().getName());
-                            boardViewModel.setAdmin(response.body().getAdmin());
-                            boardViewModel.setMembers(response.body().getMembers());
-                            boardViewModel.setTables(response.body().getTables());
-                        }
-                    }
+        userViewModel.getCurrentBoardId().observe(getViewLifecycleOwner(), id ->
+                BoardServiceImpl.getInstance().getService(userViewModel.getToken().getValue()).getBoardDetails(id)
+                        .enqueue(new Callback<BoardDetailsDTO>() {
+                            @Override
+                            public void onResponse(Call<BoardDetailsDTO> call, Response<BoardDetailsDTO> response) {
+                                if (response.isSuccessful() && response.code() == 200) {
 
-                    @Override
-                    public void onFailure(Call<BoardDetailsDTO> call, Throwable t) {
-                        Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-        });
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<BoardDetailsDTO> call, Throwable t) {
+                                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                );
     }
 }

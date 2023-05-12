@@ -3,6 +3,7 @@ package com.example.workmanagement.utils.services;
 import com.example.workmanagement.utils.dto.BoardDTO;
 import com.example.workmanagement.utils.dto.BoardDetailsDTO;
 import com.example.workmanagement.utils.dto.BoardInfo;
+import com.example.workmanagement.utils.dto.ChartDTO;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -16,6 +17,9 @@ public interface BoardService {
 
     @GET("boards/{id}")
     Call<BoardDetailsDTO> getBoardDetails(@Path("id") long id);
+
+    @GET("boards/{id}/chart")
+    Call<ChartDTO> getChartData(@Path("id") long id);
 
     @POST("boards")
     Call<BoardInfo> createBoard(@Body BoardDTO dto);
