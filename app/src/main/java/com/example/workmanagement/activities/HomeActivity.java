@@ -148,9 +148,12 @@ public class HomeActivity extends AppCompatActivity {
                                 boardViewModel = new ViewModelProvider(HomeActivity.this).get(BoardViewModel.class);
                                 userViewModel.setCurrentBoardId(boards.get(0).getId());
                             }
+                            //initSocketConnection("");
                         });
 
-                        userViewModel.getId().observe(HomeActivity.this, id -> initSocketConnection(""));
+                        userViewModel.getCurrentBoardId().observe(HomeActivity.this, id -> initSocketConnection(""));
+
+                        //userViewModel.getId().observe(HomeActivity.this, id -> initSocketConnection(""));
 
                         userViewModel.getPhotoUrl().observe(HomeActivity.this, photoUrl -> {
                             if (!photoUrl.equals("null"))
