@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -103,6 +104,7 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
         tableViewAdapter.setAllItems(tableViewModel.getColumnHeaderList(), tableViewModel.getRowHeaderList(), tableViewModel.getCellList());
         tableViewAdapter.setCellItems(listCells);
         holder.addTask.setOnClickListener(view -> showCreateTaskDialog(position));
+        holder.container.setOnClickListener(view -> showUpdateTableDialog(position));
 
         if (tables.get(position).getCreatedBy().getEmail().equals(userViewModel.getEmail().getValue()))
             holder.tableName.setOnClickListener(view -> {
@@ -224,6 +226,96 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
                             )
                             .collect(Collectors.toList()));
                 } else adapter.setUsers(new ArrayList<>());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        dialog.show();
+    }
+
+    private void showUpdateTableDialog(int pos) {
+
+        Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.create_table);
+        TextView txtUpdate = dialog.findViewById(R.id.createTxt);
+        EditText txtSearchUser = dialog.findViewById(R.id.editTxtSearchUserTable);
+        EditText txtTableName = dialog.findViewById(R.id.editTxtCreateTableName);
+        ConstraintLayout btnCreateTable = dialog.findViewById(R.id.btnCreateTable);
+
+        txtUpdate.setText("Update");
+
+        UserInvitedRecViewAdapter invitedAdapter = new UserInvitedRecViewAdapter(context);
+        RecyclerView userInvitedRecView = dialog.findViewById(R.id.invitedUserRecView);
+        userInvitedRecView.setLayoutManager(new GridLayoutManager(context, 5));
+        userInvitedRecView.setAdapter(invitedAdapter);
+        invitedAdapter.setUsers(tables.get(pos).getMembers());
+
+        UserSearchRecViewAdapter adapter = new UserSearchRecViewAdapter(context, invitedAdapter);
+        RecyclerView userRecView = dialog.findViewById(R.id.searchUserRecView);
+        userRecView.setLayoutManager(new LinearLayoutManager(context));
+        userRecView.setAdapter(adapter);
+
+        txtTableName.setText(boardViewModel.getTables().getValue().get(pos).getName());
+
+        List<UserInfoDTO> users = new ArrayList<>();
+        users.addAll(tables.get(pos).getMembers());
+        adapter.setUsers(users);
+
+        btnCreateTable.setOnClickListener(view -> {
+            if (!txtTableName.getText().toString().isEmpty()) {
+                List<TableDetailsDTO> tableDetailsDTOS = boardViewModel.getTables().getValue();
+                TableDTO newTable = new TableDTO();
+                newTable.setName(txtTableName.getText().toString());
+                newTable.setBoardId(boardViewModel.getId().getValue());
+                newTable.setMemberIds(invitedAdapter.getUsers().stream().map(u -> u.getId()).collect(Collectors.toList()));
+                if (userViewModel.getId().getValue() != boardViewModel.getAdmin().getValue().getId())
+                    newTable.getMemberIds().add(boardViewModel.getAdmin().getValue().getId());
+                TableServiceImpl.getInstance().getService(userViewModel.getToken().getValue()).updateTable(tables.get(pos).getId(), newTable)
+                        .enqueue(new Callback<TableDetailsDTO>() {
+                            @Override
+                            public void onResponse(Call<TableDetailsDTO> call, Response<TableDetailsDTO> response) {
+                                if (response.isSuccessful() && response.code() == 200) {
+                                    tableDetailsDTOS.set((int) tables.get(pos).getId(), response.body());
+                                    boardViewModel.setTables(tableDetailsDTOS);
+                                    dialog.dismiss();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<TableDetailsDTO> call, Throwable t) {
+                                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            } else
+                Toast.makeText(context, "Please fill information", Toast.LENGTH_SHORT).show();
+        });
+
+        txtSearchUser.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!charSequence.toString().isEmpty()) {
+                    List<UserInfoDTO> users = boardViewModel.getMembers().getValue();
+                    adapter.setUsers(users.stream()
+                            .filter(m -> m.getId() != userViewModel.getId().getValue()
+                                    && (m.getDisplayName().trim().toLowerCase().contains(charSequence.toString().trim())
+                                    || m.getEmail().trim().toLowerCase().contains(charSequence.toString().trim()))
+                            )
+                            .collect(Collectors.toList()));
+                } else {
+                    List<UserInfoDTO> userList = new ArrayList<>();
+                    userList.addAll(tables.get(pos).getMembers());
+                    adapter.setUsers(userList);
+                }
             }
 
             @Override
