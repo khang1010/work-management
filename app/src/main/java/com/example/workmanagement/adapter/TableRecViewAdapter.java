@@ -169,7 +169,7 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
                 long tableId = tables.get(pos).getId();
                 List<TableDetailsDTO> tableDetailsDTOS = boardViewModel.getTables().getValue();
                 TaskDTO newTask = new TaskDTO();
-                newTask.setStatus(SystemConstant.DONE_STATUS);
+                newTask.setStatus(SystemConstant.PENDING_STATUS);
                 newTask.setUserId(adapter.getUser().getId());
                 newTask.setTableId(tableId);
                 List<TextAttributeDTO> textAttributes = new ArrayList<>();

@@ -6,7 +6,7 @@ public class TaskDTO {
 
     private long id;
 
-    private long userId;
+    private Long userId;
 
     private long tableId;
 

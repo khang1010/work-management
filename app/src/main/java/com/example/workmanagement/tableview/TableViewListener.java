@@ -67,6 +67,8 @@ import com.example.workmanagement.viewmodels.UserViewModel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -143,14 +145,14 @@ public class TableViewListener implements ITableViewListener {
 //        showToast("Cell " + column + " " + row + " has been clicked.");
         if (column == 2) {
             TextView cell_name = cellView.itemView.findViewById(R.id.cell_data);
-            openDialog(cell_name);
+            openDialog(cell_name, position, row);
         } else {
             showUpdateTaskDialog(position, column, row);
         }
 
     }
 
-    private void openDialog(TextView cell_name) {
+    private void openDialog(TextView cell_name, int pos, int row) {
         final Calendar c = Calendar.getInstance();
         int mYear = c.get(Calendar.YEAR);
         int mMonth = c.get(Calendar.MONTH);
@@ -158,25 +160,63 @@ public class TableViewListener implements ITableViewListener {
         DatePickerDialog dialog = new DatePickerDialog(mContext, R.style.DialogTheme, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                date_time = String.valueOf(day) + "/" + String.valueOf(month) + "/" + String.valueOf(year);
-                openTimeDialog(cell_name);
+                System.out.println(month);
+                date_time = day + "/" + month + "/" + year;
+                openTimeDialog(cell_name, pos, row, day, month, year);
             }
 
         }, mYear, mMonth, mDay);
         dialog.show();
     }
 
-    private void openTimeDialog(TextView cell_name) {
+    private void openTimeDialog(TextView cell_name, int pos, int row, int day, int month, int year) {
         final Calendar c = Calendar.getInstance();
         int mHour = c.get(Calendar.HOUR_OF_DAY);
         int mMinute = c.get(Calendar.MINUTE);
-        TimePickerDialog dialog = new TimePickerDialog(mContext, R.style.DialogTheme, new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int hours, int minutes) {
-                date_time = (String.format("%02d", hours) + ":" + String.format("%02d", minutes) + " " + date_time);
-                cell_name.setText(date_time);
-                Toast.makeText(mContext, cell_name.getText().toString(), Toast.LENGTH_SHORT).show();
-            }
+        TimePickerDialog dialog = new TimePickerDialog(mContext, R.style.DialogTheme, (timePicker, hours, minutes) -> {
+            //date_time = (String.format("%02d", hours) + ":" + String.format("%02d", minutes) + " " + date_time);
+            //cell_name.setText(date_time);
+            LocalDateTime date = LocalDateTime.of(year, month + 1, day, hours, minutes, 0, 0);
+            //Toast.makeText(mContext, date.toString(), Toast.LENGTH_SHORT).show();
+            long tableId = tables.get(pos).getId();
+            List<TableDetailsDTO> tableDetailsDTOS = boardViewModel.getTables().getValue();
+            TaskDetailsDTO task = tables.get(pos).getTasks().get(row);
+            TaskDTO newTask = new TaskDTO();
+            List<TextAttributeDTO> textAttributes = new ArrayList<>();
+            List<DateAttributeDTO> dateAttributes = new ArrayList<>();
+            TextAttributeDTO textAttribute = new TextAttributeDTO();
+            textAttribute.setId(task.getTextAttributes().stream().filter(atr -> atr.getName().equals("name")).findFirst().get().getId());
+            textAttribute.setName("name");
+            textAttribute.setValue(task.getTextAttributes().stream().filter(atr -> atr.getName().equals("name")).findFirst().get().getValue());
+            textAttributes.add(textAttribute);
+            DateAttributeDTO dateAttribute = new DateAttributeDTO();
+            dateAttribute.setId(task.getDateAttributes().stream().filter(atr -> atr.getName().equals("deadline")).findFirst().get().getId());
+            dateAttribute.setName("deadline");
+            dateAttribute.setValue(date.toString());
+            dateAttributes.add(dateAttribute);
+            newTask.setTextAttributes(textAttributes);
+            newTask.setDateAttributes(dateAttributes);
+            TaskServiceImpl.getInstance().getService(userViewModel.getToken().getValue()).updateTask(task.getId(), newTask)
+                    .enqueue(new Callback<TaskDetailsDTO>() {
+                        @Override
+                        public void onResponse(Call<TaskDetailsDTO> call, Response<TaskDetailsDTO> response) {
+                            if (response.isSuccessful() && response.code() == 200) {
+                                int index = IntStream.range(0, tables.get(pos).getTasks().size())
+                                        .filter(i -> response.body().getId() == tables.get(pos).getTasks().get(i).getId())
+                                        .findFirst().orElse(-1);
+                                tableDetailsDTOS.stream().filter(t -> t.getId() == tableId)
+                                        .findFirst().get().getTasks()
+                                        .set(index, response.body());
+                                boardViewModel.setTables(tableDetailsDTOS);
+                            } else
+                                Toast.makeText(mContext, response.raw().toString(), Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFailure(Call<TaskDetailsDTO> call, Throwable t) {
+                            Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
         }, mHour, mMinute, true);
         dialog.show();
     }
@@ -270,7 +310,6 @@ public class TableViewListener implements ITableViewListener {
                 DateAttributeDTO dateAttribute = new DateAttributeDTO();
                 dateAttribute.setId(task.getDateAttributes().stream().filter(atr -> atr.getName().equals("deadline")).findFirst().get().getId());
                 dateAttribute.setName("deadline");
-//                dateAttribute.setValue(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()));
                 dateAttribute.setValue(task.getDateAttributes().stream().filter(atr -> atr.getName().equals("deadline")).findFirst().get().getValue());
                 dateAttributes.add(dateAttribute);
                 newTask.setTextAttributes(textAttributes);
