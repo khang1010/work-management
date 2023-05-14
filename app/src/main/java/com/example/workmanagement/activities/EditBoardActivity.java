@@ -105,6 +105,7 @@ public class EditBoardActivity extends AppCompatActivity {
             binding.imgEditBoard.setVisibility(View.GONE);
             binding.btnDoneEditBoard.setVisibility(View.VISIBLE);
             binding.editTxtEditBoardName.setVisibility(View.VISIBLE);
+            binding.btnDeleteBoard.setVisibility(View.VISIBLE);
             binding.editTxtEditBoardName.setText(binding.txtBoardName.getText());
             binding.membersRecView.setVisibility(View.GONE);
             binding.editMembersRecView.setVisibility(View.VISIBLE);
@@ -121,6 +122,7 @@ public class EditBoardActivity extends AppCompatActivity {
                 binding.imgEditBoard.setVisibility(View.VISIBLE);
                 binding.btnDoneEditBoard.setVisibility(View.GONE);
                 binding.editTxtEditBoardName.setVisibility(View.GONE);
+                binding.btnDeleteBoard.setVisibility(View.GONE);
                 binding.editMembersRecView.setVisibility(View.GONE);
                 binding.btnInviteMember.setVisibility(View.GONE);
                 binding.membersRecView.setVisibility(View.VISIBLE);
@@ -179,6 +181,21 @@ public class EditBoardActivity extends AppCompatActivity {
                     });
 
         });
+
+        binding.btnDeleteBoard.setOnClickListener(v -> BoardServiceImpl.getInstance().getService(token).deleteBoard(boardId)
+                .enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.isSuccessful() && response.code() == 200)
+                            startActivity(new Intent(EditBoardActivity.this, HomeActivity.class));
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Toast.makeText(EditBoardActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                })
+        );
 
         binding.btnInviteMember.setOnClickListener(v -> showInviteUserDialog(token, boardId, userId, binding.txtBoardName.getText().toString()));
     }
