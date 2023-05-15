@@ -104,6 +104,7 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
         tableViewAdapter.setAllItems(tableViewModel.getColumnHeaderList(), tableViewModel.getRowHeaderList(), tableViewModel.getCellList());
         tableViewAdapter.setCellItems(listCells);
         holder.addTask.setOnClickListener(view -> showCreateTaskDialog(position));
+
         holder.container.setOnClickListener(view -> showUpdateTableDialog(position));
 
         if (tables.get(position).getCreatedBy().getEmail().equals(userViewModel.getEmail().getValue()))
@@ -266,33 +267,44 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
         users.addAll(tables.get(pos).getMembers());
         adapter.setUsers(users);
 
-        btnCreateTable.setOnClickListener(view -> {
-            if (!txtTableName.getText().toString().isEmpty()) {
-                List<TableDetailsDTO> tableDetailsDTOS = boardViewModel.getTables().getValue();
-                TableDTO newTable = new TableDTO();
-                newTable.setName(txtTableName.getText().toString());
-                newTable.setBoardId(boardViewModel.getId().getValue());
-                newTable.setMemberIds(invitedAdapter.getUsers().stream().map(u -> u.getId()).collect(Collectors.toList()));
-                if (userViewModel.getId().getValue() != boardViewModel.getAdmin().getValue().getId())
-                    newTable.getMemberIds().add(boardViewModel.getAdmin().getValue().getId());
-                TableServiceImpl.getInstance().getService(userViewModel.getToken().getValue()).updateTable(tables.get(pos).getId(), newTable)
-                        .enqueue(new Callback<TableDetailsDTO>() {
-                            @Override
-                            public void onResponse(Call<TableDetailsDTO> call, Response<TableDetailsDTO> response) {
-                                if (response.isSuccessful() && response.code() == 200) {
-                                    tableDetailsDTOS.set((int) tables.get(pos).getId(), response.body());
-                                    boardViewModel.setTables(tableDetailsDTOS);
-                                    dialog.dismiss();
-                                }
-                            }
+        if (!userViewModel.getEmail().getValue().equals(tables.get(pos).getCreatedBy().getEmail())) {
+            txtSearchUser.setVisibility(View.GONE);
+            userRecView.setVisibility(View.GONE);
+            btnCreateTable.setVisibility(View.GONE);
+        }
 
-                            @Override
-                            public void onFailure(Call<TableDetailsDTO> call, Throwable t) {
-                                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+        btnCreateTable.setOnClickListener(view -> {
+            List<TableDetailsDTO> tableDetailsDTOS = boardViewModel.getTables().getValue();
+            TableDTO newTable = new TableDTO();
+
+            if (!txtTableName.getText().toString().equals(tables.get(pos).getName()))
+                newTable.setName(txtTableName.getText().toString());
+
+            List<UserInfoDTO> removedUsers = tables.get(pos).getMembers().stream()
+                    .filter(m -> invitedAdapter.getUsers().stream().noneMatch(u -> u.getId() == m.getId()))
+                    .collect(Collectors.toList());
+            if (removedUsers.stream().anyMatch(u -> tables.get(pos).getTasks().stream().anyMatch(t -> t.getUser().getId() == u.getId()))) {
+                Toast.makeText(context, "Please remove user from task first", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            newTable.setMemberIds(invitedAdapter.getUsers().stream().map(u -> u.getId()).collect(Collectors.toList()));
+
+            TableServiceImpl.getInstance().getService(userViewModel.getToken().getValue()).updateTable(tables.get(pos).getId(), newTable)
+                    .enqueue(new Callback<TableDetailsDTO>() {
+                        @Override
+                        public void onResponse(Call<TableDetailsDTO> call, Response<TableDetailsDTO> response) {
+                            if (response.isSuccessful() && response.code() == 200) {
+                                tableDetailsDTOS.set(pos, response.body());
+                                boardViewModel.setTables(tableDetailsDTOS);
+                                dialog.dismiss();
                             }
-                        });
-            } else
-                Toast.makeText(context, "Please fill information", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFailure(Call<TableDetailsDTO> call, Throwable t) {
+                            Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
         });
 
         txtSearchUser.addTextChangedListener(new TextWatcher() {
