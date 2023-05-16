@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,6 +60,10 @@ public class NotificationRecViewAdapter extends RecyclerView.Adapter<Notificatio
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
+        if (position % 2 != 0)
+            holder.layout.setBackgroundColor(mContext.getResources().getColor(R.color.notification_background_color));
+
         if (!notifications.get(position).getThumbnail().equals("null"))
             Glide.with(mContext)
                     .asBitmap()
@@ -130,6 +135,8 @@ public class NotificationRecViewAdapter extends RecyclerView.Adapter<Notificatio
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
+        private LinearLayout layout;
+
         private RelativeLayout replyBtnLayout, acceptLayout, rejectLayout;
 
         private CircleImageView thumbnail;
@@ -138,6 +145,7 @@ public class NotificationRecViewAdapter extends RecyclerView.Adapter<Notificatio
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            layout = itemView.findViewById(R.id.notificationLayout);
             replyBtnLayout = itemView.findViewById(R.id.notificationReplyBtnLayout);
             acceptLayout = itemView.findViewById(R.id.acceptInvitationLayout);
             rejectLayout = itemView.findViewById(R.id.rejectInvitationLayout);

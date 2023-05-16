@@ -1,7 +1,9 @@
 package com.example.workmanagement.adapter;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -113,6 +115,38 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
                 holder.accept.setVisibility(View.VISIBLE);
                 holder.tableName.setVisibility(View.GONE);
             });
+        else
+            holder.delete.setVisibility(View.GONE);
+
+        holder.delete.setOnClickListener(v -> {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setMessage("Are you sure you want to delete this table ?")
+                    .setPositiveButton("Yes", (dialogInterface, i) -> {
+                        TableServiceImpl.getInstance().getService(userViewModel.getToken().getValue())
+                                .deleteTable(tables.get(position).getId())
+                                .enqueue(new Callback<Void>() {
+                                    @Override
+                                    public void onResponse(Call<Void> call, Response<Void> response) {
+                                        if (response.isSuccessful() && response.code() == 200) {
+                                            long id = tables.get(holder.getAdapterPosition()).getId();
+                                            boardViewModel.setTables(tables.stream().filter(t -> t.getId() != id).collect(Collectors.toList()));
+                                        } else
+                                            Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<Void> call, Throwable t) {
+                                        Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    })
+                    .setNegativeButton("No", (dialogInterface, i) -> {
+
+                    });
+            builder.create().show();
+
+        });
 
 
         holder.accept.setOnClickListener(view -> {
@@ -341,7 +375,7 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         RelativeLayout container, titleBar;
-        ImageView down, download, up, accept;
+        ImageView down, download, up, accept, delete;
         TextView tableName, addTask;
         TableView table;
         EditText editTable;
@@ -358,6 +392,7 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
             addTask = itemView.findViewById(R.id.addTaskBtn);
             editTable = itemView.findViewById(R.id.editTableName);
             accept = itemView.findViewById(R.id.acceptBtn);
+            delete = itemView.findViewById(R.id.iconDelete);
 
             down.setOnClickListener(view -> {
                 down.setVisibility(View.GONE);

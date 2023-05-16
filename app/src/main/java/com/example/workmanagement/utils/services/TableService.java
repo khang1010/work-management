@@ -20,6 +20,6 @@ public interface TableService {
     Call<TableDetailsDTO> updateTable(@Path("id") long id, @Body TableDTO dto);
 
     @DELETE("tables/{id}")
-    Call<Void> deleteTask(@Path("id") long id);
+    Call<Void> deleteTable(@Path("id") long id);
 
 }

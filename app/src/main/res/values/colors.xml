@@ -29,6 +29,7 @@
     <color name="yellow">#ffff00</color>
     <color name="border_table">#9971EF</color>
     <color name="background_color">#f4eeff</color>
+    <color name="notification_background_color">#f4f4f4</color>
     <color name="lavender">#e6e1f1</color>
     <color name="text_user_profile">#c2b7d8</color>
     <color name="color_barchart">#7741EA</color>
