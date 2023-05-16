@@ -263,17 +263,17 @@ public class ChartFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
         userViewModel.getCurrentBoardId().observe(getViewLifecycleOwner(), id ->
-                BoardServiceImpl.getInstance().getService(userViewModel.getToken().getValue()).getBoardDetails(id)
-                        .enqueue(new Callback<BoardDetailsDTO>() {
+                BoardServiceImpl.getInstance().getService(userViewModel.getToken().getValue()).getChartData(id)
+                        .enqueue(new Callback<ChartDTO>() {
                             @Override
-                            public void onResponse(Call<BoardDetailsDTO> call, Response<BoardDetailsDTO> response) {
+                            public void onResponse(Call<ChartDTO> call, Response<ChartDTO> response) {
                                 if (response.isSuccessful() && response.code() == 200) {
-
+                                    ChartDTO data = response.body();
                                 }
                             }
 
                             @Override
-                            public void onFailure(Call<BoardDetailsDTO> call, Throwable t) {
+                            public void onFailure(Call<ChartDTO> call, Throwable t) {
                                 Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         })
