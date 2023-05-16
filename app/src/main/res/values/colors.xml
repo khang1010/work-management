@@ -35,6 +35,11 @@
     <color name="color_linechart">#9971EF</color>
     <color name="cinder">#171723</color>
     <color name="color_checkbox_unselected">#808080</color>
+    <color name="top1">#FEDE00</color>
+    <color name="top2">#808080</color>
+    <color name="top3">#808080</color>
+    <color name="top4">#808080</color>
+    <color name="top5">#808080</color>
 
 
 </resources>

@@ -43,15 +43,15 @@
             <com.github.mikephil.charting.charts.BarChart
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:id="@+id/barchartWeek"
+                android:id="@+id/barchart"
                 android:layout_marginEnd="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"/>
 
-            <com.github.mikephil.charting.charts.LineChart
+            <com.github.mikephil.charting.charts.HorizontalBarChart
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:id="@+id/linechartWeek"
+                android:id="@+id/barchart_youself"
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="10dp"/>
@@ -59,7 +59,7 @@
             <com.github.mikephil.charting.charts.PieChart
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:id="@+id/piechartWeek"
+                android:id="@+id/piechart"
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="10dp"/>

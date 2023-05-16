@@ -79,26 +79,24 @@ public class ChartFragment extends Fragment {
     private FragmentChartBinding binding;
     private BarChart barChart;
 
-    private LineChart lineChart;
-    private PieChart barChart3;
+    private BarChart barChartYouSelf;
+    private PieChart pieChart;
     private View view;
 
 
-    private String[] listItems = {"chart 1", "chart 2", "chart 3"};
-    private boolean[] selectedItems = {true, false, false};
+
+
 
     private LocalDate localDate;
 
-    private int dayOfWeek;
-    private BoardViewModel boardViewModel;
+
     private UserViewModel userViewModel;
 
-    private int numberBarchart;
-    private int numberLinechart;
-    private int numberPiechart;
 
-    private DatePickerDialog datePickerDialog;
-    private int maxPeopleInBoard;
+
+
+
+
 
     public ChartFragment() {
         // Required empty public constructor
@@ -109,39 +107,74 @@ public class ChartFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    public void GroupBarChart() {
-        barChart = view.findViewById(R.id.barchartWeek);
-        lineChart = view.findViewById(R.id.linechartWeek);
-        barChart3 = view.findViewById(R.id.piechartWeek);
+    public void GroupChart(int n1, List<Integer> d1, List<String> names1, int n2, List<Integer> d2, int n3, List<Integer> d3, List<String> names3) {
+        barChart = view.findViewById(R.id.barchart);
+        barChartYouSelf = view.findViewById(R.id.barchart_youself);
+        pieChart = view.findViewById(R.id.piechart);
 
-        barChart.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
-        barChart.setData(getDataBarChart(numberBarchart));
-        barChart.invalidate();
+        if (n1 != 0) {
+            barChart.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
+            barChart.setData(getDataBarChart(n1, d1, names1));
+            barChart.setDescription(null);
+            barChart.invalidate();
+        } else {
+            barChart.setVisibility(View.GONE);
+        }
 
-        lineChart.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
-        lineChart.setData(getDataLineChart(numberLinechart));
-        lineChart.invalidate();
+        if (n2 != 0) {
+            barChartYouSelf.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
+            barChartYouSelf.setData(getDataBarChartY(n2, d2));
+            barChartYouSelf.setDescription(null);
+            barChartYouSelf.invalidate();
+        } else {
+            barChartYouSelf.setVisibility(View.GONE);
+        }
 
-        barChart3.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
-        barChart3.setData(getDataPieChart(numberPiechart));
-        barChart3.invalidate();
+        if (n3 != 0) {
+            pieChart.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
+            pieChart.setData(getDataPieChart(n3, d3, names3));
+            pieChart.setDescription(null);
+
+            pieChart.setCenterTextColor(getActivity().getResources().getColor(R.color.white));
+            pieChart.setCenterTextSize(25);
+            pieChart.setEntryLabelColor(getActivity().getResources().getColor(R.color.main_01));
+            pieChart.invalidate();
+        } else {
+            pieChart.setVisibility(View.GONE);
+        }
 
 
     }
 
-    private BarData getDataBarChart(int number) {
+    private BarData getDataBarChart(int number, List<Integer> d, List<String> names) {
 
         BarData barData = new BarData();
 
-        int j = 5;
+
         for (int i = 0; i < number; i++) {
             ArrayList<BarEntry> data = new ArrayList<BarEntry>();
-            data.add(new BarEntry(i, j));
-            j += 2;
-            String label = String.valueOf(i + 1);
-            BarDataSet DataSet = new BarDataSet(data, label);
+            data.add(new BarEntry(i, d.get(i)));
 
-            DataSet.setColor(getActivity().getResources().getColor(R.color.color_barchart));
+            BarDataSet DataSet = new BarDataSet(data, names.get(i));
+
+            switch (i){
+                case 0:
+                    DataSet.setColor(getActivity().getResources().getColor(R.color.top1));
+                    break;
+                case 1:
+                    DataSet.setColor(getActivity().getResources().getColor(R.color.top2));
+                    break;
+                case 2:
+                    DataSet.setColor(getActivity().getResources().getColor(R.color.top3));
+                    break;
+                case 3:
+                    DataSet.setColor(getActivity().getResources().getColor(R.color.top4));
+                    break;
+                case 4:
+                    DataSet.setColor(getActivity().getResources().getColor(R.color.top5));
+                    break;
+            }
+
             barData.addDataSet(DataSet);
         }
 
@@ -149,59 +182,55 @@ public class ChartFragment extends Fragment {
         return barData;
     }
 
-    private LineData getDataLineChart(int number) {
+    private BarData getDataBarChartY(int number, List<Integer> dd) {
 
-        ArrayList<ILineDataSet> data = new ArrayList<>();
-        Random rand = new Random();
-        int r = 0;
-        int g = 0;
-        int b = 0;
-        int j = 5;
-        for (int n = 0; n < number; n++) {
-            ArrayList<Entry> d = new ArrayList<Entry>();
+        BarData barData = new BarData();
 
 
-            for (int i = 0; i < dayOfWeek; i++) {
-                d.add(new Entry(i, j));
-                j += 2;
-            }
-            String label = String.valueOf(n + 1);
-            LineDataSet lineDataSet = new LineDataSet(d, label);
-            if (n == 0)
-                lineDataSet.setColor(getActivity().getResources().getColor(R.color.color_linechart));
-            else {
-                r = rand.nextInt(255);
-                g = rand.nextInt(255);
-                b = rand.nextInt(255);
-                lineDataSet.setColor(Color.rgb(r, g, b));
-            }
-            data.add(lineDataSet);
-        }
+        ArrayList<BarEntry> data1 = new ArrayList<BarEntry>();
+        data1.add(new BarEntry(2, dd.get(0)));
+        BarDataSet DataSet1 = new BarDataSet(data1, "Done");
+        DataSet1.setColor(getActivity().getResources().getColor(R.color.done));
+
+        ArrayList<BarEntry> data2 = new ArrayList<BarEntry>();
+        data2.add(new BarEntry(1, dd.get(1)));
+        BarDataSet DataSet2 = new BarDataSet(data2, "Pending");
+        DataSet2.setColor(getActivity().getResources().getColor(R.color.pending));
+
+        ArrayList<BarEntry> data3 = new ArrayList<BarEntry>();
+        data3.add(new BarEntry(0, dd.get(2)));
+        BarDataSet DataSet3 = new BarDataSet(data3, "Stuck");
+        DataSet3.setColor(getActivity().getResources().getColor(R.color.stuck));
 
 
-        LineData lineData = new LineData(data);
+        barData.addDataSet(DataSet1);
+        barData.addDataSet(DataSet2);
+        barData.addDataSet(DataSet3);
 
-        return lineData;
+
+        return barData;
 
     }
 
-    private PieData getDataPieChart(int number) {
+    private PieData getDataPieChart(int number, List<Integer> dd, List<String> names) {
         ArrayList<PieEntry> d = new ArrayList<PieEntry>();
         ArrayList<Integer> colors = new ArrayList<Integer>();
         Random rand = new Random();
         int r = 0;
         int g = 0;
         int b = 0;
-        int j = 20;
+
         for (int i = 0; i < number; i++) {
-            String label = "Mr" + String.valueOf(i + 1);
-            d.add((new PieEntry(j, label)));
+
+
+            d.add((new PieEntry(dd.get(i), names.get(i))));
             r = rand.nextInt(255);
             g = rand.nextInt(255);
             b = rand.nextInt(255);
             colors.add(Color.rgb(r, g, b));
 
-            j += 10;
+
+
         }
         //int[] color = new int[]{Color.BLUE, Color.CYAN, Color.GREEN, Color.RED, Color.GRAY, Color.MAGENTA};
 
@@ -219,42 +248,6 @@ public class ChartFragment extends Fragment {
         binding = FragmentChartBinding.inflate(inflater);
         view = binding.getRoot();
 
-        maxPeopleInBoard = 20;
-        numberBarchart = 5;
-        numberLinechart = 1;
-        numberPiechart = 10;
-
-
-        Calendar cal = Calendar.getInstance();
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH);
-        int day = cal.get(Calendar.DATE);
-
-
-        localDate = LocalDate.now();
-        dayOfWeek = localDate.getDayOfWeek().getValue();
-
-        View bcv[] = new View[3];
-        bcv[0] = view.findViewById(R.id.barchartWeek);
-        bcv[1] = view.findViewById(R.id.linechartWeek);
-        bcv[2] = view.findViewById(R.id.piechartWeek);
-
-        for (int j = 0; j < 3; j++) {
-            if (selectedItems[j] == true) {
-                bcv[j].setVisibility(View.VISIBLE);
-
-            } else if (selectedItems[j] == false) {
-                bcv[j].setVisibility(View.GONE);
-            }
-        }
-
-
-        GroupBarChart();
-
-
-
-
-
         return view;
     }
 
@@ -268,7 +261,66 @@ public class ChartFragment extends Fragment {
                             @Override
                             public void onResponse(Call<ChartDTO> call, Response<ChartDTO> response) {
                                 if (response.isSuccessful() && response.code() == 200) {
-                                    ChartDTO data = response.body();
+                                    ChartDTO dataAllChart = response.body();
+                                    List<Integer> l1 = new ArrayList<>();
+                                    List<Integer> l2 = new ArrayList<>();
+                                    List<Integer> l3 = new ArrayList<>();
+                                    int sizePieChart = 0;
+                                    List<String> names1 = new ArrayList<>();
+                                    List<String> names3 = new ArrayList<>();
+                                    try {
+                                        for (int i = 0; i < dataAllChart.getChart_1().size(); i++) {
+                                            try {
+                                                l1.add(dataAllChart.getChart_1().get(i).getAmount());
+                                                names1.add(dataAllChart.getChart_1().get(i).getDisplayName());
+                                            } catch (Exception e) {
+                                                System.out.println("Err: chart 1 cant get data");
+                                            }
+
+                                        }
+                                    } catch (Exception e) {
+                                        System.out.println("Err: havent data in chart 1");
+                                    }
+
+                                    try {
+                                        for (int i = 0; i < dataAllChart.getChart_3().size(); i++) {
+                                            try {
+                                                l2.add(dataAllChart.getChart_3().get(i).getAmount());
+                                            } catch (Exception e) {
+                                                System.out.println("Err: chart 2 cant get data");
+                                            }
+
+                                        }
+                                    } catch (Exception e) {
+                                        System.out.println("Err: havent data in chart 2");
+                                    }
+
+                                    try {
+                                        sizePieChart = dataAllChart.getChart_2().size();
+                                    } catch (Exception e) {
+                                    }
+                                    try {
+                                        for (int i = 0; i < dataAllChart.getChart_2().size(); i++) {
+                                            try {
+
+                                                int amount = dataAllChart.getChart_2().get(i).getAmount();
+                                                if (amount != 0) {
+                                                    l3.add(amount);
+                                                    names3.add(dataAllChart.getChart_2().get(i).getDisplayName());
+                                                } else {
+                                                    sizePieChart--;
+                                                }
+                                            } catch (Exception e) {
+                                                System.out.println("Err: chart 3 cant get data");
+                                            }
+
+                                        }
+                                    } catch (Exception e) {
+                                        System.out.println("Err: havent data in chart 3");
+                                    }
+
+                                    GroupChart(dataAllChart.getChart_1().size(), l1, names1, dataAllChart.getChart_3().size(), l2, sizePieChart, l3, names3);
+
                                 }
                             }
 
@@ -277,6 +329,6 @@ public class ChartFragment extends Fragment {
                                 Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         })
-                );
+        );
     }
 }
