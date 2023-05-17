@@ -27,8 +27,7 @@
         <activity
             android:name=".activities.MessageActivity"
             android:exported="false"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize|stateUnchanged"/>
         <activity
             android:name=".activities.BlankActivity"
             android:exported="false" />
@@ -39,7 +38,7 @@
             android:name=".activities.HomeActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="false"
-            android:windowSoftInputMode="adjustNothing" />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activities.LoginActivity"
             android:exported="false" />

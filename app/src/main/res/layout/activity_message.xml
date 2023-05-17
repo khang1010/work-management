@@ -64,16 +64,19 @@
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/displayDayTimeMessageBox">
+        android:layout_below="@id/displayDayTimeMessageBox"
+        android:layout_above="@+id/bottomBar">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/messagesRecView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:padding="20dp" />
 
     </ScrollView>
 
     <RelativeLayout
+        android:id="@+id/bottomBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
