@@ -70,6 +70,9 @@ public class MessageActivity extends AppCompatActivity {
         binding.messagesRecView.setLayoutManager(new LinearLayoutManager(this));
         binding.messageViewBoardName.setText(boardName);
         binding.messageViewBtnBack.setOnClickListener(v -> onBackPressed());
+        binding.inputMessage.setOnClickListener(view -> {
+            binding.messagesRecView.scrollToPosition(adapter.getItemCount() - 1);
+        });
 
         initSocketConnection(userId, boardId, ids);
 

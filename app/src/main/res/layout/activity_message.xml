@@ -60,20 +60,30 @@
         android:textColor="@color/disable"
         android:textSize="12dp" />
 
-    <ScrollView
-        android:id="@+id/scrollView"
+<!--    <ScrollView-->
+<!--        android:id="@+id/scrollView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_below="@id/displayDayTimeMessageBox"-->
+<!--        android:layout_above="@+id/bottomBar"-->
+<!--        android:isScrollContainer="true">-->
+
+<!--        <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/messagesRecView"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:padding="20dp" />-->
+
+<!--    </ScrollView>-->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/messagesRecView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:padding="20dp"
         android:layout_below="@id/displayDayTimeMessageBox"
-        android:layout_above="@+id/bottomBar">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/messagesRecView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="20dp" />
-
-    </ScrollView>
+        android:layout_above="@+id/bottomBar"
+        android:isScrollContainer="true"/>
 
     <RelativeLayout
         android:id="@+id/bottomBar"
