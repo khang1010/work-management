@@ -89,6 +89,11 @@ public class MessageActivity extends AppCompatActivity {
 
 
     @Override
+    public void onBackPressed() {
+        finish();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         if (stompClient != null)
