@@ -1,6 +1,7 @@
 package com.example.workmanagement.fragments;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.workmanagement.R;
 import com.example.workmanagement.activities.LoginActivity;
@@ -24,7 +26,10 @@ import com.google.android.gms.tasks.Task;
 
 public class SettingFragment extends Fragment {
 
-    private Button btn_logout;
+    private Button btn_logout, btn_send_require;
+
+    private String MAIL_ADDRESS[];
+    private String MAIL_TITLE = "Work Management App: ";
     private GoogleSignInClient gsc;
     private GoogleSignInOptions gso;
     private View view;
@@ -45,6 +50,10 @@ public class SettingFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_setting, container, false);
         btn_logout = view.findViewById(R.id.btn_logout);
+        btn_send_require = view.findViewById(R.id.btn_send_require);
+        MAIL_ADDRESS = new String[1];
+        MAIL_ADDRESS[0] = "quangduongptsc@gmail.com";
+
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .requestScopes(new Scope("https://www.googleapis.com/auth/userinfo.profile"))
@@ -57,6 +66,7 @@ public class SettingFragment extends Fragment {
             getActivity().finish();
 
         });
+        btn_send_require.setOnClickListener(v->{sendMail();});
 
         return view;
     }
@@ -68,6 +78,22 @@ public class SettingFragment extends Fragment {
 
             }
         });
+
+    }
+
+    private void sendMail(){
+        try {
+            Intent intent = new Intent(Intent.ACTION_SENDTO);
+            intent.setData(Uri.parse("mailto:"));
+            intent.putExtra(Intent.EXTRA_EMAIL, MAIL_ADDRESS);
+            intent.putExtra(Intent.EXTRA_SUBJECT, MAIL_TITLE);
+
+            startActivity(intent);
+
+        }catch (Exception e){
+            Toast.makeText(getActivity(), "Not install gmail!!!", Toast.LENGTH_SHORT).show();
+            System.out.println("Err: cant create intent to send mail.");
+        }
 
     }
 

@@ -6,19 +6,24 @@
     tools:context=".fragments.SettingFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Setting Screen"
-        android:layout_centerInParent="true"
-        android:textSize="26sp" />
+
     <Button
-        android:layout_width="match_parent"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:id="@+id/btn_send_require"
+
+        android:layout_marginBottom="90dp"
+
+        android:text="Need support?"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:layout_width="200dp"
         android:layout_height="50dp"
         android:id="@+id/btn_logout"
-        android:layout_marginStart="200dp"
         android:layout_marginBottom="30dp"
-        android:layout_marginEnd="20dp"
+
         android:text="Logout"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"/>
