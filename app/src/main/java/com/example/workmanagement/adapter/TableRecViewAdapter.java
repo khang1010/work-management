@@ -221,7 +221,7 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
         userRecView.setAdapter(adapter);
 
         btnCreateTask.setOnClickListener(view -> {
-            if (!txtTaskName.getText().toString().isEmpty() && adapter.isChosen()) {
+            if (!txtTaskName.getText().toString().trim().isEmpty() && adapter.isChosen()) {
                 long tableId = tables.get(pos).getId();
                 List<TableDetailsDTO> tableDetailsDTOS = boardViewModel.getTables().getValue();
                 TaskDTO newTask = new TaskDTO();
@@ -330,7 +330,8 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
             List<TableDetailsDTO> tableDetailsDTOS = boardViewModel.getTables().getValue();
             TableDTO newTable = new TableDTO();
 
-            if (!txtTableName.getText().toString().equals(tables.get(pos).getName()))
+            if (!txtTableName.getText().toString().trim().isEmpty()
+                    && !txtTableName.getText().toString().equals(tables.get(pos).getName()))
                 newTable.setName(txtTableName.getText().toString());
 
             List<UserInfoDTO> removedUsers = tables.get(pos).getMembers().stream()

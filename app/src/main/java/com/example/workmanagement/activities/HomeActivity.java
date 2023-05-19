@@ -410,7 +410,7 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         btnCreateBoard.setOnClickListener(v -> {
-            if (txtBoardName.getText().toString().isEmpty())
+            if (txtBoardName.getText().toString().trim().isEmpty())
                 Toast.makeText(this, "Please enter board name", Toast.LENGTH_SHORT).show();
             else
                 BoardServiceImpl.getInstance().getService(userViewModel.getToken().getValue())

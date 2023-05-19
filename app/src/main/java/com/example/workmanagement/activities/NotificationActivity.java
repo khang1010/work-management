@@ -81,10 +81,13 @@ public class NotificationActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        stompClient.disconnect();
+        if (stompClient != null)
+            stompClient.disconnect();
     }
 
     private void initSocketConnection(String token, long id) {
+        if (stompClient != null)
+            stompClient.disconnect();
         stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, SystemConstant.BASE_URL + "ws/websocket");
         stompClient.connect();
         stompClient.topic("/notification/" + id)
