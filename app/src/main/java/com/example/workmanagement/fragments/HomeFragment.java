@@ -100,6 +100,26 @@ public class HomeFragment extends Fragment {
             intent.putExtra("IDS", (ArrayList) ids.stream().distinct().collect(Collectors.toList()));
             startActivity(intent);
         });
+        binding.btnEdit.setVisibility(View.GONE);
+        binding.fab.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), EditBoardActivity.class);
+            intent.putExtra("BOARD_IDS", (ArrayList) userViewModel.getBoards().getValue()
+                    .stream().map(b -> b.getId()).collect(Collectors.toList()));
+            intent.putExtra("BOARD_ID", boardViewModel.getId().getValue());
+            intent.putExtra("BOARD_NAME", boardViewModel.getName().getValue());
+            intent.putExtra("BOARD_ADMIN", boardViewModel.getAdmin().getValue());
+            intent.putExtra("BOARD_MEMBERS", (ArrayList) boardViewModel.getMembers().getValue());
+            intent.putExtra("USER_ID", userViewModel.getId().getValue());
+            intent.putExtra("TOKEN", userViewModel.getToken().getValue());
+            List<Long> ids = new ArrayList<>();
+            boardViewModel.getTables().getValue().forEach(t ->
+                    ids.addAll(t.getMembers()
+                            .stream().map(m -> m.getId())
+                            .collect(Collectors.toList()))
+            );
+            intent.putExtra("IDS", (ArrayList) ids.stream().distinct().collect(Collectors.toList()));
+            startActivity(intent);
+        });
         return view;
     }
 

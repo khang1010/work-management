@@ -43,7 +43,7 @@ public class NotificationActivity extends AppCompatActivity {
         long id = getIntent().getLongExtra("ID", -1);
         initSocketConnection(token, id);
         adapter = new NotificationRecViewAdapter(this, token);
-        binding.imgNotificationsBackToHome.setOnClickListener(v -> startActivity(new Intent(this, HomeActivity.class)));
+        binding.imgNotificationsBackToHome.setOnClickListener(v -> finish());
         binding.notificationsRecView.setLayoutManager(new LinearLayoutManager(this));
         binding.notificationsRecView.setAdapter(adapter);
         NotificationServiceImpl.getInstance().getService(token).getNotifications()
