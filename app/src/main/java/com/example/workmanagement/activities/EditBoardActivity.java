@@ -97,7 +97,7 @@ public class EditBoardActivity extends AppCompatActivity {
         UserInfoDTO admin = (UserInfoDTO) getIntent().getSerializableExtra("BOARD_ADMIN");
         Glide.with(this).asBitmap().load(admin.getPhotoUrl()).into(binding.imgAdminAvatar);
         binding.txtAdminName.setText(admin.getDisplayName());
-        binding.imgEditBoardBackToHome.setOnClickListener(v -> startActivity(new Intent(this, HomeActivity.class)));
+        binding.imgEditBoardBackToHome.setOnClickListener(v -> finish());
 
         if (userId != admin.getId())
             binding.imgEditBoard.setVisibility(View.GONE);
