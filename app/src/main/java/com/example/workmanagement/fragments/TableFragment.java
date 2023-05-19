@@ -148,7 +148,7 @@ public class TableFragment extends Fragment {
         userRecView.setAdapter(adapter);
 
         btnCreateTable.setOnClickListener(view -> {
-            if (!txtTableName.getText().toString().isEmpty()) {
+            if (!txtTableName.getText().toString().trim().isEmpty()) {
                 List<TableDetailsDTO> tableDetailsDTOS = boardViewModel.getTables().getValue();
                 TableDTO newTable = new TableDTO();
                 newTable.setName(txtTableName.getText().toString());

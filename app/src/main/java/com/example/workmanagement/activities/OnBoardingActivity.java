@@ -29,9 +29,12 @@ import com.example.workmanagement.R;
 import com.example.workmanagement.adapter.UserInvitedRecViewAdapter;
 import com.example.workmanagement.adapter.UserSearchRecViewAdapter;
 import com.example.workmanagement.databinding.ActivityOnBoardingBinding;
+import com.example.workmanagement.utils.dto.BoardDTO;
+import com.example.workmanagement.utils.dto.BoardInfo;
 import com.example.workmanagement.utils.dto.SearchUserResponse;
 import com.example.workmanagement.utils.dto.UserDTO;
 import com.example.workmanagement.utils.services.impl.AuthServiceImpl;
+import com.example.workmanagement.utils.services.impl.BoardServiceImpl;
 import com.example.workmanagement.utils.services.impl.UserServiceImpl;
 import com.example.workmanagement.viewmodels.BoardViewModel;
 import com.example.workmanagement.viewmodels.UserViewModel;
@@ -42,7 +45,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.Scope;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -151,9 +156,29 @@ public class OnBoardingActivity extends AppCompatActivity {
 
             }
         });
+
         btnCreateBoard.setOnClickListener(v -> {
-            goToHome();
+            if (txtBoardName.getText().toString().trim().isEmpty())
+                Toast.makeText(this, "Please enter board name", Toast.LENGTH_SHORT).show();
+            else
+                BoardServiceImpl.getInstance().getService(token)
+                        .createBoard(new BoardDTO(txtBoardName.getText().toString(),
+                                invitedAdapter.getUsers().stream().map(u -> u.getId()).collect(Collectors.toList()))
+                        )
+                        .enqueue(new Callback<BoardInfo>() {
+                            @Override
+                            public void onResponse(Call<BoardInfo> call, Response<BoardInfo> response) {
+                                if (response.isSuccessful() && response.code() == 201)
+                                    goToHome();
+                            }
+
+                            @Override
+                            public void onFailure(Call<BoardInfo> call, Throwable t) {
+                                Toast.makeText(OnBoardingActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
         });
+
         dialog.show();
     }
     private String getFirstWord(String text) {

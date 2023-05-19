@@ -234,6 +234,13 @@ public class TableViewListener implements ITableViewListener {
         String[] items = {"DONE", "PENDING", "STUCK"};
         ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_dropdown_item, items);
         status.setAdapter(statusAdapter);
+        String taskStatusStr = tables.get(pos).getTasks().get(row).getStatus();
+        if (taskStatusStr.equals("DONE"))
+            status.setSelection(0);
+        else if (taskStatusStr.equals("PENDING"))
+            status.setSelection(1);
+        else if (taskStatusStr.equals("STUCK"))
+            status.setSelection(2);
 
         final int[] taskStatus = {0};
         status.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
