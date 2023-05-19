@@ -2,6 +2,8 @@ package com.example.workmanagement.fragments;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +54,7 @@ import com.example.workmanagement.viewmodels.UserViewModel;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -64,8 +67,10 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.Locale;
 
@@ -116,31 +121,116 @@ public class ChartFragment extends Fragment {
             barChart.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
             barChart.setData(getDataBarChart(n1, d1, names1));
             barChart.setDescription(null);
+            barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+                @Override
+                public void onValueSelected(Entry e, Highlight h) {
+                    String s;
+                    if(h.getY() == 1)
+                        s = names1.get((int)h.getX()) +" has "+ String.valueOf((int)h.getY()) + " task.";
+                    else
+                        s = names1.get((int)h.getX()) +" has "+ String.valueOf((int)h.getY()) + " tasks.";
+
+
+                    Toast toast = Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT);
+                    toast.show();
+
+
+
+
+                }
+
+                @Override
+                public void onNothingSelected() {
+
+                }
+            });
             barChart.invalidate();
         } else {
-            barChart.setVisibility(View.GONE);
+
         }
 
         if (n2 != 0) {
             barChartYouSelf.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
             barChartYouSelf.setData(getDataBarChartY(n2, d2));
             barChartYouSelf.setDescription(null);
+            barChartYouSelf.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+                @Override
+                public void onValueSelected(Entry e, Highlight h) {
+                    String s;
+                    if(h.getX()==0){
+                        if(h.getY()==0 || h.getY()==1)
+                            s = "You have " + String.valueOf((int)h.getY()) + " stuck task";
+                        else
+                            s = "You have " + String.valueOf((int)h.getY()) + " stuck tasks";
+                    }else if(h.getX()==1){
+                        if(h.getY()==0 || h.getY()==1)
+                            s = "You have " + String.valueOf((int)h.getY()) + " pending task";
+                        else
+                            s = "You have " + String.valueOf((int)h.getY()) + " pending tasks";
+                    }else{
+                        if(h.getY()==0 || h.getY()==1)
+                            s = "You have " + String.valueOf((int)h.getY()) + " done task";
+                        else
+                            s = "You have " + String.valueOf((int)h.getY()) + " done tasks";
+                    }
+                    Toast toast = Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT);
+                    toast.show();
+
+
+                }
+
+                @Override
+                public void onNothingSelected() {
+
+                }
+            });
             barChartYouSelf.invalidate();
         } else {
-            barChartYouSelf.setVisibility(View.GONE);
+
         }
 
         if (n3 != 0) {
             pieChart.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
+            pieChart.setUsePercentValues(true);
             pieChart.setData(getDataPieChart(n3, d3, names3));
             pieChart.setDescription(null);
 
+            pieChart.setHighlightPerTapEnabled(true);
+
             pieChart.setCenterTextColor(getActivity().getResources().getColor(R.color.white));
-            pieChart.setCenterTextSize(25);
-            pieChart.setEntryLabelColor(getActivity().getResources().getColor(R.color.main_01));
+            pieChart.setCenterTextSize(25f);
+            pieChart.setDrawEntryLabels(false);
+
+            Legend l = pieChart.getLegend();
+            l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+            l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+            l.setOrientation(Legend.LegendOrientation.VERTICAL);
+            l.setDrawInside(false);
+            l.setXEntrySpace(7f);
+            l.setYEntrySpace(0f);
+            l.setYOffset(0f);
+
+            pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+                @Override
+                public void onValueSelected(Entry e, Highlight h) {
+                    String s;
+                    if(h.getY() == 1)
+                        s = names3.get((int)h.getX()) +" has "+ String.valueOf((int)h.getY()) + " task.";
+                    else
+                        s = names3.get((int)h.getX()) +" has "+ String.valueOf((int)h.getY()) + " tasks.";
+                    Toast toast = Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT);
+                    toast.show();
+
+                }
+
+                @Override
+                public void onNothingSelected() {
+
+                }
+            });
             pieChart.invalidate();
         } else {
-            pieChart.setVisibility(View.GONE);
+
         }
 
 
@@ -155,7 +245,11 @@ public class ChartFragment extends Fragment {
             ArrayList<BarEntry> data = new ArrayList<BarEntry>();
             data.add(new BarEntry(i, d.get(i)));
 
-            BarDataSet DataSet = new BarDataSet(data, names.get(i));
+            BarDataSet DataSet;
+            if(i == 0)
+                DataSet = new BarDataSet(data, names.get(i));
+            else
+                DataSet = new BarDataSet(data, null);
 
             switch (i){
                 case 0:
@@ -236,7 +330,14 @@ public class ChartFragment extends Fragment {
 
         PieDataSet dataSet = new PieDataSet(d, "");
         dataSet.setColors(colors);
+
+        dataSet.setDrawIcons(false);
+        dataSet.setSliceSpace(2f);
+
+
         PieData pieData = new PieData(dataSet);
+        pieData.setValueTextSize(15f);
+        pieData.setValueTextColor(getActivity().getResources().getColor(R.color.white));
         return pieData;
 
     }
