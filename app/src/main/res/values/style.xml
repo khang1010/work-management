@@ -26,4 +26,9 @@
         <item name="colorAccent">@color/primary_1</item>
         <item name="android:textColorSecondary">@color/color_checkbox_unselected</item>
     </style>
+
+    <style name="menu_labels_style">
+        <item name="android:textColor">@color/primary_2</item>
+        <item name="android:textStyle">bold|italic</item>
+    </style>
 </resources>

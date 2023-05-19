@@ -123,83 +123,83 @@ public class TableFragment extends Fragment {
                     clockLayout = view.findViewById(R.id.clock_container);
                     clockLayout.setVisibility(View.GONE);
                 }, 500));
-        btnAddTable = view.findViewById(R.id.addTableBtn);
-        btnAddTable.setOnClickListener(v -> showCreateTableDialog());
+//        btnAddTable = view.findViewById(R.id.addTableBtn);
+//        btnAddTable.setOnClickListener(v -> showCreateTableDialog());
     }
 
-    private void showCreateTableDialog() {
-
-        Dialog dialog = new Dialog(getActivity());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(true);
-        dialog.setContentView(R.layout.create_table);
-        EditText txtSearchUser = dialog.findViewById(R.id.editTxtSearchUserTable);
-        EditText txtTableName = dialog.findViewById(R.id.editTxtCreateTableName);
-        ConstraintLayout btnCreateTable = dialog.findViewById(R.id.btnCreateTable);
-
-        UserInvitedRecViewAdapter invitedAdapter = new UserInvitedRecViewAdapter(getActivity());
-        RecyclerView userInvitedRecView = dialog.findViewById(R.id.invitedUserRecView);
-        userInvitedRecView.setLayoutManager(new GridLayoutManager(getActivity(), 5));
-        userInvitedRecView.setAdapter(invitedAdapter);
-
-        UserSearchRecViewAdapter adapter = new UserSearchRecViewAdapter(getActivity(), invitedAdapter);
-        RecyclerView userRecView = dialog.findViewById(R.id.searchUserRecView);
-        userRecView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        userRecView.setAdapter(adapter);
-
-        btnCreateTable.setOnClickListener(view -> {
-            if (!txtTableName.getText().toString().isEmpty()) {
-                List<TableDetailsDTO> tableDetailsDTOS = boardViewModel.getTables().getValue();
-                TableDTO newTable = new TableDTO();
-                newTable.setName(txtTableName.getText().toString());
-                newTable.setBoardId(boardViewModel.getId().getValue());
-                newTable.setMemberIds(invitedAdapter.getUsers().stream().map(u -> u.getId()).collect(Collectors.toList()));
-                if (userViewModel.getId().getValue() != boardViewModel.getAdmin().getValue().getId())
-                    newTable.getMemberIds().add(boardViewModel.getAdmin().getValue().getId());
-                TableServiceImpl.getInstance().getService(userViewModel.getToken().getValue()).createTable(newTable)
-                        .enqueue(new Callback<TableDetailsDTO>() {
-                            @Override
-                            public void onResponse(Call<TableDetailsDTO> call, Response<TableDetailsDTO> response) {
-                                if (response.isSuccessful() && response.code() == 201) {
-                                    tableDetailsDTOS.add(response.body());
-                                    boardViewModel.setTables(tableDetailsDTOS);
-                                    dialog.dismiss();
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<TableDetailsDTO> call, Throwable t) {
-                                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-            } else
-                Toast.makeText(getActivity(), "Please fill information", Toast.LENGTH_SHORT).show();
-        });
-
-        txtSearchUser.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!charSequence.toString().isEmpty()) {
-                    List<UserInfoDTO> users = boardViewModel.getMembers().getValue();
-                    adapter.setUsers(users.stream()
-                            .filter(m -> m.getId() != userViewModel.getId().getValue()
-                                    && (m.getDisplayName().trim().toLowerCase().contains(charSequence.toString().trim())
-                                    || m.getEmail().trim().toLowerCase().contains(charSequence.toString().trim()))
-                            )
-                            .collect(Collectors.toList()));
-                } else adapter.setUsers(new ArrayList<>());
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-        dialog.show();
-    }
+//    private void showCreateTableDialog() {
+//
+//        Dialog dialog = new Dialog(getActivity());
+//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        dialog.setCancelable(true);
+//        dialog.setContentView(R.layout.create_table);
+//        EditText txtSearchUser = dialog.findViewById(R.id.editTxtSearchUserTable);
+//        EditText txtTableName = dialog.findViewById(R.id.editTxtCreateTableName);
+//        ConstraintLayout btnCreateTable = dialog.findViewById(R.id.btnCreateTable);
+//
+//        UserInvitedRecViewAdapter invitedAdapter = new UserInvitedRecViewAdapter(getActivity());
+//        RecyclerView userInvitedRecView = dialog.findViewById(R.id.invitedUserRecView);
+//        userInvitedRecView.setLayoutManager(new GridLayoutManager(getActivity(), 5));
+//        userInvitedRecView.setAdapter(invitedAdapter);
+//
+//        UserSearchRecViewAdapter adapter = new UserSearchRecViewAdapter(getActivity(), invitedAdapter);
+//        RecyclerView userRecView = dialog.findViewById(R.id.searchUserRecView);
+//        userRecView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        userRecView.setAdapter(adapter);
+//
+//        btnCreateTable.setOnClickListener(view -> {
+//            if (!txtTableName.getText().toString().isEmpty()) {
+//                List<TableDetailsDTO> tableDetailsDTOS = boardViewModel.getTables().getValue();
+//                TableDTO newTable = new TableDTO();
+//                newTable.setName(txtTableName.getText().toString());
+//                newTable.setBoardId(boardViewModel.getId().getValue());
+//                newTable.setMemberIds(invitedAdapter.getUsers().stream().map(u -> u.getId()).collect(Collectors.toList()));
+//                if (userViewModel.getId().getValue() != boardViewModel.getAdmin().getValue().getId())
+//                    newTable.getMemberIds().add(boardViewModel.getAdmin().getValue().getId());
+//                TableServiceImpl.getInstance().getService(userViewModel.getToken().getValue()).createTable(newTable)
+//                        .enqueue(new Callback<TableDetailsDTO>() {
+//                            @Override
+//                            public void onResponse(Call<TableDetailsDTO> call, Response<TableDetailsDTO> response) {
+//                                if (response.isSuccessful() && response.code() == 201) {
+//                                    tableDetailsDTOS.add(response.body());
+//                                    boardViewModel.setTables(tableDetailsDTOS);
+//                                    dialog.dismiss();
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onFailure(Call<TableDetailsDTO> call, Throwable t) {
+//                                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
+//            } else
+//                Toast.makeText(getActivity(), "Please fill information", Toast.LENGTH_SHORT).show();
+//        });
+//
+//        txtSearchUser.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                if (!charSequence.toString().isEmpty()) {
+//                    List<UserInfoDTO> users = boardViewModel.getMembers().getValue();
+//                    adapter.setUsers(users.stream()
+//                            .filter(m -> m.getId() != userViewModel.getId().getValue()
+//                                    && (m.getDisplayName().trim().toLowerCase().contains(charSequence.toString().trim())
+//                                    || m.getEmail().trim().toLowerCase().contains(charSequence.toString().trim()))
+//                            )
+//                            .collect(Collectors.toList()));
+//                } else adapter.setUsers(new ArrayList<>());
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//
+//            }
+//        });
+//        dialog.show();
+//    }
 }

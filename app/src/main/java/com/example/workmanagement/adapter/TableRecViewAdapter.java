@@ -108,6 +108,22 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
         if (listCells.size() == 0) {
             holder.table.setVisibility(View.GONE);
         }
+        holder.down.setOnClickListener(view -> {
+            holder.down.setVisibility(View.GONE);
+            holder.up.setVisibility(View.VISIBLE);
+            if (listCells.size() == 0) {
+                holder.table.setVisibility(View.GONE);
+            } else {
+                holder.table.setVisibility(View.VISIBLE);
+            }
+            holder.addTask.setVisibility(View.VISIBLE);
+        });
+        holder.up.setOnClickListener(view -> {
+            holder.down.setVisibility(View.VISIBLE);
+            holder.up.setVisibility(View.GONE);
+            holder.table.setVisibility(View.GONE);
+            holder.addTask.setVisibility(View.GONE);
+        });
         holder.addTask.setOnClickListener(view -> showCreateTaskDialog(position));
 
         holder.container.setOnClickListener(view -> showUpdateTableDialog(position));
@@ -396,19 +412,6 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
             editTable = itemView.findViewById(R.id.editTableName);
             accept = itemView.findViewById(R.id.acceptBtn);
             delete = itemView.findViewById(R.id.iconDelete);
-
-            down.setOnClickListener(view -> {
-                down.setVisibility(View.GONE);
-                up.setVisibility(View.VISIBLE);
-                table.setVisibility(View.VISIBLE);
-                addTask.setVisibility(View.VISIBLE);
-            });
-            up.setOnClickListener(view -> {
-                down.setVisibility(View.VISIBLE);
-                up.setVisibility(View.GONE);
-                table.setVisibility(View.GONE);
-                addTask.setVisibility(View.GONE);
-            });
 
         }
     }

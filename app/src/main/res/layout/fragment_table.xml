@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.TableFragment"
     android:background="@color/background_color"
-    android:id="@+id/fragment_container">
+    android:id="@+id/fragment_container"
+    android:isScrollContainer="true">
 
 <!--        <LinearLayout-->
 <!--            android:id="@+id/table_test_container"-->
@@ -106,21 +107,21 @@
             android:id="@+id/table_rec_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:id="@+id/addTableBtn"
-            android:background="@drawable/shape_button_add_table"
-            android:layout_below="@+id/table_rec_view"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="20dp"
-            android:text="+ Add new table"
-            android:textAllCaps="false"
-            android:textColor="@color/border_table"
-            android:textSize="15sp"
-            android:textStyle="bold"/>
+<!--        <Button-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:id="@+id/addTableBtn"-->
+<!--            android:background="@drawable/shape_button_add_table"-->
+<!--            android:layout_below="@+id/table_rec_view"-->
+<!--            android:layout_marginLeft="20dp"-->
+<!--            android:layout_marginRight="20dp"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:layout_marginBottom="20dp"-->
+<!--            android:text="+ Add new table"-->
+<!--            android:textAllCaps="false"-->
+<!--            android:textColor="@color/border_table"-->
+<!--            android:textSize="15sp"-->
+<!--            android:textStyle="bold"/>-->
 
         <RelativeLayout
             android:id="@+id/clock_container"
@@ -140,4 +141,4 @@
         </RelativeLayout>
     </RelativeLayout>
 
-</ScrollView>
+</RelativeLayout>
