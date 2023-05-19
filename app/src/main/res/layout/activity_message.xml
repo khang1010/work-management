@@ -14,10 +14,12 @@
 
         <ImageView
             android:id="@+id/messageViewBtnBack"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="10dp"
+
+
+
             android:src="@drawable/btn_back"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -27,7 +29,7 @@
             android:id="@+id/imgBoard"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_marginStart="8dp"
+
             android:padding="10dp"
             android:src="@mipmap/ic_launcher"
             app:civ_border_color="#FF000000"
@@ -85,77 +87,74 @@
         android:layout_above="@+id/bottomBar"
         android:isScrollContainer="true"/>
 
-    <RelativeLayout
+
+
+
+<!--        <Button-->
+<!--            android:id="@+id/addInputMessageBoxBtn"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="17dp"-->
+<!--            android:layout_marginTop="11dp"-->
+<!--            android:background="@drawable/add_input_message_board_box"-->
+<!--            android:maxWidth="32dp"-->
+<!--            android:maxHeight="32dp"-->
+<!--            android:minWidth="32dp"-->
+<!--            android:minHeight="32dp"></Button>-->
+
+    <LinearLayout
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
         android:background="@color/white"
-        android:minHeight="70dp">
+        android:layoutDirection="rtl"
+        android:minHeight="70dp"
+        android:orientation="horizontal">
 
         <Button
-            android:id="@+id/addInputMessageBoxBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="17dp"
-            android:layout_marginTop="11dp"
-            android:background="@drawable/add_input_message_board_box"
-            android:maxWidth="32dp"
-            android:maxHeight="32dp"
-            android:minWidth="32dp"
-            android:minHeight="32dp"></Button>
+            android:id="@+id/stickerIconMessageBoxBtn"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/ic_sticker" />
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/addInputMessageBoxBtn">
-
-            <EditText
-                android:id="@+id/inputMessage"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_centerInParent="true"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/search_user_input_border"
-                android:hint="Aa"
-                android:inputType="textMultiLine"
-                android:padding="10dp"
-                android:textColor="@color/disable"
-                android:textColorHint="@color/disable"
-                android:textSize="15dp"></EditText>
-
-            <Button
-                android:id="@+id/stickerIconMessageBoxBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignEnd="@id/inputMessage"
-                android:layout_alignBottom="@id/inputMessage"
-                android:layout_centerInParent="true"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/ic_sticker"
-                android:maxWidth="30dp"
-                android:maxHeight="30dp"
-                android:minWidth="30dp"
-                android:minHeight="30dp"/>
-
-            <Button
-                android:id="@+id/btnSend"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignEnd="@id/inputMessage"
-                android:layout_alignBottom="@id/inputMessage"
-                android:layout_centerInParent="true"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/btn_send"
-                android:maxWidth="30dp"
-                android:maxHeight="30dp"
-                android:minWidth="30dp"
-                android:minHeight="30dp"/>
-        </RelativeLayout>
+        <EditText
+            android:id="@+id/inputMessage"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/search_user_input_border"
+            android:hint="Aa"
+            android:inputType="textMultiLine"
+            android:maxWidth="100dp"
+            android:padding="10dp"
+            android:textColor="@color/disable"
+            android:textColorHint="@color/disable"
+            android:textSize="15dp" />
 
 
-    </RelativeLayout>
+        <!--            <Button-->
+        <!--                android:id="@+id/btnSend"-->
+        <!--                android:visibility="gone"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_alignEnd="@id/inputMessage"-->
+        <!--                android:layout_alignBottom="@id/inputMessage"-->
+        <!--                android:layout_centerInParent="true"-->
+        <!--                android:layout_marginEnd="8dp"-->
+        <!--                android:background="@drawable/btn_send"-->
+        <!--                android:maxWidth="30dp"-->
+        <!--                android:maxHeight="30dp"-->
+        <!--                android:minWidth="30dp"-->
+        <!--                android:minHeight="30dp"/>-->
+    </LinearLayout>
+
+
+
 
 </RelativeLayout>

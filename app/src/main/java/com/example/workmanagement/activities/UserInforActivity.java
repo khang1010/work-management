@@ -1,5 +1,6 @@
 package com.example.workmanagement.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.SubMenu;
 import android.view.View;
@@ -53,6 +54,7 @@ public class UserInforActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_user_infor);
         btnBack = findViewById(R.id.btn_back);
+
         avatar = findViewById(R.id.img_avater_user_profiler);
 
 //        bio = findViewById(R.id.edit_text_bio);
@@ -131,6 +133,8 @@ public class UserInforActivity extends AppCompatActivity {
 //        });
 
         btnBack.setOnClickListener(v -> onBackPressed());
+
+
 
         avatar.setOnClickListener(v -> {
 

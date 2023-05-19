@@ -12,5 +12,15 @@
         android:text="Setting Screen"
         android:layout_centerInParent="true"
         android:textSize="26sp" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/btn_logout"
+        android:layout_marginStart="200dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="20dp"
+        android:text="Logout"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

@@ -41,6 +41,7 @@
     <color name="top3">#808080</color>
     <color name="top4">#808080</color>
     <color name="top5">#808080</color>
+    <color name="bottom_layout_color">#d3d3d3</color>
 
 
 </resources>
