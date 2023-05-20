@@ -33,7 +33,7 @@
             android:padding="10dp"
             android:src="@mipmap/ic_launcher"
             app:civ_border_color="#FF000000"
-            app:civ_border_width="2dp"
+            app:civ_border_width="1dp"
             app:layout_constraintBottom_toBottomOf="@+id/messageViewBtnBack"
             app:layout_constraintStart_toEndOf="@+id/messageViewBtnBack"
             app:layout_constraintTop_toTopOf="@+id/messageViewBtnBack" />
@@ -119,7 +119,8 @@
             android:layout_height="35dp"
             android:layout_gravity="center"
             android:layout_marginStart="20dp"
-            android:background="@drawable/ic_sticker" />
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/ic_happy" />
 
         <EditText
             android:id="@+id/inputMessage"
@@ -133,6 +134,7 @@
             android:inputType="textMultiLine"
             android:maxWidth="100dp"
             android:padding="10dp"
+            android:textDirection="ltr"
             android:textColor="@color/disable"
             android:textColorHint="@color/disable"
             android:textSize="15dp" />

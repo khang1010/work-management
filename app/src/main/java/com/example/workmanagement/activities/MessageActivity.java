@@ -11,6 +11,8 @@ import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ScrollView;
@@ -29,6 +31,7 @@ import com.example.workmanagement.databinding.ActivityMessageBinding;
 import com.example.workmanagement.utils.SystemConstant;
 import com.example.workmanagement.utils.dto.MessageDTO;
 import com.example.workmanagement.utils.dto.NotificationDTO;
+import com.example.workmanagement.utils.helper.TextToImageHelper;
 import com.example.workmanagement.utils.services.store.MessageStorage;
 import com.squareup.moshi.Moshi;
 
@@ -36,6 +39,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.StompClient;
 
@@ -46,12 +50,17 @@ public class MessageActivity extends AppCompatActivity {
     private ActivityMessageBinding binding;
 
     private MessagesRecViewAdapter adapter;
+    private CircleImageView imgBoard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMessageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+
+
+
         long userId = getIntent().getLongExtra("USER_ID", -1);
         String email = getIntent().getStringExtra("USER_EMAIL");
         String displayName = getIntent().getStringExtra("USER_NAME");
@@ -59,6 +68,12 @@ public class MessageActivity extends AppCompatActivity {
         String boardName = getIntent().getStringExtra("BOARD_NAME");
         long boardId = getIntent().getLongExtra("BOARD_ID", -1);
         List<Long> ids = (List<Long>) getIntent().getSerializableExtra("IDS");
+
+
+        String first = String.valueOf(boardName.charAt(0));
+
+        TextToImageHelper t = new TextToImageHelper();
+        binding.imgBoard.setImageBitmap(t.generateImage(first, getIntent().getIntExtra("TEXT_COLOR", 255), getIntent().getIntExtra("BACKGROUND_COLOR", 255)));
 
         adapter = new MessagesRecViewAdapter(
                 this,
@@ -82,6 +97,28 @@ public class MessageActivity extends AppCompatActivity {
                 binding.inputMessage.setText("");
                 stompClient.send("/app/message/" + boardId, new Moshi.Builder().build().adapter(MessageDTO.class).toJson(message)).subscribe();
                 binding.messagesRecView.scrollToPosition(adapter.getItemCount() - 1);
+            }else{
+                MessageDTO message = new MessageDTO(boardId, boardName, email, displayName, photoUrl, "\uD83D\uDE03");
+                binding.inputMessage.setText("");
+                stompClient.send("/app/message/" + boardId, new Moshi.Builder().build().adapter(MessageDTO.class).toJson(message)).subscribe();
+                binding.messagesRecView.scrollToPosition(adapter.getItemCount() - 1);
+            }
+        });
+        binding.inputMessage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(binding.inputMessage.length()==0){binding.stickerIconMessageBoxBtn.setBackground(getDrawable(R.drawable.ic_happy));}
+                else{binding.stickerIconMessageBoxBtn.setBackground(getDrawable(R.drawable.icon_send));}
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
 
