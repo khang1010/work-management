@@ -29,7 +29,7 @@ public class SettingFragment extends Fragment {
     private Button btn_logout, btn_send_require;
 
     private String MAIL_ADDRESS[];
-    private String MAIL_TITLE = "Work Management App: ";
+    private String MAIL_TITLE;
     private GoogleSignInClient gsc;
     private GoogleSignInOptions gso;
     private View view;
@@ -51,8 +51,9 @@ public class SettingFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_setting, container, false);
         btn_logout = view.findViewById(R.id.btn_logout);
         btn_send_require = view.findViewById(R.id.btn_send_require);
+        MAIL_TITLE = getResources().getString(R.string.email_title);
         MAIL_ADDRESS = new String[1];
-        MAIL_ADDRESS[0] = "quangduongptsc@gmail.com";
+        MAIL_ADDRESS[0] = getActivity().getResources().getString(R.string.email_address);
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -91,7 +92,7 @@ public class SettingFragment extends Fragment {
             startActivity(intent);
 
         }catch (Exception e){
-            Toast.makeText(getActivity(), "Not install gmail!!!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.send_email_error), Toast.LENGTH_SHORT).show();
             System.out.println("Err: cant create intent to send mail.");
         }
 
