@@ -56,24 +56,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:visibility="gone"
+        <ImageView
             android:id="@+id/btnDeleteBoard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/btn_del_board_border"
-            android:paddingLeft="20dp"
-            android:paddingTop="5dp"
-            android:paddingRight="20dp"
-            android:paddingBottom="5dp"
-            android:text="Delete"
-            android:textColor="@color/white"
-            android:textSize="20dp"
-            app:layout_constraintBottom_toBottomOf="@+id/btnDoneEditBoard"
-            app:layout_constraintEnd_toStartOf="@+id/btnDoneEditBoard"
-            app:layout_constraintTop_toTopOf="@+id/btnDoneEditBoard"
-            app:layout_constraintVertical_bias="0.0" />
+            android:layout_marginEnd="24dp"
+            android:src="@drawable/ic_delete"
+            app:layout_constraintBottom_toBottomOf="@+id/imgEditBoard"
+            app:layout_constraintEnd_toStartOf="@+id/imgEditBoard"
+            app:layout_constraintTop_toTopOf="@+id/imgEditBoard"
+            app:layout_constraintVertical_bias="1.0" />
 
         <TextView
             android:visibility="gone"

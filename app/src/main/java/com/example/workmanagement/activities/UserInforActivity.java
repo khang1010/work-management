@@ -94,8 +94,7 @@ public class UserInforActivity extends AppCompatActivity {
         }
 
         txtNothing.setOnClickListener(v ->
-                Toast.makeText(UserInforActivity.this, "Please enter board !!!", Toast.LENGTH_SHORT).show()
-        );
+                Toast.makeText(UserInforActivity.this, "Please enter board !!!", Toast.LENGTH_SHORT).show());
 
 
 

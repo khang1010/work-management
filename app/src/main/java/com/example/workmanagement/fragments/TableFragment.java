@@ -45,6 +45,7 @@ import com.example.workmanagement.tableview.model.RowHeader;
 import com.example.workmanagement.utils.dto.SearchUserResponse;
 import com.example.workmanagement.utils.dto.TableDTO;
 import com.example.workmanagement.utils.dto.TableDetailsDTO;
+import com.example.workmanagement.utils.dto.TaskDetailsDTO;
 import com.example.workmanagement.utils.dto.UserInfoDTO;
 import com.example.workmanagement.utils.services.TableService;
 import com.example.workmanagement.utils.services.impl.TableServiceImpl;
@@ -52,6 +53,7 @@ import com.example.workmanagement.utils.services.impl.UserServiceImpl;
 import com.example.workmanagement.viewmodels.BoardViewModel;
 import com.example.workmanagement.viewmodels.UserViewModel;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -113,16 +115,34 @@ public class TableFragment extends Fragment {
 //                .getRowHeaderList(), tableViewModel.getCellList());
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         boardViewModel = new ViewModelProvider(requireActivity()).get(BoardViewModel.class);
-        boardViewModel.getTables().observe(getViewLifecycleOwner(), tables ->
-                new Handler().postDelayed(() -> {
-                    tableRecView = view.findViewById(R.id.table_rec_view);
-                    TableRecViewAdapter adapter = new TableRecViewAdapter(getActivity(), userViewModel, boardViewModel);
-                    tableRecView.setAdapter(adapter);
-                    tableRecView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    adapter.setTables(tables);
-                    clockLayout = view.findViewById(R.id.clock_container);
-                    clockLayout.setVisibility(View.GONE);
-                }, 500));
+        boardViewModel.getTables().observe(getViewLifecycleOwner(), tables -> {
+            List<List<TaskDetailsDTO>> tasks = tables.stream().map(t -> t.getTasks()).collect(Collectors.toList());
+            List<TaskDetailsDTO> myTasks = new ArrayList<>();
+            tasks.forEach(task -> myTasks.addAll(task.stream().filter(t -> t.getUser().getId() == userViewModel.getId().getValue()).collect(Collectors.toList())));
+            int count = 0;
+            Date today = new Date();
+            count = (int) myTasks.stream().filter(t -> {
+                Date date = null;
+                try {
+                    date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(t.getDateAttributes().stream().filter(atr -> atr.getName().equals("deadline")).findFirst().get().getValue());
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+                if (date.getYear() == today.getYear() && date.getMonth() == today.getMonth() && date.getDate() == today.getDate())
+                    return true;
+                return false;
+            }).count();
+            binding.txtClockImage.setText("You have " + count + " task need to complete today");
+            new Handler().postDelayed(() -> {
+                tableRecView = view.findViewById(R.id.table_rec_view);
+                TableRecViewAdapter adapter = new TableRecViewAdapter(getActivity(), userViewModel, boardViewModel);
+                tableRecView.setAdapter(adapter);
+                tableRecView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                adapter.setTables(tables);
+                clockLayout = view.findViewById(R.id.clock_container);
+                clockLayout.setVisibility(View.GONE);
+            }, 500);
+        });
 //        btnAddTable = view.findViewById(R.id.addTableBtn);
 //        btnAddTable.setOnClickListener(v -> showCreateTableDialog());
     }

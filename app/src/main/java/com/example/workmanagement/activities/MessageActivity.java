@@ -58,9 +58,6 @@ public class MessageActivity extends AppCompatActivity {
         binding = ActivityMessageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-
-
-
         long userId = getIntent().getLongExtra("USER_ID", -1);
         String email = getIntent().getStringExtra("USER_EMAIL");
         String displayName = getIntent().getStringExtra("USER_NAME");
@@ -97,7 +94,7 @@ public class MessageActivity extends AppCompatActivity {
                 binding.inputMessage.setText("");
                 stompClient.send("/app/message/" + boardId, new Moshi.Builder().build().adapter(MessageDTO.class).toJson(message)).subscribe();
                 binding.messagesRecView.scrollToPosition(adapter.getItemCount() - 1);
-            }else{
+            } else {
                 MessageDTO message = new MessageDTO(boardId, boardName, email, displayName, photoUrl, "\uD83D\uDE03");
                 binding.inputMessage.setText("");
                 stompClient.send("/app/message/" + boardId, new Moshi.Builder().build().adapter(MessageDTO.class).toJson(message)).subscribe();
@@ -112,8 +109,10 @@ public class MessageActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(binding.inputMessage.length()==0){binding.stickerIconMessageBoxBtn.setBackground(getDrawable(R.drawable.ic_happy));}
-                else{binding.stickerIconMessageBoxBtn.setBackground(getDrawable(R.drawable.icon_send));}
+                if (binding.inputMessage.length() == 0)
+                    binding.stickerIconMessageBoxBtn.setBackground(getDrawable(R.drawable.ic_happy));
+                else
+                    binding.stickerIconMessageBoxBtn.setBackground(getDrawable(R.drawable.icon_send));
             }
 
             @Override

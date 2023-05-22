@@ -97,17 +97,19 @@ public class EditBoardActivity extends AppCompatActivity {
         UserInfoDTO admin = (UserInfoDTO) getIntent().getSerializableExtra("BOARD_ADMIN");
         Glide.with(this).asBitmap().load(admin.getPhotoUrl()).into(binding.imgAdminAvatar);
         binding.txtAdminName.setText(admin.getDisplayName());
-        binding.imgEditBoardBackToHome.setOnClickListener(v -> finish());
+        binding.imgEditBoardBackToHome.setOnClickListener(v -> startActivity(new Intent(this, HomeActivity.class)));
 
-        if (userId != admin.getId())
+        if (userId != admin.getId()) {
             binding.imgEditBoard.setVisibility(View.GONE);
+            binding.btnDeleteBoard.setVisibility(View.GONE);
+        }
 
         binding.imgEditBoard.setOnClickListener(v -> {
             binding.txtBoardName.setVisibility(View.GONE);
             binding.imgEditBoard.setVisibility(View.GONE);
             binding.btnDoneEditBoard.setVisibility(View.VISIBLE);
             binding.editTxtEditBoardName.setVisibility(View.VISIBLE);
-            binding.btnDeleteBoard.setVisibility(View.VISIBLE);
+            binding.btnDeleteBoard.setVisibility(View.GONE);
             binding.editTxtEditBoardName.setText(binding.txtBoardName.getText());
             binding.membersRecView.setVisibility(View.GONE);
             binding.editMembersRecView.setVisibility(View.VISIBLE);
@@ -124,7 +126,7 @@ public class EditBoardActivity extends AppCompatActivity {
                 binding.imgEditBoard.setVisibility(View.VISIBLE);
                 binding.btnDoneEditBoard.setVisibility(View.GONE);
                 binding.editTxtEditBoardName.setVisibility(View.GONE);
-                binding.btnDeleteBoard.setVisibility(View.GONE);
+                binding.btnDeleteBoard.setVisibility(View.VISIBLE);
                 binding.editMembersRecView.setVisibility(View.GONE);
                 binding.btnInviteMember.setVisibility(View.GONE);
                 binding.membersRecView.setVisibility(View.VISIBLE);
@@ -147,7 +149,7 @@ public class EditBoardActivity extends AppCompatActivity {
                     binding.imgEditBoard.setVisibility(View.VISIBLE);
                     binding.btnDoneEditBoard.setVisibility(View.GONE);
                     binding.editTxtEditBoardName.setVisibility(View.GONE);
-                    binding.btnDeleteBoard.setVisibility(View.GONE);
+                    binding.btnDeleteBoard.setVisibility(View.VISIBLE);
                     binding.editMembersRecView.setVisibility(View.GONE);
                     binding.btnInviteMember.setVisibility(View.GONE);
                     binding.membersRecView.setVisibility(View.VISIBLE);
@@ -166,7 +168,7 @@ public class EditBoardActivity extends AppCompatActivity {
                                 binding.imgEditBoard.setVisibility(View.VISIBLE);
                                 binding.btnDoneEditBoard.setVisibility(View.GONE);
                                 binding.editTxtEditBoardName.setVisibility(View.GONE);
-                                binding.btnDeleteBoard.setVisibility(View.GONE);
+                                binding.btnDeleteBoard.setVisibility(View.VISIBLE);
                                 binding.editMembersRecView.setVisibility(View.GONE);
                                 binding.btnInviteMember.setVisibility(View.GONE);
                                 binding.membersRecView.setVisibility(View.VISIBLE);

@@ -103,7 +103,7 @@ public class OnBoardingActivity extends AppCompatActivity {
                     Toast.makeText(OnBoardingActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
-            binding.acctName.setText(getFirstWord(account.getDisplayName().toString()));
+            binding.acctName.setText(getFirstWord(account.getDisplayName()));
         }
     }
     private void showCreateBoardDialog(String token) {
