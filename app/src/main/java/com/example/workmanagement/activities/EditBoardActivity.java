@@ -139,7 +139,7 @@ public class EditBoardActivity extends AppCompatActivity {
             if (!binding.editTxtEditBoardName.getText().toString().trim().isEmpty()
                     && !binding.txtBoardName.getText().toString().equals(binding.editTxtEditBoardName.getText().toString()))
                 dto.setName(binding.editTxtEditBoardName.getText().toString());
-            if (ids.size() < memberIds.size())
+            if (ids.size() < members.size())
                 if (members.stream().filter(m -> ids.stream().noneMatch(i -> i == m.getId()))
                         .collect(Collectors.toList()) // get removed members
                         .stream().anyMatch(m -> memberIds.stream().anyMatch(id -> id == m.getId())) // check if we remove any user in table

@@ -99,7 +99,7 @@ public class NotificationRecViewAdapter extends RecyclerView.Adapter<Notificatio
                                     .findFirst().orElse(-1);
                             notifications.set(index, response.body());
                             notifyItemChanged(index);
-                        }
+                        } else Toast.makeText(mContext, response.message(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
