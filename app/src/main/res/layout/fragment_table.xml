@@ -3,10 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_container"
+    tools:context=".fragments.TableFragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/background_color"
-    tools:context=".fragments.TableFragment">
+    android:isScrollContainer="true">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,7 +26,7 @@
             android:layout_height="wrap_content"
             android:text="You have 0 tasks need to complete today"
             android:textColor="@color/white"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -34,18 +35,12 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ScrollView
-        android:id="@+id/scrollView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/table_rec_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/clock_image">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/table_rec_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:isScrollContainer="true"/>
-    </ScrollView>
+        android:isScrollContainer="true"
+        android:layout_below="@+id/clock_image" />
 
 
     <RelativeLayout

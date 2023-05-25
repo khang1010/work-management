@@ -101,14 +101,13 @@
             android:id="@+id/refreshLayout"
             android:layout_below="@id/headerLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/bottomNavigation">
 
             <FrameLayout
                 android:id="@+id/fragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/bottomNavigation"
-                android:layout_below="@id/headerLayout"
                 android:layout_marginBottom="-1dp"
                 android:background="@color/background_color" />
 
