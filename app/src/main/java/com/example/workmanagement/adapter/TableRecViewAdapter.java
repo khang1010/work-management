@@ -61,6 +61,7 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
 
     public void setTables(List<TableDetailsDTO> tables) {
         this.tables = tables;
+        notifyDataSetChanged();
     }
 
     public TableRecViewAdapter(Context context, UserViewModel userViewModel, BoardViewModel boardViewModel) {
@@ -257,6 +258,7 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
                                 Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
+                notifyDataSetChanged();
             } else
                 Toast.makeText(context, "Please fill full information", Toast.LENGTH_SHORT).show();
 
