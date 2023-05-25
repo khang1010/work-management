@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -199,17 +200,17 @@ public class HomeFragment extends Fragment {
                                 if (response.isSuccessful() && response.code() == 201) {
                                     tableDetailsDTOS.add(response.body());
                                     boardViewModel.setTables(tableDetailsDTOS);
+                                    Toasty.success(getContext(), "Create table success!", Toast.LENGTH_SHORT, true).show();
                                     dialog.dismiss();
-                                }
+                                } else Toasty.error(getContext(), response.raw().toString(), Toast.LENGTH_SHORT, true).show();
                             }
 
                             @Override
                             public void onFailure(Call<TableDetailsDTO> call, Throwable t) {
-                                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toasty.error(getContext(), t.getMessage(), Toast.LENGTH_SHORT, true).show();
                             }
                         });
-            } else
-                Toast.makeText(getActivity(), "Please fill information", Toast.LENGTH_SHORT).show();
+            } else Toasty.warning(getContext(), "Please fill full information", Toast.LENGTH_SHORT, true).show();
         });
 
         txtSearchUser.addTextChangedListener(new TextWatcher() {

@@ -76,6 +76,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -208,13 +209,14 @@ public class TableViewListener implements ITableViewListener {
                                         .findFirst().get().getTasks()
                                         .set(index, response.body());
                                 boardViewModel.setTables(tableDetailsDTOS);
+                                Toasty.success(mContext, "Update task success!", Toast.LENGTH_SHORT, true).show();
                             } else
-                                Toast.makeText(mContext, response.raw().toString(), Toast.LENGTH_SHORT).show();
+                                Toasty.error(mContext, response.raw().toString(), Toast.LENGTH_SHORT, true).show();
                         }
 
                         @Override
                         public void onFailure(Call<TaskDetailsDTO> call, Throwable t) {
-                            Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toasty.error(mContext, t.getMessage(), Toast.LENGTH_SHORT, true).show();
                         }
                     });
         }, mHour, mMinute, true);
@@ -333,14 +335,14 @@ public class TableViewListener implements ITableViewListener {
                                             .findFirst().get().getTasks()
                                             .set(index, response.body());
                                     boardViewModel.setTables(tableDetailsDTOS);
+                                    Toasty.success(mContext, "Update task success!", Toast.LENGTH_SHORT, true).show();
                                     dialog.dismiss();
-                                } else
-                                    Toast.makeText(mContext, response.raw().toString(), Toast.LENGTH_SHORT).show();
+                                } else Toasty.error(mContext, response.raw().toString(), Toast.LENGTH_SHORT, true).show();
                             }
 
                             @Override
                             public void onFailure(Call<TaskDetailsDTO> call, Throwable t) {
-                                Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toasty.error(mContext, t.getMessage(), Toast.LENGTH_SHORT, true).show();
                             }
                         });
             } else
@@ -484,7 +486,7 @@ public class TableViewListener implements ITableViewListener {
     public void onRowHeaderLongPressed(@NonNull RecyclerView.ViewHolder rowHeaderView, int row) {
 
         // Create Long Press Popup
-        RowHeaderLongPressPopup popup = new RowHeaderLongPressPopup(rowHeaderView, mTableView, boardViewModel, userViewModel, (int) tables.get(position).getTasks().get(row).getId(), tables, position);
+        RowHeaderLongPressPopup popup = new RowHeaderLongPressPopup(rowHeaderView, mTableView, boardViewModel, userViewModel, (int) tables.get(position).getTasks().get(row).getId(), tables, position, mContext);
         // Show
         popup.show();
     }

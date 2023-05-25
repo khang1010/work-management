@@ -48,6 +48,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -150,13 +151,13 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
                                         if (response.isSuccessful() && response.code() == 200) {
                                             long id = tables.get(holder.getAdapterPosition()).getId();
                                             boardViewModel.setTables(tables.stream().filter(t -> t.getId() != id).collect(Collectors.toList()));
-                                        } else
-                                            Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show();
+                                            Toasty.success(context, "Delete table success!", Toast.LENGTH_SHORT, true).show();
+                                        } else Toasty.error(context, response.raw().toString(), Toast.LENGTH_SHORT, true).show();
                                     }
 
                                     @Override
                                     public void onFailure(Call<Void> call, Throwable t) {
-                                        Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                        Toasty.error(context, t.getMessage(), Toast.LENGTH_SHORT, true).show();
                                     }
                                 });
                     })
@@ -186,13 +187,14 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
                                     holder.editTable.setVisibility(View.GONE);
                                     holder.accept.setVisibility(View.GONE);
                                     boardViewModel.setTables(tableDetailsDTOS);
+                                    Toasty.success(context, "Update table success!", Toast.LENGTH_SHORT, true).show();
                                 } else
-                                    Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show();
+                                    Toasty.error(context, response.raw().toString(), Toast.LENGTH_SHORT, true).show();
                             }
 
                             @Override
                             public void onFailure(Call<TableDetailsDTO> call, Throwable t) {
-                                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toasty.error(context, t.getMessage(), Toast.LENGTH_SHORT, true).show();
                             }
                         });
             }
@@ -248,17 +250,19 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
                                     tableDetailsDTOS.stream().filter(t -> t.getId() == tableId)
                                             .findFirst().get().getTasks().add(response.body());
                                     boardViewModel.setTables(tableDetailsDTOS);
+                                    Toasty.success(context, "Create task success!", Toast.LENGTH_SHORT, true).show();
                                     dialog.dismiss();
                                 }
+                                else Toasty.error(context, response.raw().toString(), Toast.LENGTH_SHORT, true).show();
                             }
 
                             @Override
                             public void onFailure(Call<TaskDetailsDTO> call, Throwable t) {
-                                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toasty.error(context, t.getMessage(), Toast.LENGTH_SHORT, true).show();
                             }
                         });
             } else
-                Toast.makeText(context, "Please fill full information", Toast.LENGTH_SHORT).show();
+                Toasty.warning(context, "Please fill full information", Toast.LENGTH_SHORT, true).show();
 
         });
 
@@ -351,12 +355,13 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
                                 tableDetailsDTOS.set(pos, response.body());
                                 boardViewModel.setTables(tableDetailsDTOS);
                                 dialog.dismiss();
-                            }
+                                Toasty.success(context, "Update table success!", Toast.LENGTH_SHORT, true).show();
+                            } else Toasty.error(context, response.raw().toString(), Toast.LENGTH_SHORT, true).show();
                         }
 
                         @Override
                         public void onFailure(Call<TableDetailsDTO> call, Throwable t) {
-                            Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toasty.error(context, t.getMessage(), Toast.LENGTH_SHORT, true).show();
                         }
                     });
         });

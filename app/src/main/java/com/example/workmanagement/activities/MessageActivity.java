@@ -66,7 +66,6 @@ public class MessageActivity extends AppCompatActivity {
         long boardId = getIntent().getLongExtra("BOARD_ID", -1);
         List<Long> ids = (List<Long>) getIntent().getSerializableExtra("IDS");
 
-
         String first = String.valueOf(boardName.charAt(0));
 
         TextToImageHelper t = new TextToImageHelper();
@@ -122,7 +121,6 @@ public class MessageActivity extends AppCompatActivity {
         });
 
     }
-
 
     @Override
     public void onBackPressed() {
