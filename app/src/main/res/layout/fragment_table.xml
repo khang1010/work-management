@@ -2,11 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.TableFragment"
     android:background="@color/background_color"
-    android:id="@+id/fragment_container">
+    tools:context=".fragments.TableFragment">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -39,12 +39,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/clock_image">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/table_rec_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:isScrollContainer="true"/>
     </ScrollView>
+
 
     <RelativeLayout
         android:id="@+id/clock_container"

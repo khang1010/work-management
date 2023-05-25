@@ -10,6 +10,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +23,12 @@ import com.example.workmanagement.databinding.FragmentChartBinding;
 import com.example.workmanagement.databinding.FragmentChatBinding;
 import com.example.workmanagement.databinding.FragmentTableBinding;
 import com.example.workmanagement.utils.dto.MessageDTO;
+import com.example.workmanagement.utils.services.store.BoardMessages;
 import com.example.workmanagement.utils.services.store.MessageStorage;
 import com.example.workmanagement.viewmodels.UserViewModel;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class ChatFragment extends Fragment {
 
@@ -34,7 +38,8 @@ public class ChatFragment extends Fragment {
 
     private UserViewModel userViewModel;
 
-    public ChatFragment() {}
+    public ChatFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,5 +63,26 @@ public class ChatFragment extends Fragment {
         userViewModel.getBoards().observe(getViewLifecycleOwner(), boards ->
                 adapter.setBoards(MessageStorage.getInstance().getBoardMessages())
         );
+        binding.editTxtSearchBoardMessage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!charSequence.toString().trim().isEmpty())
+                    adapter.setBoards(userViewModel.getBoards().getValue()
+                            .stream().filter(b -> b.getName().contains(charSequence))
+                            .map(b -> new BoardMessages(b.getId(), b.getName()))
+                            .collect(Collectors.toList())
+                    );
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 }

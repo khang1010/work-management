@@ -10,7 +10,7 @@ public class TaskDTO {
 
     private long tableId;
 
-    private int status;
+    private Integer status;
 
     private List<TextAttributeDTO> textAttributes;
 
