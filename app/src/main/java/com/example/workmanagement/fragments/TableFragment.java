@@ -48,13 +48,17 @@ import com.example.workmanagement.utils.dto.SearchUserResponse;
 import com.example.workmanagement.utils.dto.TableDTO;
 import com.example.workmanagement.utils.dto.TableDetailsDTO;
 import com.example.workmanagement.utils.dto.TaskDetailsDTO;
+import com.example.workmanagement.utils.dto.UserDTO;
 import com.example.workmanagement.utils.dto.UserInfoDTO;
 import com.example.workmanagement.utils.services.TableService;
+import com.example.workmanagement.utils.services.impl.AuthServiceImpl;
 import com.example.workmanagement.utils.services.impl.BoardServiceImpl;
 import com.example.workmanagement.utils.services.impl.TableServiceImpl;
 import com.example.workmanagement.utils.services.impl.UserServiceImpl;
 import com.example.workmanagement.viewmodels.BoardViewModel;
 import com.example.workmanagement.viewmodels.UserViewModel;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -128,7 +132,38 @@ public class TableFragment extends Fragment {
                 clockLayout.setVisibility(View.GONE);
             }, 500);
         });
+        binding.refreshLayout.setOnRefreshListener(() -> reloadUserData());
     }
 
+    private void reloadUserData() {
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
+        UserDTO userDTO = new UserDTO();
+        userDTO.setEmail(account.getEmail());
+        userDTO.setDisplayName(account.getDisplayName());
+        userDTO.setFamilyName(account.getFamilyName());
+        userDTO.setGivenName(account.getGivenName());
+        userDTO.setPhotoUrl(String.valueOf(account.getPhotoUrl()));
 
+        AuthServiceImpl.getInstance().getService().loginUser(userDTO).enqueue(new Callback<UserDTO>() {
+            @Override
+            public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
+                if (response.isSuccessful() && response.code() == 200) {
+                    userViewModel.setId(response.body().getId());
+                    userViewModel.setEmail(response.body().getEmail());
+                    userViewModel.setDisplayName(response.body().getDisplayName());
+                    userViewModel.setPhotoUrl(response.body().getPhotoUrl());
+                    userViewModel.setToken(response.body().getToken());
+                    userViewModel.setBoards(response.body().getBoards());
+                    userViewModel.setHasNonReadNotification(response.body().isHasNonReadNotification());
+                }
+                binding.refreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailure(Call<UserDTO> call, Throwable t) {
+                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                binding.refreshLayout.setRefreshing(false);
+            }
+        });
+    }
 }
