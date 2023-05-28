@@ -98,7 +98,7 @@ public class EditBoardActivity extends AppCompatActivity {
         UserInfoDTO admin = (UserInfoDTO) getIntent().getSerializableExtra("BOARD_ADMIN");
         Glide.with(this).asBitmap().load(admin.getPhotoUrl()).into(binding.imgAdminAvatar);
         binding.txtAdminName.setText(admin.getDisplayName());
-        binding.imgEditBoardBackToHome.setOnClickListener(v -> startActivity(new Intent(this, HomeActivity.class)));
+        binding.imgEditBoardBackToHome.setOnClickListener(v -> onBackPressed());
 
         if (userId != admin.getId()) {
             binding.imgEditBoard.setVisibility(View.GONE);
@@ -201,7 +201,7 @@ public class EditBoardActivity extends AppCompatActivity {
                                         @Override
                                         public void onResponse(Call<Void> call, Response<Void> response) {
                                             if (response.isSuccessful() && response.code() == 200)
-                                                startActivity(new Intent(EditBoardActivity.this, HomeActivity.class));
+                                                onBackPressed();
                                             else
                                                 Toasty.error(EditBoardActivity.this, response.raw().toString(), Toast.LENGTH_SHORT, true).show();
                                         }

@@ -22,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
 import android.view.ContextMenu;
@@ -88,20 +89,9 @@ public class ChartFragment extends Fragment {
     private PieChart pieChart;
     private View view;
 
-
-
-
-
     private LocalDate localDate;
 
-
     private UserViewModel userViewModel;
-
-
-
-
-
-
 
     public ChartFragment() {
         // Required empty public constructor
@@ -296,11 +286,9 @@ public class ChartFragment extends Fragment {
         BarDataSet DataSet3 = new BarDataSet(data3, "Stuck");
         DataSet3.setColor(getActivity().getResources().getColor(R.color.stuck));
 
-
         barData.addDataSet(DataSet1);
         barData.addDataSet(DataSet2);
         barData.addDataSet(DataSet3);
-
 
         return barData;
 
@@ -348,7 +336,6 @@ public class ChartFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentChartBinding.inflate(inflater);
         view = binding.getRoot();
-
         return view;
     }
 

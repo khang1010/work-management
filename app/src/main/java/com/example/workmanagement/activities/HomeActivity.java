@@ -103,7 +103,6 @@ public class HomeActivity extends AppCompatActivity {
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
-        binding.logoutBtn.setVisibility(View.GONE);
         binding.notificationPoint.setVisibility(View.GONE);
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -184,10 +183,6 @@ public class HomeActivity extends AppCompatActivity {
             });
         }
 
-        binding.refreshLayout.setOnRefreshListener(() -> reloadUserData());
-
-        binding.logoutBtn.setOnClickListener(view -> goSignOut());
-
         binding.imgSideBar.setOnClickListener(v -> binding.drawableLayout.openDrawer(GravityCompat.START));
 
         binding.imgAvatar.setOnClickListener(v -> startActivity(new Intent(this, UserInforActivity.class)));
@@ -250,83 +245,40 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    private void reloadUserData() {
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if (account == null)
-            goSignOut();
-        else {
-            UserDTO userDTO = new UserDTO();
-            userDTO.setEmail(account.getEmail());
-            userDTO.setDisplayName(account.getDisplayName());
-            userDTO.setFamilyName(account.getFamilyName());
-            userDTO.setGivenName(account.getGivenName());
-            userDTO.setPhotoUrl(String.valueOf(account.getPhotoUrl()));
-
-            AuthServiceImpl.getInstance().getService().loginUser(userDTO).enqueue(new Callback<UserDTO>() {
-                @Override
-                public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
-                    if (response.isSuccessful() && response.code() == 200) {
-                        userViewModel.setId(response.body().getId());
-                        userViewModel.setEmail(response.body().getEmail());
-                        userViewModel.setDisplayName(response.body().getDisplayName());
-                        userViewModel.setPhotoUrl(response.body().getPhotoUrl());
-                        userViewModel.setToken(response.body().getToken());
-                        userViewModel.setBoards(response.body().getBoards());
-                        userViewModel.setHasNonReadNotification(response.body().isHasNonReadNotification());
-
-                        binding.navigationView.getMenu().clear();
-                        SubMenu subMenu = binding.navigationView.getMenu().addSubMenu("Your boards");
-
-                        userViewModel.getBoards().observe(HomeActivity.this, boards -> {
-                            subMenu.clear();
-                            AtomicInteger i = new AtomicInteger();
-                            boards.forEach(b -> {
-                                subMenu.add(b.getName());
-                                subMenu.getItem(i.getAndIncrement()).setIcon(R.drawable.space_dashboard);
-                            });
-                            if (i.get() > 0) {
-                                subMenu.getItem(0).setChecked(true);
-                                boardViewModel = new ViewModelProvider(HomeActivity.this).get(BoardViewModel.class);
-                                userViewModel.setCurrentBoardId(boards.get(0).getId());
-                            }
-                        });
-
-                        userViewModel.getCurrentBoardId().observe(HomeActivity.this, id -> initSocketConnection(""));
-
-                        userViewModel.getPhotoUrl().observe(HomeActivity.this, photoUrl -> {
-                            if (!photoUrl.equals("null"))
-                                Glide.with(HomeActivity.this)
-                                        .asBitmap()
-                                        .load(photoUrl)
-                                        .into(binding.imgAvatar);
-                            else
-                                binding.imgAvatar.setImageResource(R.mipmap.ic_launcher);
-                        });
-
-                        userViewModel.getHasNonReadNotification().observe(HomeActivity.this, hasNonRead -> {
-                            if (hasNonRead)
-                                binding.notificationPoint.setVisibility(View.VISIBLE);
-                            else
-                                binding.notificationPoint.setVisibility(View.GONE);
-                        });
-                    }
-                    binding.refreshLayout.setRefreshing(false);
-                }
-
-                @Override
-                public void onFailure(Call<UserDTO> call, Throwable t) {
-                    Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                    binding.refreshLayout.setRefreshing(false);
-                }
-            });
-        }
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
-        if (stompClient != null && userViewModel.getBoards().getValue() != null)
-            initSocketConnection("");
+        reloadUserData();
+    }
+
+    private void reloadUserData() {
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        UserDTO userDTO = new UserDTO();
+        userDTO.setEmail(account.getEmail());
+        userDTO.setDisplayName(account.getDisplayName());
+        userDTO.setFamilyName(account.getFamilyName());
+        userDTO.setGivenName(account.getGivenName());
+        userDTO.setPhotoUrl(String.valueOf(account.getPhotoUrl()));
+
+        AuthServiceImpl.getInstance().getService().loginUser(userDTO).enqueue(new Callback<UserDTO>() {
+            @Override
+            public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
+                if (response.isSuccessful() && response.code() == 200) {
+                    userViewModel.setId(response.body().getId());
+                    userViewModel.setEmail(response.body().getEmail());
+                    userViewModel.setDisplayName(response.body().getDisplayName());
+                    userViewModel.setPhotoUrl(response.body().getPhotoUrl());
+                    userViewModel.setToken(response.body().getToken());
+                    userViewModel.setBoards(response.body().getBoards());
+                    userViewModel.setHasNonReadNotification(response.body().isHasNonReadNotification());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserDTO> call, Throwable t) {
+                Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
