@@ -9,6 +9,9 @@ public class TaskDetailsDTO {
     @Json(name = "id")
     private long id;
 
+    @Json(name = "description")
+    private String description;
+
     @Json(name = "status")
     private String status;
 
@@ -81,5 +84,13 @@ public class TaskDetailsDTO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

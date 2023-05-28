@@ -35,6 +35,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -129,7 +130,7 @@ public class TableFragment extends Fragment {
 
             @Override
             public void onFailure(Call<UserDTO> call, Throwable t) {
-                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toasty.error(getContext(), t.getMessage(), Toast.LENGTH_SHORT, true).show();
                 binding.refreshLayout.setRefreshing(false);
             }
         });

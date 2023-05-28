@@ -172,6 +172,7 @@ public class HomeFragment extends Fragment {
         dialog.setContentView(R.layout.create_table);
         EditText txtSearchUser = dialog.findViewById(R.id.editTxtSearchUserTable);
         EditText txtTableName = dialog.findViewById(R.id.editTxtCreateTableName);
+        EditText txtTableDesc = dialog.findViewById(R.id.editTxtCreateTableDesc);
         ConstraintLayout btnCreateTable = dialog.findViewById(R.id.btnCreateTable);
 
         UserInvitedRecViewAdapter invitedAdapter = new UserInvitedRecViewAdapter(getActivity());
@@ -185,10 +186,11 @@ public class HomeFragment extends Fragment {
         userRecView.setAdapter(adapter);
 
         btnCreateTable.setOnClickListener(view -> {
-            if (!txtTableName.getText().toString().isEmpty()) {
+            if (!txtTableName.getText().toString().trim().isEmpty() && !txtTableDesc.getText().toString().trim().isEmpty()) {
                 List<TableDetailsDTO> tableDetailsDTOS = boardViewModel.getTables().getValue();
                 TableDTO newTable = new TableDTO();
                 newTable.setName(txtTableName.getText().toString());
+                newTable.setDescription(txtTableDesc.getText().toString());
                 newTable.setBoardId(boardViewModel.getId().getValue());
                 newTable.setMemberIds(invitedAdapter.getUsers().stream().map(u -> u.getId()).collect(Collectors.toList()));
                 if (userViewModel.getId().getValue() != boardViewModel.getAdmin().getValue().getId())
