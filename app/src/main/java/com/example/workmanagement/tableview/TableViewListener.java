@@ -230,11 +230,11 @@ public class TableViewListener implements ITableViewListener {
         dialog.setContentView(R.layout.create_task);
         EditText txtSearchUser = dialog.findViewById(R.id.editTxtSearch);
         EditText txtTaskName = dialog.findViewById(R.id.editTxtCreateTaskName);
+        EditText txtTaskDesc = dialog.findViewById(R.id.editTxtCreateTaskDesc);
 
         Spinner status = dialog.findViewById(R.id.statusSpinner);
         status.setVisibility(View.VISIBLE);
         String[] items = {"DONE", "PENDING", "STUCK"};
-        //ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_dropdown_item, items);
         StatusSpinnerAdapter statusAdapter = new StatusSpinnerAdapter(mContext, Arrays.asList(items));
         status.setAdapter(statusAdapter);
 
@@ -274,6 +274,8 @@ public class TableViewListener implements ITableViewListener {
         adapter.setChosen(true);
 
         txtTaskName.setText(String.valueOf(listCells.get(row).get(0).getData()));
+        txtTaskDesc.setText(tables.get(pos).getTasks().get(row).getDescription());
+
         if (String.valueOf(listCells.get(row).get(1).getText()).equals("")) {
             txtSearchUser.setText("");
             List<UserInfoDTO> userList = new ArrayList<>();
@@ -292,18 +294,23 @@ public class TableViewListener implements ITableViewListener {
         }
 
         btnCreateTask.setOnClickListener(view -> {
-            if (!txtTaskName.getText().toString().isEmpty() && adapter.isChosen()) {
+            if (adapter.isChosen()) {
                 long tableId = tables.get(pos).getId();
                 List<TableDetailsDTO> tableDetailsDTOS = boardViewModel.getTables().getValue();
                 TaskDetailsDTO task = tables.get(pos).getTasks().get(row);
                 TaskDTO newTask = new TaskDTO();
+                if (!txtTaskDesc.getText().toString().trim().isEmpty())
+                    newTask.setDescription(txtTaskDesc.getText().toString());
                 newTask.setStatus(status.getSelectedItemPosition());
                 newTask.setUserId(adapter.getUser().getId());
                 List<TextAttributeDTO> textAttributes = new ArrayList<>();
                 List<DateAttributeDTO> dateAttributes = new ArrayList<>();
                 TextAttributeDTO textAttribute = new TextAttributeDTO();
                 textAttribute.setId(task.getTextAttributes().stream().filter(atr -> atr.getName().equals("name")).findFirst().get().getId());
-                textAttribute.setName("name");
+                if (!txtTaskName.getText().toString().trim().isEmpty())
+                    textAttribute.setName("name");
+                else
+                    String.valueOf(listCells.get(row).get(0).getData());
                 textAttribute.setValue(txtTaskName.getText().toString());
                 textAttributes.add(textAttribute);
                 DateAttributeDTO dateAttribute = new DateAttributeDTO();
@@ -327,7 +334,8 @@ public class TableViewListener implements ITableViewListener {
                                     boardViewModel.setTables(tableDetailsDTOS);
                                     Toasty.success(mContext, "Update task success!", Toast.LENGTH_SHORT, true).show();
                                     dialog.dismiss();
-                                } else Toasty.error(mContext, response.raw().toString(), Toast.LENGTH_SHORT, true).show();
+                                } else
+                                    Toasty.error(mContext, response.raw().toString(), Toast.LENGTH_SHORT, true).show();
                             }
 
                             @Override
@@ -336,7 +344,7 @@ public class TableViewListener implements ITableViewListener {
                             }
                         });
             } else
-                Toast.makeText(mContext, "Please fill full information", Toast.LENGTH_SHORT).show();
+                Toasty.warning(mContext, "Please fill full information", Toast.LENGTH_SHORT, true).show();
 
         });
         txtSearchUser.addTextChangedListener(new TextWatcher() {

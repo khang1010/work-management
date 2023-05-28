@@ -6,6 +6,8 @@ public class TaskDTO {
 
     private long id;
 
+    private String description;
+
     private Long userId;
 
     private long tableId;
@@ -50,6 +52,14 @@ public class TaskDTO {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public List<TextAttributeDTO> getTextAttributes() {

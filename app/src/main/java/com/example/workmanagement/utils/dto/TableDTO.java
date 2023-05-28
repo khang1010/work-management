@@ -6,6 +6,8 @@ public class TableDTO {
 
     private String name;
 
+    private String description;
+
     private long boardId;
 
     private List<Long> memberIds;
@@ -32,5 +34,13 @@ public class TableDTO {
 
     public void setMemberIds(List<Long> memberIds) {
         this.memberIds = memberIds;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
