@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -60,6 +61,8 @@ public class RowHeaderLongPressPopup extends PopupMenu implements PopupMenu
     private static final int SCROLL_COLUMN = 1;
     private static final int SHOWHIDE_COLUMN = 2;
     private static final int REMOVE_ROW = 3;
+
+    private Context context;
 
     private BoardViewModel boardViewModel;
     private UserViewModel userViewModel;
@@ -79,7 +82,7 @@ public class RowHeaderLongPressPopup extends PopupMenu implements PopupMenu
         initialize();
     }
 
-    public RowHeaderLongPressPopup(@NonNull RecyclerView.ViewHolder viewHolder, @NonNull TableView tableView, BoardViewModel boardViewModel, UserViewModel userViewModel, int id, List<TableDetailsDTO> tables, int position) {
+    public RowHeaderLongPressPopup(@NonNull RecyclerView.ViewHolder viewHolder, @NonNull TableView tableView, BoardViewModel boardViewModel, UserViewModel userViewModel, int id, List<TableDetailsDTO> tables, int position, Context context) {
         super(viewHolder.itemView.getContext(), viewHolder.itemView);
 
         this.mTableView = tableView;
@@ -89,7 +92,7 @@ public class RowHeaderLongPressPopup extends PopupMenu implements PopupMenu
         this.tables = tables;
         this.pos = position;
         this.id = id;
-
+        this.context = context;
         initialize();
     }
 
@@ -143,13 +146,13 @@ public class RowHeaderLongPressPopup extends PopupMenu implements PopupMenu
                                     .collect(Collectors.toList())
                             );
                             boardViewModel.setTables(tableDetailsDTOS);
-                        }
-
+                            Toasty.success(context, "Delete task success!", Toast.LENGTH_SHORT, true).show();
+                        } else Toasty.error(context, response.raw().toString(), Toast.LENGTH_SHORT, true).show();
                     }
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
-
+                        Toasty.error(context, t.getMessage(), Toast.LENGTH_SHORT, true).show();
                     }
                 });
                 break;

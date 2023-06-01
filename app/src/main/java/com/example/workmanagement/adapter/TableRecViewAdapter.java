@@ -3,7 +3,9 @@ package com.example.workmanagement.adapter;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -41,6 +43,14 @@ import com.example.workmanagement.utils.services.impl.TaskServiceImpl;
 import com.example.workmanagement.viewmodels.BoardViewModel;
 import com.example.workmanagement.viewmodels.UserViewModel;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,6 +58,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -61,6 +72,7 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
 
     public void setTables(List<TableDetailsDTO> tables) {
         this.tables = tables;
+        notifyDataSetChanged();
     }
 
     public TableRecViewAdapter(Context context, UserViewModel userViewModel, BoardViewModel boardViewModel) {
@@ -150,13 +162,14 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
                                         if (response.isSuccessful() && response.code() == 200) {
                                             long id = tables.get(holder.getAdapterPosition()).getId();
                                             boardViewModel.setTables(tables.stream().filter(t -> t.getId() != id).collect(Collectors.toList()));
+                                            Toasty.success(context, "Delete table success!", Toast.LENGTH_SHORT, true).show();
                                         } else
-                                            Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show();
+                                            Toasty.error(context, response.raw().toString(), Toast.LENGTH_SHORT, true).show();
                                     }
 
                                     @Override
                                     public void onFailure(Call<Void> call, Throwable t) {
-                                        Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                        Toasty.error(context, t.getMessage(), Toast.LENGTH_SHORT, true).show();
                                     }
                                 });
                     })
@@ -164,7 +177,6 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
 
                     });
             builder.create().show();
-
         });
 
 
@@ -186,18 +198,26 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
                                     holder.editTable.setVisibility(View.GONE);
                                     holder.accept.setVisibility(View.GONE);
                                     boardViewModel.setTables(tableDetailsDTOS);
+                                    Toasty.success(context, "Update table success!", Toast.LENGTH_SHORT, true).show();
                                 } else
-                                    Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show();
+                                    Toasty.error(context, response.raw().toString(), Toast.LENGTH_SHORT, true).show();
                             }
 
                             @Override
                             public void onFailure(Call<TableDetailsDTO> call, Throwable t) {
-                                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toasty.error(context, t.getMessage(), Toast.LENGTH_SHORT, true).show();
                             }
                         });
             }
         });
 
+//        holder.download.setOnClickListener(view -> {
+//            try {
+//                createExcel(view, position, boardViewModel.getTables().getValue().get(position).getTasks());
+//            } catch (ParseException e) {
+//                throw new RuntimeException(e);
+//            }
+//        });
     }
 
     @Override
@@ -211,8 +231,14 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.create_task);
+        Window window = dialog.getWindow();
+        if (window == null) {
+            return;
+        }
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         EditText txtSearchUser = dialog.findViewById(R.id.editTxtSearch);
         EditText txtTaskName = dialog.findViewById(R.id.editTxtCreateTaskName);
+        EditText txtTaskDesc = dialog.findViewById(R.id.editTxtCreateTaskDesc);
         ConstraintLayout btnCreateTask = dialog.findViewById(R.id.btnCreateTask);
 
         UserSearchInTaskAdapter adapter = new UserSearchInTaskAdapter(context);
@@ -221,10 +247,12 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
         userRecView.setAdapter(adapter);
 
         btnCreateTask.setOnClickListener(view -> {
-            if (!txtTaskName.getText().toString().trim().isEmpty() && adapter.isChosen()) {
+            if (!txtTaskName.getText().toString().trim().isEmpty()
+                    && !txtTaskDesc.getText().toString().trim().isEmpty() && adapter.isChosen()) {
                 long tableId = tables.get(pos).getId();
                 List<TableDetailsDTO> tableDetailsDTOS = boardViewModel.getTables().getValue();
                 TaskDTO newTask = new TaskDTO();
+                newTask.setDescription(txtTaskDesc.getText().toString());
                 newTask.setStatus(SystemConstant.PENDING_STATUS);
                 newTask.setUserId(adapter.getUser().getId());
                 newTask.setTableId(tableId);
@@ -248,18 +276,20 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
                                     tableDetailsDTOS.stream().filter(t -> t.getId() == tableId)
                                             .findFirst().get().getTasks().add(response.body());
                                     boardViewModel.setTables(tableDetailsDTOS);
+                                    Toasty.success(context, "Create task success!", Toast.LENGTH_SHORT, true).show();
                                     dialog.dismiss();
-                                }
+                                } else
+                                    Toasty.error(context, response.raw().toString(), Toast.LENGTH_SHORT, true).show();
                             }
 
                             @Override
                             public void onFailure(Call<TaskDetailsDTO> call, Throwable t) {
-                                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toasty.error(context, t.getMessage(), Toast.LENGTH_SHORT, true).show();
                             }
                         });
+                notifyDataSetChanged();
             } else
-                Toast.makeText(context, "Please fill full information", Toast.LENGTH_SHORT).show();
-
+                Toasty.warning(context, "Please fill full information", Toast.LENGTH_SHORT, true).show();
         });
 
         txtSearchUser.addTextChangedListener(new TextWatcher() {
@@ -296,9 +326,15 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.create_table);
+        Window window = dialog.getWindow();
+        if (window == null) {
+            return;
+        }
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         TextView txtUpdate = dialog.findViewById(R.id.createTxt);
         EditText txtSearchUser = dialog.findViewById(R.id.editTxtSearchUserTable);
         EditText txtTableName = dialog.findViewById(R.id.editTxtCreateTableName);
+        EditText txtTableDesc = dialog.findViewById(R.id.editTxtCreateTableDesc);
         ConstraintLayout btnCreateTable = dialog.findViewById(R.id.btnCreateTable);
 
         txtUpdate.setText("Update");
@@ -315,6 +351,7 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
         userRecView.setAdapter(adapter);
 
         txtTableName.setText(boardViewModel.getTables().getValue().get(pos).getName());
+        txtTableDesc.setText(boardViewModel.getTables().getValue().get(pos).getDescription());
 
         List<UserInfoDTO> users = new ArrayList<>();
         users.addAll(tables.get(pos).getMembers());
@@ -334,6 +371,10 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
                     && !txtTableName.getText().toString().equals(tables.get(pos).getName()))
                 newTable.setName(txtTableName.getText().toString());
 
+            if (!txtTableDesc.getText().toString().trim().isEmpty()
+                    && !txtTableDesc.getText().toString().equals(tables.get(pos).getDescription()))
+                newTable.setDescription(txtTableDesc.getText().toString());
+
             List<UserInfoDTO> removedUsers = tables.get(pos).getMembers().stream()
                     .filter(m -> invitedAdapter.getUsers().stream().noneMatch(u -> u.getId() == m.getId()))
                     .collect(Collectors.toList());
@@ -351,12 +392,14 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
                                 tableDetailsDTOS.set(pos, response.body());
                                 boardViewModel.setTables(tableDetailsDTOS);
                                 dialog.dismiss();
-                            }
+                                Toasty.success(context, "Update table success!", Toast.LENGTH_SHORT, true).show();
+                            } else
+                                Toasty.error(context, response.raw().toString(), Toast.LENGTH_SHORT, true).show();
                         }
 
                         @Override
                         public void onFailure(Call<TableDetailsDTO> call, Throwable t) {
-                            Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toasty.error(context, t.getMessage(), Toast.LENGTH_SHORT, true).show();
                         }
                     });
         });
@@ -390,6 +433,63 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
             }
         });
         dialog.show();
+    }
+
+    public void createExcel(View view, int pos, List<TaskDetailsDTO> tasks) throws ParseException {
+        HSSFWorkbook hssfWorkbook = new HSSFWorkbook();
+        HSSFSheet hssfSheet = hssfWorkbook.createSheet();
+
+        HSSFRow hssfRow = hssfSheet.createRow(0);
+        HSSFCell hssfCell = hssfRow.createCell(0);
+        hssfCell.setCellValue("Id");
+
+        hssfCell = hssfRow.createCell(1);
+        hssfCell.setCellValue("Name");
+
+        hssfCell = hssfRow.createCell(2);
+        hssfCell.setCellValue("Person");
+
+        hssfCell = hssfRow.createCell(3);
+        hssfCell.setCellValue("Deadline");
+
+        hssfCell = hssfRow.createCell(4);
+        hssfCell.setCellValue("Status");
+
+        for (int i = 0; i < tasks.size(); i++) {
+            hssfRow = hssfSheet.createRow(i + 1);
+            hssfCell = hssfRow.createCell(0);
+            hssfCell.setCellValue(tasks.get(i).getId());
+
+            hssfCell = hssfRow.createCell(1);
+            hssfCell.setCellValue(tasks.get(i).getTextAttributes().stream().filter(atr -> atr.getName().equals("name")).findFirst().get().getValue());
+
+            hssfCell = hssfRow.createCell(2);
+            hssfCell.setCellValue(tasks.get(i).getUser().getDisplayName());
+
+            Date date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(tasks.get(i).getDateAttributes().stream().filter(atr -> atr.getName().equals("deadline")).findFirst().get().getValue());
+            hssfCell = hssfRow.createCell(3);
+            hssfCell.setCellValue(String.valueOf(new SimpleDateFormat("HH:mm dd/MM/yyyy").format(date)));
+
+            hssfCell = hssfRow.createCell(4);
+            hssfCell.setCellValue(tasks.get(i).getStatus());
+        }
+
+        File file = new File(Environment.getExternalStorageDirectory() + "/" + boardViewModel.getTables().getValue().get(pos).getName() + ".xls");
+
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            hssfWorkbook.write(fileOutputStream);
+
+            if (fileOutputStream != null) {
+                fileOutputStream.flush();
+                fileOutputStream.close();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

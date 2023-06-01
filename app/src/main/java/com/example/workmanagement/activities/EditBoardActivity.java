@@ -7,10 +7,11 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -54,6 +55,7 @@ import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -97,7 +99,7 @@ public class EditBoardActivity extends AppCompatActivity {
         UserInfoDTO admin = (UserInfoDTO) getIntent().getSerializableExtra("BOARD_ADMIN");
         Glide.with(this).asBitmap().load(admin.getPhotoUrl()).into(binding.imgAdminAvatar);
         binding.txtAdminName.setText(admin.getDisplayName());
-        binding.imgEditBoardBackToHome.setOnClickListener(v -> startActivity(new Intent(this, HomeActivity.class)));
+        binding.imgEditBoardBackToHome.setOnClickListener(v -> onBackPressed());
 
         if (userId != admin.getId()) {
             binding.imgEditBoard.setVisibility(View.GONE);
@@ -144,7 +146,7 @@ public class EditBoardActivity extends AppCompatActivity {
                         .collect(Collectors.toList()) // get removed members
                         .stream().anyMatch(m -> memberIds.stream().anyMatch(id -> id == m.getId())) // check if we remove any user in table
                 ) {
-                    Toast.makeText(this, "Please remove user from table first!", Toast.LENGTH_SHORT).show();
+                    Toasty.warning(this, "Please remove user from table first!", Toast.LENGTH_SHORT, true).show();
                     binding.txtBoardName.setVisibility(View.VISIBLE);
                     binding.imgEditBoard.setVisibility(View.VISIBLE);
                     binding.btnDoneEditBoard.setVisibility(View.GONE);
@@ -178,12 +180,14 @@ public class EditBoardActivity extends AppCompatActivity {
                                 editMembersAdapter.setMembers(members.stream()
                                         .filter(m -> ids.stream().anyMatch(i -> i == m.getId())).collect(Collectors.toList())
                                 );
-                            }
+                                Toasty.success(EditBoardActivity.this, "Update board success!", Toast.LENGTH_SHORT, true).show();
+                            } else
+                                Toasty.error(EditBoardActivity.this, response.raw().toString(), Toast.LENGTH_SHORT, true).show();
                         }
 
                         @Override
                         public void onFailure(Call<BoardDetailsDTO> call, Throwable t) {
-                            Toast.makeText(EditBoardActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toasty.error(EditBoardActivity.this, t.getMessage(), Toast.LENGTH_SHORT, true).show();
                         }
                     });
 
@@ -198,12 +202,14 @@ public class EditBoardActivity extends AppCompatActivity {
                                         @Override
                                         public void onResponse(Call<Void> call, Response<Void> response) {
                                             if (response.isSuccessful() && response.code() == 200)
-                                                startActivity(new Intent(EditBoardActivity.this, HomeActivity.class));
+                                                onBackPressed();
+                                            else
+                                                Toasty.error(EditBoardActivity.this, response.raw().toString(), Toast.LENGTH_SHORT, true).show();
                                         }
 
                                         @Override
                                         public void onFailure(Call<Void> call, Throwable t) {
-                                            Toast.makeText(EditBoardActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                            Toasty.error(EditBoardActivity.this, t.getMessage(), Toast.LENGTH_SHORT, true).show();
                                         }
                                     })
                     )
@@ -219,7 +225,8 @@ public class EditBoardActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        stompClient.disconnect();
+        if (stompClient != null)
+            stompClient.disconnect();
     }
 
     private void initSocketConnection(long userId, List<Long> ids) {
@@ -318,6 +325,7 @@ public class EditBoardActivity extends AppCompatActivity {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.create_board);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         EditText txtSearchUser = dialog.findViewById(R.id.editTxtSearchUser);
         EditText txtBoardName = dialog.findViewById(R.id.editTxtCreateBoardName);
         txtBoardName.setText(boardName);
@@ -379,16 +387,15 @@ public class EditBoardActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<BoardDetailsDTO> call, Response<BoardDetailsDTO> response) {
                             if (response.isSuccessful() && response.code() == 200)
-                                Toast.makeText(EditBoardActivity.this, "Invite successful", Toast.LENGTH_SHORT).show();
+                                Toasty.success(EditBoardActivity.this, "Invite successful!", Toast.LENGTH_SHORT, true).show();
                             else
-                                Toast.makeText(EditBoardActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                                Toasty.error(EditBoardActivity.this, response.raw().toString(), Toast.LENGTH_SHORT, true).show();
                             dialog.dismiss();
                         }
 
                         @Override
                         public void onFailure(Call<BoardDetailsDTO> call, Throwable t) {
-                            Toast.makeText(EditBoardActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
+                            Toasty.error(EditBoardActivity.this, t.getMessage(), Toast.LENGTH_SHORT, true).show();
                         }
                     });
         });

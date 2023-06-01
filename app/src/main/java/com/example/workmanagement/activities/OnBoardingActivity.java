@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -106,6 +107,7 @@ public class OnBoardingActivity extends AppCompatActivity {
             binding.acctName.setText(getFirstWord(account.getDisplayName()));
         }
     }
+
     private void showCreateBoardDialog(String token) {
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -159,7 +161,7 @@ public class OnBoardingActivity extends AppCompatActivity {
 
         btnCreateBoard.setOnClickListener(v -> {
             if (txtBoardName.getText().toString().trim().isEmpty())
-                Toast.makeText(this, "Please enter board name", Toast.LENGTH_SHORT).show();
+                Toasty.warning(OnBoardingActivity.this, "Please enter board name", Toast.LENGTH_SHORT, true).show();
             else
                 BoardServiceImpl.getInstance().getService(token)
                         .createBoard(new BoardDTO(txtBoardName.getText().toString(),
@@ -170,17 +172,20 @@ public class OnBoardingActivity extends AppCompatActivity {
                             public void onResponse(Call<BoardInfo> call, Response<BoardInfo> response) {
                                 if (response.isSuccessful() && response.code() == 201)
                                     goToHome();
+                                else
+                                    Toasty.error(OnBoardingActivity.this, response.raw().toString(), Toast.LENGTH_SHORT, true).show();
                             }
 
                             @Override
                             public void onFailure(Call<BoardInfo> call, Throwable t) {
-                                Toast.makeText(OnBoardingActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toasty.error(OnBoardingActivity.this, t.getMessage(), Toast.LENGTH_SHORT, true).show();
                             }
                         });
         });
 
         dialog.show();
     }
+
     private String getFirstWord(String text) {
         int index = text.indexOf(' ');
         if (index > -1) { // Check if there is more than one word.
@@ -189,6 +194,7 @@ public class OnBoardingActivity extends AppCompatActivity {
             return text; // Text is the first word itself.
         }
     }
+
     private void goToHome() {
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);

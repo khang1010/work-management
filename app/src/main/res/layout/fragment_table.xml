@@ -2,70 +2,68 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.TableFragment"
-    android:background="@color/background_color"
     android:id="@+id/fragment_container"
-    android:isScrollContainer="true">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background_color"
+    android:isScrollContainer="true"
+    tools:context=".fragments.TableFragment">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clock_image"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/clock_image">
+
+        <TextView
+            android:id="@+id/txt_clock_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You have 0 tasks need to complete today"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:isScrollContainer="true">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/clock_image"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/clock_image">
-
-            <TextView
-                android:id="@+id/txt_clock_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="You have 0 tasks need to complete today"
-                android:textColor="@color/white"
-                android:textSize="18dp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
+        android:layout_below="@id/clock_image">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/table_rec_view"
-            android:layout_below="@id/clock_image"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/clock_image"
+            android:isScrollContainer="true" />
 
-        <RelativeLayout
-            android:id="@+id/clock_container"
-            android:layout_width="170dp"
-            android:layout_height="170dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="161dp"
-            android:layout_marginEnd="102dp"
-            android:background="@drawable/background_table">
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-            <pl.droidsonroids.gif.GifImageView
-                android:id="@+id/gif_clock"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:src="@drawable/clock" />
+    <RelativeLayout
+        android:id="@+id/clock_container"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
+        android:layout_below="@+id/clock_image"
+        android:layout_centerInParent="true"
+        android:background="@drawable/background_table">
 
-        </RelativeLayout>
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/gif_clock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/clock" />
+
     </RelativeLayout>
 
 </RelativeLayout>

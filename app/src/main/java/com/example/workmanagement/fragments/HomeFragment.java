@@ -1,20 +1,27 @@
 package com.example.workmanagement.fragments;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
@@ -24,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.workmanagement.R;
 import com.example.workmanagement.activities.EditBoardActivity;
+import com.example.workmanagement.activities.LabelActivity;
 import com.example.workmanagement.activities.LoginActivity;
 import com.example.workmanagement.adapter.UserInvitedRecViewAdapter;
 import com.example.workmanagement.adapter.UserSearchRecViewAdapter;
@@ -45,6 +53,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -81,9 +90,11 @@ public class HomeFragment extends Fragment {
 
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
 
+        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.READ_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
+        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
+
         if (account == null) goSignOut();
-        binding.logoutBtn.setOnClickListener(v -> goSignOut());
-        binding.logoutBtn.setVisibility(View.GONE);
         binding.navigation.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigation_table:
@@ -94,25 +105,6 @@ public class HomeFragment extends Fragment {
                     return true;
             }
             return false;
-        });
-        binding.btnEdit.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), EditBoardActivity.class);
-            intent.putExtra("BOARD_IDS", (ArrayList) userViewModel.getBoards().getValue()
-                    .stream().map(b -> b.getId()).collect(Collectors.toList()));
-            intent.putExtra("BOARD_ID", boardViewModel.getId().getValue());
-            intent.putExtra("BOARD_NAME", boardViewModel.getName().getValue());
-            intent.putExtra("BOARD_ADMIN", boardViewModel.getAdmin().getValue());
-            intent.putExtra("BOARD_MEMBERS", (ArrayList) boardViewModel.getMembers().getValue());
-            intent.putExtra("USER_ID", userViewModel.getId().getValue());
-            intent.putExtra("TOKEN", userViewModel.getToken().getValue());
-            List<Long> ids = new ArrayList<>();
-            boardViewModel.getTables().getValue().forEach(t ->
-                    ids.addAll(t.getMembers()
-                            .stream().map(m -> m.getId())
-                            .collect(Collectors.toList()))
-            );
-            intent.putExtra("IDS", (ArrayList) ids.stream().distinct().collect(Collectors.toList()));
-            startActivity(intent);
         });
         binding.actionAddTable.setOnClickListener(v -> showCreateTableDialog());
         binding.actionEditBoard.setOnClickListener(v -> {
@@ -134,6 +126,13 @@ public class HomeFragment extends Fragment {
             intent.putExtra("IDS", (ArrayList) ids.stream().distinct().collect(Collectors.toList()));
             startActivity(intent);
         });
+        binding.actionLabel.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), LabelActivity.class);
+            intent.putExtra("LABELS", (ArrayList) boardViewModel.getLabels().getValue());
+            intent.putExtra("BOARD_ID", boardViewModel.getId().getValue());
+            intent.putExtra("TOKEN", userViewModel.getToken().getValue());
+            startActivity(intent);
+        });
         return view;
     }
 
@@ -153,6 +152,7 @@ public class HomeFragment extends Fragment {
                             boardViewModel.setAdmin(response.body().getAdmin());
                             boardViewModel.setMembers(response.body().getMembers());
                             boardViewModel.setTables(response.body().getTables());
+                            boardViewModel.setLabels(response.body().getLabels());
                         }
                     }
 
@@ -169,8 +169,14 @@ public class HomeFragment extends Fragment {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.create_table);
+        Window window = dialog.getWindow();
+        if (window == null)
+            return;
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
         EditText txtSearchUser = dialog.findViewById(R.id.editTxtSearchUserTable);
         EditText txtTableName = dialog.findViewById(R.id.editTxtCreateTableName);
+        EditText txtTableDesc = dialog.findViewById(R.id.editTxtCreateTableDesc);
         ConstraintLayout btnCreateTable = dialog.findViewById(R.id.btnCreateTable);
 
         UserInvitedRecViewAdapter invitedAdapter = new UserInvitedRecViewAdapter(getActivity());
@@ -184,10 +190,11 @@ public class HomeFragment extends Fragment {
         userRecView.setAdapter(adapter);
 
         btnCreateTable.setOnClickListener(view -> {
-            if (!txtTableName.getText().toString().isEmpty()) {
+            if (!txtTableName.getText().toString().trim().isEmpty() && !txtTableDesc.getText().toString().trim().isEmpty()) {
                 List<TableDetailsDTO> tableDetailsDTOS = boardViewModel.getTables().getValue();
                 TableDTO newTable = new TableDTO();
                 newTable.setName(txtTableName.getText().toString());
+                newTable.setDescription(txtTableDesc.getText().toString());
                 newTable.setBoardId(boardViewModel.getId().getValue());
                 newTable.setMemberIds(invitedAdapter.getUsers().stream().map(u -> u.getId()).collect(Collectors.toList()));
                 if (userViewModel.getId().getValue() != boardViewModel.getAdmin().getValue().getId())
@@ -199,17 +206,17 @@ public class HomeFragment extends Fragment {
                                 if (response.isSuccessful() && response.code() == 201) {
                                     tableDetailsDTOS.add(response.body());
                                     boardViewModel.setTables(tableDetailsDTOS);
+                                    Toasty.success(getContext(), "Create table success!", Toast.LENGTH_SHORT, true).show();
                                     dialog.dismiss();
-                                }
+                                } else Toasty.error(getContext(), response.raw().toString(), Toast.LENGTH_SHORT, true).show();
                             }
 
                             @Override
                             public void onFailure(Call<TableDetailsDTO> call, Throwable t) {
-                                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toasty.error(getContext(), t.getMessage(), Toast.LENGTH_SHORT, true).show();
                             }
                         });
-            } else
-                Toast.makeText(getActivity(), "Please fill information", Toast.LENGTH_SHORT).show();
+            } else Toasty.warning(getContext(), "Please fill full information", Toast.LENGTH_SHORT, true).show();
         });
 
         txtSearchUser.addTextChangedListener(new TextWatcher() {

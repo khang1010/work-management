@@ -15,6 +15,10 @@ public class TableDetailsDTO {
     @Json(name = "name")
     private String name;
 
+    @Json(name = "description")
+    private String description;
+
+
     @Json(name = "members")
     private List<UserInfoDTO> members;
 
@@ -59,5 +63,13 @@ public class TableDetailsDTO {
 
     public void setTasks(List<TaskDetailsDTO> tasks) {
         this.tasks = tasks;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

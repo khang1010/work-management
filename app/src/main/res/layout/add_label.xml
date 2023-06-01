@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="20dp"
+    android:background="@drawable/shape_dialog"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <EditText
+        android:id="@+id/editTxtCreateLabelName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:ems="10"
+        android:hint="Label Name"
+        android:textColor="@color/primary_4"
+        android:textColorHint="@color/primary_4"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Color"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTxtCreateLabelName" />
+
+    <TextView
+        android:id="@+id/labelColorPicker"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="32dp"
+        android:background="@drawable/done_status_border"
+        android:gravity="center"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/textView"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="@+id/textView" />
+
+    <Button
+        android:id="@+id/btnCreateLabel"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/btn_add_board_border"
+        android:text="+ Create"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        tools:layout_editor_absoluteX="20dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

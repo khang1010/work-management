@@ -77,6 +77,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -102,7 +103,6 @@ public class HomeActivity extends AppCompatActivity {
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
-        binding.logoutBtn.setVisibility(View.GONE);
         binding.notificationPoint.setVisibility(View.GONE);
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -183,13 +183,9 @@ public class HomeActivity extends AppCompatActivity {
             });
         }
 
-        binding.logoutBtn.setOnClickListener(view -> goSignOut());
-
         binding.imgSideBar.setOnClickListener(v -> binding.drawableLayout.openDrawer(GravityCompat.START));
 
-        binding.imgAvatar.setOnClickListener(v -> {
-            startActivity(new Intent(this, UserInforActivity.class));
-        });
+        binding.imgAvatar.setOnClickListener(v -> startActivity(new Intent(this, UserInforActivity.class)));
 
         binding.navigationView.setNavigationItemSelectedListener(item -> {
             Menu menu = binding.navigationView.getMenu().getItem(0).getSubMenu();
@@ -246,6 +242,42 @@ public class HomeActivity extends AppCompatActivity {
             intent.putExtra("TOKEN", userViewModel.getToken().getValue());
             intent.putExtra("ID", userViewModel.getId().getValue());
             startActivity(intent);
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        reloadUserData();
+    }
+
+    private void reloadUserData() {
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        UserDTO userDTO = new UserDTO();
+        userDTO.setEmail(account.getEmail());
+        userDTO.setDisplayName(account.getDisplayName());
+        userDTO.setFamilyName(account.getFamilyName());
+        userDTO.setGivenName(account.getGivenName());
+        userDTO.setPhotoUrl(String.valueOf(account.getPhotoUrl()));
+
+        AuthServiceImpl.getInstance().getService().loginUser(userDTO).enqueue(new Callback<UserDTO>() {
+            @Override
+            public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
+                if (response.isSuccessful() && response.code() == 200) {
+                    userViewModel.setId(response.body().getId());
+                    userViewModel.setEmail(response.body().getEmail());
+                    userViewModel.setDisplayName(response.body().getDisplayName());
+                    userViewModel.setPhotoUrl(response.body().getPhotoUrl());
+                    userViewModel.setToken(response.body().getToken());
+                    userViewModel.setBoards(response.body().getBoards());
+                    userViewModel.setHasNonReadNotification(response.body().isHasNonReadNotification());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserDTO> call, Throwable t) {
+                Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
@@ -411,7 +443,7 @@ public class HomeActivity extends AppCompatActivity {
 
         btnCreateBoard.setOnClickListener(v -> {
             if (txtBoardName.getText().toString().trim().isEmpty())
-                Toast.makeText(this, "Please enter board name", Toast.LENGTH_SHORT).show();
+                Toasty.warning(HomeActivity.this, "Please enter board name", Toast.LENGTH_SHORT, true).show();
             else
                 BoardServiceImpl.getInstance().getService(userViewModel.getToken().getValue())
                         .createBoard(new BoardDTO(txtBoardName.getText().toString(),
@@ -424,14 +456,16 @@ public class HomeActivity extends AppCompatActivity {
                                     List<BoardInfo> boards = userViewModel.getBoards().getValue();
                                     boards.add(0, response.body());
                                     userViewModel.setBoards(boards);
+                                    Toasty.success(HomeActivity.this, "Create board success!", Toast.LENGTH_SHORT, true).show();
                                     dialog.dismiss();
                                     //binding.drawableLayout.closeDrawer(GravityCompat.START);
-                                }
+                                } else
+                                    Toasty.error(HomeActivity.this, response.raw().toString(), Toast.LENGTH_SHORT, true).show();
                             }
 
                             @Override
                             public void onFailure(Call<BoardInfo> call, Throwable t) {
-                                Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toasty.error(HomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT, true).show();
                             }
                         });
         });

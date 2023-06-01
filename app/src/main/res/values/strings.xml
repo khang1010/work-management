@@ -46,4 +46,6 @@
     <string name="email_title">Work Management App: </string>
     <string name="send_email_error">"Can't send email"</string>
 
+    <string name="confirm">"OK"</string>
+
 </resources>

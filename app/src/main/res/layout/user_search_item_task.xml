@@ -20,12 +20,17 @@
 
     <TextView
         android:id="@+id/txtEmailSearchUser"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="55dp"
         android:text="Giang"
-        android:textSize="12dp"
+        android:layout_marginEnd="55dp"
+        android:textSize="12sp"
+        android:maxLines="1"
+        android:ellipsize="end"
         app:layout_constraintBottom_toBottomOf="@+id/imgAvatarSearchUser"
+        app:layout_constraintEnd_toStartOf="@+id/cbxSearchUser"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/imgAvatarSearchUser"
         app:layout_constraintTop_toTopOf="@+id/imgAvatarSearchUser" />
 

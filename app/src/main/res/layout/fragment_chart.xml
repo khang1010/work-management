@@ -7,22 +7,6 @@
     tools:context=".fragments.ChartFragment"
     android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
-<!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
-<!--        android:id="@+id/chart_nav"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:contextClickable="false"-->
-<!--        android:pointerIcon="none"-->
-<!--        android:textAlignment="center"-->
-<!--        app:elevation="0dp"-->
-<!--        app:itemIconSize="0dp"-->
-<!--        app:itemPaddingBottom="20dp"-->
-<!--        app:itemTextAppearanceActive="@style/textStyle_chartNav_active"-->
-<!--        app:itemTextAppearanceInactive="@style/textStyle_chartNav_inactive"-->
-<!--        app:menu="@menu/chart_navigation" />-->
-
-
     <Button
         android:layout_width="match_parent"
         android:layout_height="50dp"

@@ -22,6 +22,9 @@ public class BoardDetailsDTO {
     @Json(name = "tables")
     private List<TableDetailsDTO> tables;
 
+    @Json(name = "labels")
+    private List<LabelDTO> labels;
+
     public long getId() {
         return id;
     }
@@ -60,5 +63,13 @@ public class BoardDetailsDTO {
 
     public void setTables(List<TableDetailsDTO> tables) {
         this.tables = tables;
+    }
+
+    public List<LabelDTO> getLabels() {
+        return labels;
+    }
+
+    public void setLabels(List<LabelDTO> labels) {
+        this.labels = labels;
     }
 }

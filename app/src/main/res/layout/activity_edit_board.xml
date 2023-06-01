@@ -89,8 +89,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="#EFEFEF">
+        android:background="#EFEFEF"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/txtMembers"
@@ -98,17 +98,17 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:padding="20dp"
-            android:textSize="20dp"
-            android:textStyle="bold"
+            android:text="Members"
             android:textColor="@color/primary_1"
-            android:text="Members"/>
+            android:textSize="20dp"
+            android:textStyle="bold" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/adminLayout"
-            android:padding="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/txtMembers">
+            android:layout_below="@id/txtMembers"
+            android:padding="20dp">
 
             <TextView
                 android:id="@+id/textView3"
@@ -151,12 +151,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/adminLayout"
             android:layout_marginLeft="47dp"
-            android:textColor="@color/black"
-            android:text="Members" />
+            android:text="Members"
+            android:textColor="@color/black" />
 
         <TextView
             android:id="@+id/btnInviteMember"
-            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/adminLayout"
@@ -164,21 +163,22 @@
             android:layout_marginRight="20dp"
             android:text="Invite"
             android:textColor="@color/primary_0"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="gone" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/membersRecView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="47dp"
-            android:layout_below="@id/txtListMembers"/>
+            android:layout_below="@id/txtListMembers"
+            android:layout_marginLeft="47dp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/editMembersRecView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="47dp"
-            android:layout_below="@id/txtListMembers"/>
+            android:layout_below="@id/txtListMembers"
+            android:layout_marginLeft="47dp" />
 
     </RelativeLayout>
 
