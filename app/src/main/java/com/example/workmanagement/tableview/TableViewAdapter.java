@@ -132,11 +132,11 @@ public class TableViewAdapter extends AbstractTableAdapter<ColumnHeader, RowHead
                 layout = inflater.inflate(R.layout.table_view_image_cell_layout, parent, false);
 
                 return new PersonCellViewHolder(layout, parent.getContext());
-            case GENDER_CELL_TYPE:
-                // Get image cell layout which has ImageView instead of TextView.
-                layout = inflater.inflate(R.layout.table_view_image_cell_layout, parent, false);
-
-                return new GenderCellViewHolder(layout);
+//            case GENDER_CELL_TYPE:
+//                // Get image cell layout which has ImageView instead of TextView.
+//                layout = inflater.inflate(R.layout.table_view_cell_layout, parent, false);
+//
+//                return new CellViewHolder(layout);
             default:
                 // For cells that display a text
                 layout = inflater.inflate(R.layout.table_view_cell_layout, parent, false);

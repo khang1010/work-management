@@ -107,6 +107,7 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
                 throw new RuntimeException(e);
             }
             list.add(new Cell("3", new SimpleDateFormat("HH:mm dd/MM/yyyy").format(date)));
+            list.add(new Cell("4", "Khang"));
             listCells.add(list);
         });
 

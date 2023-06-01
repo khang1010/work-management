@@ -60,7 +60,7 @@ public class TableViewModel {
     public static final int GIRL = 2;
 
     // Constant size for dummy data sets
-    private static final int COLUMN_SIZE = 3;
+    private static final int COLUMN_SIZE = 4;
     private static final int ROW_SIZE = 5;
     private int row = 0;
     public void setRow(int row) {
@@ -111,8 +111,10 @@ public class TableViewModel {
             else if (i == 1) {
                 title = "Person";
             }
-            else
+            else if (i == 2)
                 title = "Deadline";
+            else
+                title = "Label";
 
             ColumnHeader header = new ColumnHeader(String.valueOf(i), title);
             list.add(header);
