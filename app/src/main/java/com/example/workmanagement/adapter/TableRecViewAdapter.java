@@ -3,9 +3,9 @@ package com.example.workmanagement.adapter;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -43,6 +43,14 @@ import com.example.workmanagement.utils.services.impl.TaskServiceImpl;
 import com.example.workmanagement.viewmodels.BoardViewModel;
 import com.example.workmanagement.viewmodels.UserViewModel;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -203,6 +211,13 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
             }
         });
 
+//        holder.download.setOnClickListener(view -> {
+//            try {
+//                createExcel(view, position, boardViewModel.getTables().getValue().get(position).getTasks());
+//            } catch (ParseException e) {
+//                throw new RuntimeException(e);
+//            }
+//        });
     }
 
     @Override
@@ -418,6 +433,63 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
             }
         });
         dialog.show();
+    }
+
+    public void createExcel(View view, int pos, List<TaskDetailsDTO> tasks) throws ParseException {
+        HSSFWorkbook hssfWorkbook = new HSSFWorkbook();
+        HSSFSheet hssfSheet = hssfWorkbook.createSheet();
+
+        HSSFRow hssfRow = hssfSheet.createRow(0);
+        HSSFCell hssfCell = hssfRow.createCell(0);
+        hssfCell.setCellValue("Id");
+
+        hssfCell = hssfRow.createCell(1);
+        hssfCell.setCellValue("Name");
+
+        hssfCell = hssfRow.createCell(2);
+        hssfCell.setCellValue("Person");
+
+        hssfCell = hssfRow.createCell(3);
+        hssfCell.setCellValue("Deadline");
+
+        hssfCell = hssfRow.createCell(4);
+        hssfCell.setCellValue("Status");
+
+        for (int i = 0; i < tasks.size(); i++) {
+            hssfRow = hssfSheet.createRow(i + 1);
+            hssfCell = hssfRow.createCell(0);
+            hssfCell.setCellValue(tasks.get(i).getId());
+
+            hssfCell = hssfRow.createCell(1);
+            hssfCell.setCellValue(tasks.get(i).getTextAttributes().stream().filter(atr -> atr.getName().equals("name")).findFirst().get().getValue());
+
+            hssfCell = hssfRow.createCell(2);
+            hssfCell.setCellValue(tasks.get(i).getUser().getDisplayName());
+
+            Date date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(tasks.get(i).getDateAttributes().stream().filter(atr -> atr.getName().equals("deadline")).findFirst().get().getValue());
+            hssfCell = hssfRow.createCell(3);
+            hssfCell.setCellValue(String.valueOf(new SimpleDateFormat("HH:mm dd/MM/yyyy").format(date)));
+
+            hssfCell = hssfRow.createCell(4);
+            hssfCell.setCellValue(tasks.get(i).getStatus());
+        }
+
+        File file = new File(Environment.getExternalStorageDirectory() + "/" + boardViewModel.getTables().getValue().get(pos).getName() + ".xls");
+
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            hssfWorkbook.write(fileOutputStream);
+
+            if (fileOutputStream != null) {
+                fileOutputStream.flush();
+                fileOutputStream.close();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
