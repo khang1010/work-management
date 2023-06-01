@@ -424,7 +424,7 @@ public class HomeActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<SearchUserResponse> call, Response<SearchUserResponse> response) {
                             if (response.isSuccessful() && response.code() == 200)
-                                adapter.setUsers(response.body().getUsers());
+                                adapter.setUsers(response.body().getUsers().stream().filter(u -> u.getId() != userViewModel.getId().getValue()).collect(Collectors.toList()));
                         }
 
                         @Override
