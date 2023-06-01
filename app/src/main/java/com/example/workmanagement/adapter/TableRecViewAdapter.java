@@ -155,7 +155,8 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
                                             long id = tables.get(holder.getAdapterPosition()).getId();
                                             boardViewModel.setTables(tables.stream().filter(t -> t.getId() != id).collect(Collectors.toList()));
                                             Toasty.success(context, "Delete table success!", Toast.LENGTH_SHORT, true).show();
-                                        } else Toasty.error(context, response.raw().toString(), Toast.LENGTH_SHORT, true).show();
+                                        } else
+                                            Toasty.error(context, response.raw().toString(), Toast.LENGTH_SHORT, true).show();
                                     }
 
                                     @Override
@@ -272,7 +273,8 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
                             }
                         });
                 notifyDataSetChanged();
-            } else Toasty.warning(context, "Please fill full information", Toast.LENGTH_SHORT, true).show();
+            } else
+                Toasty.warning(context, "Please fill full information", Toast.LENGTH_SHORT, true).show();
         });
 
         txtSearchUser.addTextChangedListener(new TextWatcher() {
@@ -376,7 +378,8 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
                                 boardViewModel.setTables(tableDetailsDTOS);
                                 dialog.dismiss();
                                 Toasty.success(context, "Update table success!", Toast.LENGTH_SHORT, true).show();
-                            } else Toasty.error(context, response.raw().toString(), Toast.LENGTH_SHORT, true).show();
+                            } else
+                                Toasty.error(context, response.raw().toString(), Toast.LENGTH_SHORT, true).show();
                         }
 
                         @Override

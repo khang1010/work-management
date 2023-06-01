@@ -48,7 +48,7 @@ public class TableFragment extends Fragment {
 
     private RecyclerView tableRecView;
     private RelativeLayout clockLayout;
-    private Button btnAddTable;
+
     private UserViewModel userViewModel;
 
     public TableFragment() {

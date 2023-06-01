@@ -3,6 +3,7 @@ package com.example.workmanagement.viewmodels;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.workmanagement.utils.dto.LabelDTO;
 import com.example.workmanagement.utils.dto.TableDetailsDTO;
 import com.example.workmanagement.utils.dto.UserInfoDTO;
 
@@ -19,6 +20,8 @@ public class BoardViewModel extends ViewModel {
     private MutableLiveData<List<UserInfoDTO>> members = new MutableLiveData<>();
 
     private MutableLiveData<List<TableDetailsDTO>> tables = new MutableLiveData<>();
+
+    private MutableLiveData<List<LabelDTO>> labels = new MutableLiveData<>();
 
     public MutableLiveData<Long> getId() {
         return id;
@@ -58,5 +61,13 @@ public class BoardViewModel extends ViewModel {
 
     public void setTables(List<TableDetailsDTO> tables) {
         this.tables.setValue(tables);
+    }
+
+    public MutableLiveData<List<LabelDTO>> getLabels() {
+        return labels;
+    }
+
+    public void setLabels(List<LabelDTO> labels) {
+        this.labels.setValue(labels);
     }
 }

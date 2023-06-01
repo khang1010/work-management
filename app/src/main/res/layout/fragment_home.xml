@@ -7,8 +7,6 @@
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigation"
         android:layout_width="match_parent"
@@ -22,22 +20,6 @@
         app:itemTextAppearanceInactive="@style/textStyle_homeNav_inactive"
         app:menu="@menu/home_navigation"
         app:itemPaddingBottom="20dp"/>
-
-    <Button
-        android:id="@+id/btnEdit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/navigation"
-        android:text="edit"
-        android:visibility="gone"/>
-
-    <Button
-        android:id="@+id/logoutBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Log out"
-        android:visibility="gone"/>
 
     <FrameLayout
         android:id="@+id/frame_layout"
@@ -78,6 +60,17 @@
             fab:fab_colorNormal="@color/primary_2"
             fab:fab_title="Add new table"
             android:src="@drawable/ic_add_table"
+            fab:fab_colorPressed="@color/primary_5"
+            app:fab_size="mini"
+            android:paddingTop="1dp"/>
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="@color/primary_2"
+            fab:fab_title="Labels"
+            android:src="@drawable/ic_label"
             fab:fab_colorPressed="@color/primary_5"
             app:fab_size="mini"
             android:paddingTop="1dp"/>

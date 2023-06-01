@@ -19,6 +19,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activities.LabelActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.EditBoardActivity"
             android:exported="false" />
         <activity

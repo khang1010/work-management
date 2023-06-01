@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.workmanagement.R;
 import com.example.workmanagement.activities.EditBoardActivity;
+import com.example.workmanagement.activities.LabelActivity;
 import com.example.workmanagement.activities.LoginActivity;
 import com.example.workmanagement.adapter.UserInvitedRecViewAdapter;
 import com.example.workmanagement.adapter.UserSearchRecViewAdapter;
@@ -87,8 +88,6 @@ public class HomeFragment extends Fragment {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
 
         if (account == null) goSignOut();
-        binding.logoutBtn.setOnClickListener(v -> goSignOut());
-        binding.logoutBtn.setVisibility(View.GONE);
         binding.navigation.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigation_table:
@@ -99,25 +98,6 @@ public class HomeFragment extends Fragment {
                     return true;
             }
             return false;
-        });
-        binding.btnEdit.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), EditBoardActivity.class);
-            intent.putExtra("BOARD_IDS", (ArrayList) userViewModel.getBoards().getValue()
-                    .stream().map(b -> b.getId()).collect(Collectors.toList()));
-            intent.putExtra("BOARD_ID", boardViewModel.getId().getValue());
-            intent.putExtra("BOARD_NAME", boardViewModel.getName().getValue());
-            intent.putExtra("BOARD_ADMIN", boardViewModel.getAdmin().getValue());
-            intent.putExtra("BOARD_MEMBERS", (ArrayList) boardViewModel.getMembers().getValue());
-            intent.putExtra("USER_ID", userViewModel.getId().getValue());
-            intent.putExtra("TOKEN", userViewModel.getToken().getValue());
-            List<Long> ids = new ArrayList<>();
-            boardViewModel.getTables().getValue().forEach(t ->
-                    ids.addAll(t.getMembers()
-                            .stream().map(m -> m.getId())
-                            .collect(Collectors.toList()))
-            );
-            intent.putExtra("IDS", (ArrayList) ids.stream().distinct().collect(Collectors.toList()));
-            startActivity(intent);
         });
         binding.actionAddTable.setOnClickListener(v -> showCreateTableDialog());
         binding.actionEditBoard.setOnClickListener(v -> {
@@ -139,6 +119,13 @@ public class HomeFragment extends Fragment {
             intent.putExtra("IDS", (ArrayList) ids.stream().distinct().collect(Collectors.toList()));
             startActivity(intent);
         });
+        binding.actionLabel.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), LabelActivity.class);
+            intent.putExtra("LABELS", (ArrayList) boardViewModel.getLabels().getValue());
+            intent.putExtra("BOARD_ID", boardViewModel.getId().getValue());
+            intent.putExtra("TOKEN", userViewModel.getToken().getValue());
+            startActivity(intent);
+        });
         return view;
     }
 
@@ -158,6 +145,7 @@ public class HomeFragment extends Fragment {
                             boardViewModel.setAdmin(response.body().getAdmin());
                             boardViewModel.setMembers(response.body().getMembers());
                             boardViewModel.setTables(response.body().getTables());
+                            boardViewModel.setLabels(response.body().getLabels());
                         }
                     }
 
@@ -175,11 +163,9 @@ public class HomeFragment extends Fragment {
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.create_table);
         Window window = dialog.getWindow();
-        if (window == null) {
+        if (window == null)
             return;
-        }
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
 
         EditText txtSearchUser = dialog.findViewById(R.id.editTxtSearchUserTable);
         EditText txtTableName = dialog.findViewById(R.id.editTxtCreateTableName);
