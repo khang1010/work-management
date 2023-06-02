@@ -9,6 +9,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.storage.StorageManager;
+import android.provider.DocumentsContract;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -219,14 +221,16 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
             }
         });
 
-//        holder.download.setOnClickListener(view -> {
-//            try {
-//                askForPermissions(position);
-//                createExcel(view, position, boardViewModel.getTables().getValue().get(position).getTasks());
-//            } catch (ParseException e) {
-//                throw new RuntimeException(e);
-//            }
-//        });
+        System.setProperty("org.apache.poi.javax.xml.stream.XMLInputFactory", "com.fasterxml.aalto.stax.InputFactoryImpl");
+        System.setProperty("org.apache.poi.javax.xml.stream.XMLOutputFactory", "com.fasterxml.aalto.stax.OutputFactoryImpl");
+        System.setProperty("org.apache.poi.javax.xml.stream.XMLEventFactory", "com.fasterxml.aalto.stax.EventFactoryImpl");
+        holder.download.setOnClickListener(view -> {
+            try {
+                createExcel(view, position, boardViewModel.getTables().getValue().get(position).getTasks());
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     @Override
@@ -464,17 +468,6 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
         dialog.show();
     }
 
-    public void askForPermissions(int pos) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (!Environment.isExternalStorageManager()) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                context.startActivity(intent);
-                return;
-            }
-            createDir(pos);
-        }
-    }
-
     public void createDir(int pos){
         String dirPath = context.getExternalFilesDir(null).getAbsolutePath();
         String filePath = dirPath + "/task/";
@@ -491,61 +484,115 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
 
         HSSFRow hssfRow = hssfSheet.createRow(0);
         HSSFCell hssfCell = hssfRow.createCell(0);
-        hssfCell.setCellValue("Id");
-
-        hssfCell = hssfRow.createCell(1);
         hssfCell.setCellValue("Name");
 
-        hssfCell = hssfRow.createCell(2);
+        hssfCell = hssfRow.createCell(1);
         hssfCell.setCellValue("Person");
 
-        hssfCell = hssfRow.createCell(3);
+        hssfCell = hssfRow.createCell(2);
         hssfCell.setCellValue("Deadline");
 
-        hssfCell = hssfRow.createCell(4);
+        hssfCell = hssfRow.createCell(3);
         hssfCell.setCellValue("Status");
 
         for (int i = 0; i < tasks.size(); i++) {
             hssfRow = hssfSheet.createRow(i + 1);
             hssfCell = hssfRow.createCell(0);
-            hssfCell.setCellValue(tasks.get(i).getId());
-
-            hssfCell = hssfRow.createCell(1);
             hssfCell.setCellValue(tasks.get(i).getTextAttributes().stream().filter(atr -> atr.getName().equals("name")).findFirst().get().getValue());
 
-            hssfCell = hssfRow.createCell(2);
+            hssfCell = hssfRow.createCell(1);
             hssfCell.setCellValue(tasks.get(i).getUser().getDisplayName());
 
             Date date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(tasks.get(i).getDateAttributes().stream().filter(atr -> atr.getName().equals("deadline")).findFirst().get().getValue());
-            hssfCell = hssfRow.createCell(3);
+            hssfCell = hssfRow.createCell(2);
             hssfCell.setCellValue(String.valueOf(new SimpleDateFormat("HH:mm dd/MM/yyyy").format(date)));
 
-            hssfCell = hssfRow.createCell(4);
+            hssfCell = hssfRow.createCell(3);
             hssfCell.setCellValue(tasks.get(i).getStatus());
+
+            hssfSheet.setColumnWidth(0, (20 * 200));
+            hssfSheet.setColumnWidth(1, (30 * 200));
+            hssfSheet.setColumnWidth(2, (30 * 200));
+            hssfSheet.setColumnWidth(3, (30 * 200));
         }
 
-        String dirPath = context.getExternalFilesDir(null).getAbsolutePath();
-        String filePath = dirPath + "/task/";
-        File file = new File(filePath + boardViewModel.getTables().getValue().get(pos).getName() + ".xls");
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.parse(" content://storage/emulated/0/Android/data/com.example.workmanagement/files/task/" + boardViewModel.getTables().getValue().get(pos).getName() + ".xls"),"*/*");
-        context.startActivity(intent);
+        String folderName = context.getResources().getString(R.string.app_name);
+        String fileName = boardViewModel.getTables().getValue().get(pos).getName() + ".xls";
+        String dirPath = Environment.getExternalStorageDirectory() + File.separator + folderName + File.separator + fileName;
+        File file = new File(Environment.getExternalStorageDirectory() + File.separator + folderName);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        FileOutputStream outputStream = null;
 
         try {
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-            hssfWorkbook.write(fileOutputStream);
-
-            if (fileOutputStream != null) {
-                fileOutputStream.flush();
-                fileOutputStream.close();
-            }
+            outputStream = new FileOutputStream(dirPath);
+            hssfWorkbook.write(outputStream);
+            // ShareViaEmail(file.getParentFile().getName(),file.getName());
+            Toast.makeText(context, "Excel Created in " + dirPath, Toast.LENGTH_LONG).show();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+
+            Toast.makeText(context, "Not OK", Toast.LENGTH_LONG).show();
+            try {
+                outputStream.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+
+            }
+        }
+
+//        String dirPath = context.getExternalFilesDir(null).getAbsolutePath();
+//        String filePath = dirPath + "/task/";
+//        File file = new File(filePath + boardViewModel.getTables().getValue().get(pos).getName() + ".xls");
+
+//        try {
+//            if (!file.exists()) {
+//                file.createNewFile();
+//            }
+//            FileOutputStream fileOutputStream = new FileOutputStream(file);
+//            hssfWorkbook.write(fileOutputStream);
+//
+//            if (fileOutputStream != null) {
+//                fileOutputStream.flush();
+//                fileOutputStream.close();
+//            }
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//        Intent intent = new Intent(Intent.ACTION_VIEW);
+//        intent.setDataAndType(Uri.fromFile(file),"*/*");
+//        context.startActivity(intent);
+//        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+//        String path = Environment.getExternalStorageDirectory() + File.separator + folderName;
+//        intent.setDataAndType(Uri.parse(path), "application/*");
+//        intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, Uri.parse(path));
+//        context.startActivity(intent);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            StorageManager sm = (StorageManager) context.getSystemService(Context.STORAGE_SERVICE);
+
+            Intent intent = sm.getPrimaryStorageVolume().createOpenDocumentTreeIntent();
+            String startDir = context.getResources().getString(R.string.app_name);
+
+            Uri uri = intent.getParcelableExtra("android.provider.extra.INITIAL_URI");
+
+            String scheme = uri.toString();
+
+            scheme = scheme.replace("/root/", "/document/");
+
+            scheme += "%3A" + startDir;
+
+            uri = Uri.parse(scheme);
+
+            intent.putExtra("android.provider.extra.INITIAL_URI", uri);
+
+            context.startActivity(intent);
+
+            return;
         }
     }
+
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
