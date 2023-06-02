@@ -19,6 +19,7 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ import com.example.workmanagement.tableview.TableViewModel;
 import com.example.workmanagement.tableview.model.Cell;
 import com.example.workmanagement.utils.SystemConstant;
 import com.example.workmanagement.utils.dto.DateAttributeDTO;
+import com.example.workmanagement.utils.dto.LabelAttributeDTO;
 import com.example.workmanagement.utils.dto.TableDTO;
 import com.example.workmanagement.utils.dto.TableDetailsDTO;
 import com.example.workmanagement.utils.dto.TaskDTO;
@@ -253,28 +255,48 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
         userRecView.setLayoutManager(new LinearLayoutManager(context));
         userRecView.setAdapter(adapter);
 
+        Spinner label = dialog.findViewById(R.id.labelSpinner);
+        label.setVisibility(View.VISIBLE);
+        LabelSpinnerAdapter labelAdapter = new LabelSpinnerAdapter(context, boardViewModel.getLabels().getValue());
+        label.setAdapter(labelAdapter);
+
         btnCreateTask.setOnClickListener(view -> {
             if (!txtTaskName.getText().toString().trim().isEmpty()
                     && !txtTaskDesc.getText().toString().trim().isEmpty() && adapter.isChosen()) {
                 long tableId = tables.get(pos).getId();
                 List<TableDetailsDTO> tableDetailsDTOS = boardViewModel.getTables().getValue();
+
                 TaskDTO newTask = new TaskDTO();
                 newTask.setDescription(txtTaskDesc.getText().toString());
                 newTask.setStatus(SystemConstant.PENDING_STATUS);
                 newTask.setUserId(adapter.getUser().getId());
                 newTask.setTableId(tableId);
+
                 List<TextAttributeDTO> textAttributes = new ArrayList<>();
                 List<DateAttributeDTO> dateAttributes = new ArrayList<>();
+                List<LabelAttributeDTO> labelAttributes = new ArrayList<>();
+
                 TextAttributeDTO textAttribute = new TextAttributeDTO();
                 textAttribute.setName("name");
                 textAttribute.setValue(txtTaskName.getText().toString());
                 textAttributes.add(textAttribute);
+
                 DateAttributeDTO dateAttribute = new DateAttributeDTO();
                 dateAttribute.setName("deadline");
                 dateAttribute.setValue(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()));
                 dateAttributes.add(dateAttribute);
+
+                LabelAttributeDTO labelAttribute = new LabelAttributeDTO();
+                labelAttribute.setName("label");
+                labelAttribute.setLabelId(label.getSelectedItemId());
+                labelAttributes.add(labelAttribute);
+
                 newTask.setTextAttributes(textAttributes);
                 newTask.setDateAttributes(dateAttributes);
+
+                if (boardViewModel.getLabels().getValue().size() > 0)
+                    newTask.setLabelAttributes(labelAttributes);
+
                 TaskServiceImpl.getInstance().getService(userViewModel.getToken().getValue()).createTask(newTask)
                         .enqueue(new Callback<TaskDetailsDTO>() {
                             @Override

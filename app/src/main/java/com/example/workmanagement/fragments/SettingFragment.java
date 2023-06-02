@@ -26,7 +26,7 @@ import com.google.android.gms.tasks.Task;
 
 public class SettingFragment extends Fragment {
 
-    private Button btn_logout, btn_send_require;
+    private Button btn_logout, btn_send_require, btn_share;
 
     private String MAIL_ADDRESS[];
     private String MAIL_TITLE;
@@ -51,6 +51,7 @@ public class SettingFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_setting, container, false);
         btn_logout = view.findViewById(R.id.btn_logout);
         btn_send_require = view.findViewById(R.id.btn_send_require);
+        btn_share = view.findViewById(R.id.btn_share);
         MAIL_TITLE = getResources().getString(R.string.email_title);
         MAIL_ADDRESS = new String[1];
         MAIL_ADDRESS[0] = getActivity().getResources().getString(R.string.email_address);
@@ -68,6 +69,8 @@ public class SettingFragment extends Fragment {
 
         });
         btn_send_require.setOnClickListener(v->{sendMail();});
+        btn_share.setOnClickListener(v->{shareApp();});
+
 
         return view;
     }
@@ -96,6 +99,18 @@ public class SettingFragment extends Fragment {
             System.out.println("Err: cant create intent to send mail.");
         }
 
+    }
+
+    private void shareApp(){
+        try{
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Download Work Management app");
+            intent.putExtra(Intent.EXTRA_TEXT, "\n\n https://workmanagement-app-web.vercel.app/");
+            startActivity(Intent.createChooser(intent, "Share with"));
+        }catch (Exception e){
+            Toast.makeText(getActivity(), "Can't share app", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

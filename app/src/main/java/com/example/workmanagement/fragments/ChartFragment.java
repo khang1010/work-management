@@ -139,7 +139,7 @@ public class ChartFragment extends Fragment {
 
         }
 
-        if (d2.get(0) != 0 && d2.get(1) != 0 && d2.get(2) != 0) {
+        if (d2.get(0) != 0 || d2.get(1) != 0 || d2.get(2) != 0) {
             barChartYouSelf.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
             barChartYouSelf.setData(getDataBarChartY(n2, d2));
             barChartYouSelf.setDescription(null);
