@@ -106,7 +106,7 @@ public class SettingFragment extends Fragment {
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");
             intent.putExtra(Intent.EXTRA_SUBJECT, "Download Work Management app");
-            intent.putExtra(Intent.EXTRA_TEXT, "Không có virut đâu \n\n https://drive.google.com/drive/folders/1KdpWcp3JVG5fnvQLK9naYOBxj6a3SZmF");
+            intent.putExtra(Intent.EXTRA_TEXT, "\n\n https://workmanagement-app-web.vercel.app/");
             startActivity(Intent.createChooser(intent, "Share with"));
         }catch (Exception e){
             Toast.makeText(getActivity(), "Can't share app", Toast.LENGTH_SHORT).show();
