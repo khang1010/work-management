@@ -49,7 +49,7 @@ public class PersonCellViewHolder extends AbstractViewHolder {
     public final ImageView cell_image;
     public final TextView cell_name;
     public final RelativeLayout cell_container;
-    private UserViewModel userViewModel;
+
     private Context mContext;
     public PersonCellViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -66,6 +66,22 @@ public class PersonCellViewHolder extends AbstractViewHolder {
         cell_container = itemView.findViewById(R.id.cell_background);
     }
 
+    public PersonCellViewHolder(@NonNull View itemView, Context mContext, String type) {
+        super(itemView);
+        this.mContext = mContext;
+        cell_image = itemView.findViewById(R.id.cell_image);
+        cell_name = itemView.findViewById(R.id.cell_text);
+        cell_container = itemView.findViewById(R.id.cell_background);
+        if (type.equals("LABEL")) {
+            cell_image.setVisibility(View.GONE);
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+            cell_name.setLayoutParams(layoutParams);
+            cell_name.setTextColor(mContext.getResources().getColor(R.color.white));
+        }
+    }
+
     public void setData(Object data, String name) {
         int mood = (int) data;
         int moodDrawable = mood == TableViewModel.HAPPY ? R.drawable.ic_happy : R.drawable.ic_next;
@@ -73,11 +89,5 @@ public class PersonCellViewHolder extends AbstractViewHolder {
         cell_image.setImageResource(moodDrawable);
         cell_name.setText(name);
         cell_container.setBackgroundResource(R.color.blue);
-
-//        userViewModel.getPhotoUrl().observe((LifecycleOwner) mContext, photoUrl -> Glide.with(mContext)
-//                .asBitmap()
-//                .load(photoUrl)
-//                .into(cell_image));
-//        cell_name.setText(userViewModel.getDisplayName().toString());
     }
 }

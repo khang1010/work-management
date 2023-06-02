@@ -116,7 +116,11 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
                 throw new RuntimeException(e);
             }
             list.add(new Cell("3", new SimpleDateFormat("HH:mm dd/MM/yyyy").format(date)));
-            list.add(new Cell("4", "Khang"));
+            if (t.getLabelAttributes().stream().filter(atr -> atr.getName().equals("label")).findFirst().isPresent()) {
+                long labelId = t.getLabelAttributes().stream().filter(atr -> atr.getName().equals("label")).findFirst().get().getLabelId();
+                list.add(new Cell("4", "default", boardViewModel.getLabels().getValue().stream().filter(l -> l.getId() == labelId).findFirst().get().getName()));
+            } else
+                list.add(new Cell("4", "default", "No label"));
             listCells.add(list);
         });
 
@@ -468,12 +472,12 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
         dialog.show();
     }
 
-    public void createDir(int pos){
+    public void createDir(int pos) {
         String dirPath = context.getExternalFilesDir(null).getAbsolutePath();
         String filePath = dirPath + "/task/";
         File dir = new File(filePath);
 
-        if (!dir.exists()){
+        if (!dir.exists()) {
             dir.mkdirs();
         }
     }
@@ -591,7 +595,6 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
             return;
         }
     }
-
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -47,12 +47,12 @@ public class CellViewHolder extends AbstractViewHolder {
     @NonNull
     private final TextView cell_textview;
     @NonNull
-    private final LinearLayout cell_container;
+    public final LinearLayout cell_container;
 
     public CellViewHolder(@NonNull View itemView) {
         super(itemView);
         cell_textview = itemView.findViewById(R.id.cell_data);
-        cell_container = itemView.findViewById(R.id.cell_container);
+        cell_container = itemView.findViewById(R.id.cell_container_normal);
     }
 
     public void setCell(@Nullable Cell cell) {
@@ -63,7 +63,7 @@ public class CellViewHolder extends AbstractViewHolder {
     public void setCellDeadline(@Nullable Cell cell) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
         Date date = new Date();
-        String text = String.valueOf(dateFormat.format(date));
+        String text = dateFormat.format(date);
         cell_textview.setText(text);
         cell_container.getLayoutParams().width = LinearLayout.LayoutParams.WRAP_CONTENT;
         cell_textview.requestLayout();

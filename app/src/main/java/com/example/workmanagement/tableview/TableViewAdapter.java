@@ -25,8 +25,7 @@
 package com.example.workmanagement.tableview;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,19 +43,13 @@ import com.evrencoskun.tableview.sort.SortState;
 import com.example.workmanagement.R;
 import com.example.workmanagement.tableview.holder.CellViewHolder;
 import com.example.workmanagement.tableview.holder.ColumnHeaderViewHolder;
-import com.example.workmanagement.tableview.holder.GenderCellViewHolder;
-import com.example.workmanagement.tableview.holder.MoodCellViewHolder;
 import com.example.workmanagement.tableview.holder.PersonCellViewHolder;
 import com.example.workmanagement.tableview.holder.RowHeaderViewHolder;
 import com.example.workmanagement.tableview.model.Cell;
 import com.example.workmanagement.tableview.model.ColumnHeader;
 import com.example.workmanagement.tableview.model.RowHeader;
+import com.example.workmanagement.utils.dto.TaskDetailsDTO;
 import com.example.workmanagement.viewmodels.BoardViewModel;
-import com.example.workmanagement.viewmodels.UserViewModel;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Created by evrencoskun on 11/06/2017.
@@ -132,8 +125,11 @@ public class TableViewAdapter extends AbstractTableAdapter<ColumnHeader, RowHead
                 layout = inflater.inflate(R.layout.table_view_image_cell_layout, parent, false);
 
                 return new PersonCellViewHolder(layout, parent.getContext());
-//            case GENDER_CELL_TYPE:
-//                // Get image cell layout which has ImageView instead of TextView.
+            case GENDER_CELL_TYPE:
+                // Get image cell layout which has ImageView instead of TextView.
+                layout = inflater.inflate(R.layout.table_view_image_cell_layout, parent, false);
+
+                return new PersonCellViewHolder(layout, parent.getContext(), "LABEL");
 //                layout = inflater.inflate(R.layout.table_view_cell_layout, parent, false);
 //
 //                return new CellViewHolder(layout);
@@ -168,8 +164,6 @@ public class TableViewAdapter extends AbstractTableAdapter<ColumnHeader, RowHead
             case PERSON_CELL_TYPE:
                 PersonCellViewHolder personViewHolder = (PersonCellViewHolder) holder;
 
-//                personViewHolder.cell_image.setImageResource(mTableViewModel.getDrawable((int) cellItemModel
-//                        .getData(), false));
                 String temp = boardViewModel.getTables().getValue().get(tablePosition).getTasks().get(rowPosition).getStatus();
 
                 if (temp.equals("DONE")) {
@@ -183,11 +177,6 @@ public class TableViewAdapter extends AbstractTableAdapter<ColumnHeader, RowHead
                 }
                 personViewHolder.cell_name.setText(cellItemModel.getText());
 
-//                userViewModel.getPhotoUrl().observe(lifecycleOwner, photoUrl -> Glide.with(mContext)
-//                .asBitmap()
-//                .load(photoUrl)
-//                .into(personViewHolder.cell_image));
-//                Toast.makeText(mContext, String.valueOf(cellItemModel.getData()), Toast.LENGTH_SHORT).show();
                 if (String.valueOf(cellItemModel.getData()).equals("default")) {
                     personViewHolder.cell_image.setImageResource(R.drawable.ic_launcher_foreground);
                 } else {
@@ -198,12 +187,19 @@ public class TableViewAdapter extends AbstractTableAdapter<ColumnHeader, RowHead
                 }
                 break;
             case DEADLINE_CELL_TYPE:
-//                GenderCellViewHolder genderViewHolder = (GenderCellViewHolder) holder;
-//
-//                genderViewHolder.cell_image.setImageResource(mTableViewModel.getDrawable((int)
-//                        cellItemModel.getData(), true));
                 CellViewHolder viewHolder1 = (CellViewHolder) holder;
                 viewHolder1.setCellDeadline(cellItemModel);
+                break;
+            case GENDER_CELL_TYPE:
+                PersonCellViewHolder cellViewHolder = (PersonCellViewHolder) holder;
+                TaskDetailsDTO task = boardViewModel.getTables().getValue().get(tablePosition).getTasks().get(rowPosition);
+                if (task.getLabelAttributes().stream().filter(atr -> atr.getName().equals("label")).findFirst().isPresent()) {
+                    long labelId = task.getLabelAttributes().stream().filter(atr -> atr.getName().equals("label")).findFirst().get().getLabelId();
+                    String color = boardViewModel.getLabels().getValue().stream().filter(l -> l.getId() == labelId).findFirst().get().getColor();
+                    cellViewHolder.cell_container.setBackgroundColor(Color.parseColor(color));
+                    cellViewHolder.cell_name.setText(cellItemModel.getText());
+                }
+                //cellViewHolder.setCell(cellItemModel);
                 break;
             default:
                 // Get the holder to update cell item text
