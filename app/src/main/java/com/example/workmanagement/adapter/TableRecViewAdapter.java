@@ -3,9 +3,13 @@ package com.example.workmanagement.adapter;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -69,6 +73,7 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
     private Context context;
     private UserViewModel userViewModel;
     private BoardViewModel boardViewModel;
+//    private File dir;
 
     public void setTables(List<TableDetailsDTO> tables) {
         this.tables = tables;
@@ -214,6 +219,7 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
 
 //        holder.download.setOnClickListener(view -> {
 //            try {
+//                askForPermissions(position);
 //                createExcel(view, position, boardViewModel.getTables().getValue().get(position).getTasks());
 //            } catch (ParseException e) {
 //                throw new RuntimeException(e);
@@ -436,6 +442,27 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
         dialog.show();
     }
 
+    public void askForPermissions(int pos) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                context.startActivity(intent);
+                return;
+            }
+            createDir(pos);
+        }
+    }
+
+    public void createDir(int pos){
+        String dirPath = context.getExternalFilesDir(null).getAbsolutePath();
+        String filePath = dirPath + "/task/";
+        File dir = new File(filePath);
+
+        if (!dir.exists()){
+            dir.mkdirs();
+        }
+    }
+
     public void createExcel(View view, int pos, List<TaskDetailsDTO> tasks) throws ParseException {
         HSSFWorkbook hssfWorkbook = new HSSFWorkbook();
         HSSFSheet hssfSheet = hssfWorkbook.createSheet();
@@ -475,7 +502,12 @@ public class TableRecViewAdapter extends RecyclerView.Adapter<TableRecViewAdapte
             hssfCell.setCellValue(tasks.get(i).getStatus());
         }
 
-        File file = new File(Environment.getExternalStorageDirectory() + "/" + boardViewModel.getTables().getValue().get(pos).getName() + ".xls");
+        String dirPath = context.getExternalFilesDir(null).getAbsolutePath();
+        String filePath = dirPath + "/task/";
+        File file = new File(filePath + boardViewModel.getTables().getValue().get(pos).getName() + ".xls");
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.parse(" content://storage/emulated/0/Android/data/com.example.workmanagement/files/task/" + boardViewModel.getTables().getValue().get(pos).getName() + ".xls"),"*/*");
+        context.startActivity(intent);
 
         try {
             if (!file.exists()) {
