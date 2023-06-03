@@ -197,8 +197,8 @@ public class TableViewAdapter extends AbstractTableAdapter<ColumnHeader, RowHead
                     long labelId = task.getLabelAttributes().stream().filter(atr -> atr.getName().equals("label")).findFirst().get().getLabelId();
                     String color = boardViewModel.getLabels().getValue().stream().filter(l -> l.getId() == labelId).findFirst().get().getColor();
                     cellViewHolder.cell_container.setBackgroundColor(Color.parseColor(color));
-                    cellViewHolder.cell_name.setText(cellItemModel.getText());
                 }
+                cellViewHolder.cell_name.setText(cellItemModel.getText());
                 //cellViewHolder.setCell(cellItemModel);
                 break;
             default:

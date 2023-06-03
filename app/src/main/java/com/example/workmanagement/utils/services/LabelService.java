@@ -18,6 +18,6 @@ public interface LabelService {
     Call<LabelDTO> updateLabel(@Path("id") long id, @Body LabelDTO dto);
 
     @DELETE("labels/{id}")
-    Call<Void> deleteTask(@Path("id") long id);
+    Call<Void> deleteLabel(@Path("id") long id);
 
 }

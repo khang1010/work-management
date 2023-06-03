@@ -2,7 +2,9 @@ package com.example.workmanagement.utils.dto;
 
 import com.squareup.moshi.Json;
 
-public class TextAttributeDTO {
+import java.io.Serializable;
+
+public class TextAttributeDTO implements Serializable {
 
     @Json(name = "id")
     private long id;

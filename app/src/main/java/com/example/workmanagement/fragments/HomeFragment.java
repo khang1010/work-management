@@ -39,6 +39,7 @@ import com.example.workmanagement.databinding.FragmentHomeBinding;
 import com.example.workmanagement.utils.dto.BoardDetailsDTO;
 import com.example.workmanagement.utils.dto.TableDTO;
 import com.example.workmanagement.utils.dto.TableDetailsDTO;
+import com.example.workmanagement.utils.dto.TaskDetailsDTO;
 import com.example.workmanagement.utils.dto.UserInfoDTO;
 import com.example.workmanagement.utils.services.impl.BoardServiceImpl;
 import com.example.workmanagement.utils.services.impl.TableServiceImpl;
@@ -91,7 +92,7 @@ public class HomeFragment extends Fragment {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
 
         ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        Manifest.permission.READ_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
+                Manifest.permission.READ_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
         ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
 
         if (account == null) goSignOut();
@@ -131,6 +132,9 @@ public class HomeFragment extends Fragment {
             intent.putExtra("LABELS", (ArrayList) boardViewModel.getLabels().getValue());
             intent.putExtra("BOARD_ID", boardViewModel.getId().getValue());
             intent.putExtra("TOKEN", userViewModel.getToken().getValue());
+            List<TaskDetailsDTO> tasks = new ArrayList<>();
+            boardViewModel.getTables().getValue().forEach(t -> tasks.addAll(t.getTasks()));
+            intent.putExtra("TASKS", (ArrayList) tasks);
             startActivity(intent);
         });
         return view;
@@ -163,6 +167,7 @@ public class HomeFragment extends Fragment {
                 });
         });
     }
+
     private void showCreateTableDialog() {
 
         Dialog dialog = new Dialog(getActivity());
@@ -208,7 +213,8 @@ public class HomeFragment extends Fragment {
                                     boardViewModel.setTables(tableDetailsDTOS);
                                     Toasty.success(getContext(), "Create table success!", Toast.LENGTH_SHORT, true).show();
                                     dialog.dismiss();
-                                } else Toasty.error(getContext(), response.raw().toString(), Toast.LENGTH_SHORT, true).show();
+                                } else
+                                    Toasty.error(getContext(), response.raw().toString(), Toast.LENGTH_SHORT, true).show();
                             }
 
                             @Override
@@ -216,7 +222,8 @@ public class HomeFragment extends Fragment {
                                 Toasty.error(getContext(), t.getMessage(), Toast.LENGTH_SHORT, true).show();
                             }
                         });
-            } else Toasty.warning(getContext(), "Please fill full information", Toast.LENGTH_SHORT, true).show();
+            } else
+                Toasty.warning(getContext(), "Please fill full information", Toast.LENGTH_SHORT, true).show();
         });
 
         txtSearchUser.addTextChangedListener(new TextWatcher() {
@@ -245,7 +252,6 @@ public class HomeFragment extends Fragment {
         });
         dialog.show();
     }
-
 
 
     private void loadFragment(Fragment fragment) {
