@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -142,6 +143,7 @@ public class LabelActivity extends AppCompatActivity {
     private void showCreateLabelDialog(long boardId, String token) {
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        dialog.getWindow().setLayout(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.add_label);
         Window window = dialog.getWindow();
