@@ -72,6 +72,7 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.google.android.material.transition.MaterialSharedAxis;
 
 import java.util.Locale;
 
@@ -111,20 +112,44 @@ public class ChartFragment extends Fragment {
             barChart.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
             barChart.setData(getDataBarChart(n1, d1, names1));
             barChart.setDescription(null);
+
+
+
+            Legend l = barChart.getLegend();
+//            l.setOrientation(Legend.LegendOrientation.VERTICAL);
+            l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+            l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+            l.setWordWrapEnabled(true);
+            l.setForm(Legend.LegendForm.SQUARE);
+
+            XAxis xAxis = barChart.getXAxis();
+            xAxis.setDrawLabels(false);
+            xAxis.setDrawAxisLine(true);
+            xAxis.setDrawGridLines(true);
+
+
+            YAxis yAxisLeft = barChart.getAxisLeft();
+            yAxisLeft.setLabelCount(8, true);
+            yAxisLeft.setSpaceTop(0.3f);
+
+
+            YAxis yAxisRight = barChart.getAxisRight();
+            yAxisRight.setDrawLabels(false);
+            yAxisRight.setDrawAxisLine(true);
+            yAxisRight.setDrawGridLines(false);
+
             barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
                 @Override
                 public void onValueSelected(Entry e, Highlight h) {
                     String s;
-                    if(h.getY() == 1)
-                        s = names1.get((int)h.getX()) +" has "+ String.valueOf((int)h.getY()) + " task.";
+                    if (h.getY() == 1)
+                        s = names1.get((int) h.getX()) + " has " + String.valueOf((int) h.getY()) + " task.";
                     else
-                        s = names1.get((int)h.getX()) +" has "+ String.valueOf((int)h.getY()) + " tasks.";
+                        s = names1.get((int) h.getX()) + " has " + String.valueOf((int) h.getY()) + " tasks.";
 
 
                     Toast toast = Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT);
                     toast.show();
-
-
 
 
                 }
@@ -143,25 +168,49 @@ public class ChartFragment extends Fragment {
             barChartYouSelf.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
             barChartYouSelf.setData(getDataBarChartY(n2, d2));
             barChartYouSelf.setDescription(null);
+
+
+            Legend l = barChartYouSelf.getLegend();
+//            l.setOrientation(Legend.LegendOrientation.VERTICAL);
+            l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+            l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+            l.setWordWrapEnabled(true);
+            l.setForm(Legend.LegendForm.SQUARE);
+
+            XAxis xAxis = barChartYouSelf.getXAxis();
+            xAxis.setDrawLabels(false);
+            xAxis.setDrawAxisLine(true);
+            xAxis.setDrawGridLines(true);
+
+
+            YAxis yAxisLeft = barChartYouSelf.getAxisLeft();
+            yAxisLeft.setLabelCount(5, true);
+            yAxisLeft.setSpaceTop(0.3f);
+
+
+            YAxis yAxisRight = barChartYouSelf.getAxisRight();
+            yAxisRight.setDrawLabels(false);
+            yAxisRight.setDrawAxisLine(true);
+            yAxisRight.setDrawGridLines(false);
             barChartYouSelf.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
                 @Override
                 public void onValueSelected(Entry e, Highlight h) {
                     String s;
-                    if(h.getX()==0){
-                        if(h.getY()==0 || h.getY()==1)
-                            s = "You have " + String.valueOf((int)h.getY()) + " stuck task";
+                    if (h.getX() == 0) {
+                        if (h.getY() == 0 || h.getY() == 1)
+                            s = "You have " + String.valueOf((int) h.getY()) + " stuck task";
                         else
-                            s = "You have " + String.valueOf((int)h.getY()) + " stuck tasks";
-                    }else if(h.getX()==1){
-                        if(h.getY()==0 || h.getY()==1)
-                            s = "You have " + String.valueOf((int)h.getY()) + " pending task";
+                            s = "You have " + String.valueOf((int) h.getY()) + " stuck tasks";
+                    } else if (h.getX() == 1) {
+                        if (h.getY() == 0 || h.getY() == 1)
+                            s = "You have " + String.valueOf((int) h.getY()) + " pending task";
                         else
-                            s = "You have " + String.valueOf((int)h.getY()) + " pending tasks";
-                    }else{
-                        if(h.getY()==0 || h.getY()==1)
-                            s = "You have " + String.valueOf((int)h.getY()) + " done task";
+                            s = "You have " + String.valueOf((int) h.getY()) + " pending tasks";
+                    } else {
+                        if (h.getY() == 0 || h.getY() == 1)
+                            s = "You have " + String.valueOf((int) h.getY()) + " done task";
                         else
-                            s = "You have " + String.valueOf((int)h.getY()) + " done tasks";
+                            s = "You have " + String.valueOf((int) h.getY()) + " done tasks";
                     }
                     Toast toast = Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT);
                     toast.show();
@@ -192,22 +241,28 @@ public class ChartFragment extends Fragment {
             pieChart.setDrawEntryLabels(false);
 
             Legend l = pieChart.getLegend();
-            l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-            l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-            l.setOrientation(Legend.LegendOrientation.VERTICAL);
-            l.setDrawInside(false);
-            l.setXEntrySpace(7f);
-            l.setYEntrySpace(0f);
-            l.setYOffset(0f);
+            l.setEnabled(false);
+
+//            l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+//            l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+//            l.setOrientation(Legend.LegendOrientation.VERTICAL);
+//            l.setDrawInside(false);
+//            l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+//            l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+
+//            l.setWordWrapEnabled(true);
+//            l.setForm(Legend.LegendForm.CIRCLE);
+//            l.setMaxSizePercent(0.8f);
+
 
             pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
                 @Override
                 public void onValueSelected(Entry e, Highlight h) {
                     String s;
-                    if(h.getY() == 1)
-                        s = names3.get((int)h.getX()) +" has "+ String.valueOf((int)h.getY()) + " task.";
+                    if (h.getY() == 1)
+                        s = names3.get((int) h.getX()) + " has " + String.valueOf((int) h.getY()) + " task.";
                     else
-                        s = names3.get((int)h.getX()) +" has "+ String.valueOf((int)h.getY()) + " tasks.";
+                        s = names3.get((int) h.getX()) + " has " + String.valueOf((int) h.getY()) + " tasks.";
                     Toast toast = Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT);
                     toast.show();
 
@@ -236,12 +291,13 @@ public class ChartFragment extends Fragment {
             data.add(new BarEntry(i, d.get(i)));
 
             BarDataSet DataSet;
-            if(i == 0)
+            if (i == 0)
                 DataSet = new BarDataSet(data, names.get(i));
             else
-                DataSet = new BarDataSet(data, null);
+                DataSet = new BarDataSet(data, "");
 
-            switch (i){
+
+            switch (i) {
                 case 0:
                     DataSet.setColor(getActivity().getResources().getColor(R.color.top1));
                     break;
@@ -310,7 +366,6 @@ public class ChartFragment extends Fragment {
             g = rand.nextInt(255);
             b = rand.nextInt(255);
             colors.add(Color.rgb(r, g, b));
-
 
 
         }

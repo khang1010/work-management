@@ -45,7 +45,7 @@
     <string name="email_address">quangduongptsc@gmail.com</string>
     <string name="email_title">Work Management App: </string>
     <string name="send_email_error">"Can't send email"</string>
-
+    <string name="website_url">"https://workmanagement-app-web.vercel.app/"</string>
     <string name="confirm">"OK"</string>
 
 </resources>
