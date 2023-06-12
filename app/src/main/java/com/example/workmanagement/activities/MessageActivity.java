@@ -1,7 +1,6 @@
 package com.example.workmanagement.activities;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -13,10 +12,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ScrollView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -31,7 +26,7 @@ import com.example.workmanagement.databinding.ActivityMessageBinding;
 import com.example.workmanagement.utils.SystemConstant;
 import com.example.workmanagement.utils.dto.MessageDTO;
 import com.example.workmanagement.utils.dto.NotificationDTO;
-import com.example.workmanagement.utils.helper.TextToImageHelper;
+import com.example.workmanagement.utils.TextToImageHelper;
 import com.example.workmanagement.utils.services.store.MessageStorage;
 import com.squareup.moshi.Moshi;
 

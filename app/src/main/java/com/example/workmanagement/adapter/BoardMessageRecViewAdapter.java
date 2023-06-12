@@ -11,17 +11,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.workmanagement.R;
 import com.example.workmanagement.activities.MessageActivity;
-import com.example.workmanagement.utils.dto.BoardInfo;
-import com.example.workmanagement.utils.dto.MessageDTO;
-import com.example.workmanagement.utils.helper.TextToImageHelper;
+import com.example.workmanagement.utils.TextToImageHelper;
 import com.example.workmanagement.utils.services.store.BoardMessages;
 import com.example.workmanagement.viewmodels.UserViewModel;
 

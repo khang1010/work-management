@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.workmanagement.R;
+import com.example.workmanagement.adapter.ChartDetailRecycleviewAdapter;
 import com.example.workmanagement.databinding.FragmentChartBinding;
 
 import android.app.AlertDialog;
@@ -22,6 +23,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
@@ -42,13 +45,17 @@ import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 import com.example.workmanagement.R;
 import com.example.workmanagement.utils.dto.BoardDetailsDTO;
 import com.example.workmanagement.utils.dto.ChartDTO;
+import com.example.workmanagement.utils.models.ChartDetailItem;
 import com.example.workmanagement.utils.services.impl.BoardServiceImpl;
 import com.example.workmanagement.viewmodels.BoardViewModel;
 import com.example.workmanagement.viewmodels.UserViewModel;
@@ -90,6 +97,11 @@ public class ChartFragment extends Fragment {
     private PieChart pieChart;
     private View view;
 
+    private RecyclerView barchartRecyclerview, piechartRecyclerview;
+    private ChartDetailRecycleviewAdapter barChartAdapter, pieChartAdapter;
+    private List<ChartDetailItem> barChartList = new ArrayList<>();
+    private List<ChartDetailItem> pieChartList = new ArrayList<>();
+
     private LocalDate localDate;
 
     private UserViewModel userViewModel;
@@ -103,11 +115,28 @@ public class ChartFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    public void GroupChart(int n1, List<Integer> d1, List<String> names1, int n2, List<Integer> d2, int n3, List<Integer> d3, List<String> names3) {
+
+    private void initElements(LayoutInflater inflater){
         barChart = view.findViewById(R.id.barchart);
         barChartYouSelf = view.findViewById(R.id.barchart_youself);
         pieChart = view.findViewById(R.id.piechart);
+        barchartRecyclerview = view.findViewById(R.id.barchart_recyclerview);
+        piechartRecyclerview = view.findViewById(R.id.piechart_recyclerview);
 
+        barchartRecyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
+        piechartRecyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
+
+
+        barChartAdapter = new ChartDetailRecycleviewAdapter(barChartList, inflater);
+        pieChartAdapter = new ChartDetailRecycleviewAdapter(pieChartList, inflater);
+
+        barchartRecyclerview.setAdapter(barChartAdapter);
+        piechartRecyclerview.setAdapter(pieChartAdapter);
+
+
+    }
+
+    private void GroupBarChart(int n1, List<Integer> d1, List<String> names1){
         if (n1 != 0) {
             barChart.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
             barChart.setData(getDataBarChart(n1, d1, names1));
@@ -160,10 +189,16 @@ public class ChartFragment extends Fragment {
                 }
             });
             barChart.invalidate();
+
+
+
+
         } else {
 
         }
+    }
 
+    private void GroupBarChartYouSelf(int n2, List<Integer> d2){
         if (d2.get(0) != 0 || d2.get(1) != 0 || d2.get(2) != 0) {
             barChartYouSelf.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
             barChartYouSelf.setData(getDataBarChartY(n2, d2));
@@ -227,8 +262,19 @@ public class ChartFragment extends Fragment {
         } else {
 
         }
+    }
 
+//    private List<Integer> convertToPercentageValueList(List<Integer> list, int total){
+//        List<Integer> result = new ArrayList<>();
+//        for(int i = 0; i < list.size(); i++){
+//            result.add(list.get(i)/total);
+//        }
+//        return result;
+//    }
+
+    private void GroupPieChart(int n3, List<Integer> d3, List<String> names3, int totalTaskInBoard){
         if (n3 != 0) {
+            List<Integer> percent = new ArrayList<>();
             pieChart.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
             pieChart.setUsePercentValues(true);
             pieChart.setData(getDataPieChart(n3, d3, names3));
@@ -274,16 +320,37 @@ public class ChartFragment extends Fragment {
                 }
             });
             pieChart.invalidate();
+
         } else {
 
         }
+    }
 
+    public void GroupCharts(int n1, List<Integer> d1, List<String> names1, int n2, List<Integer> d2, int n3, List<Integer> d3, List<String> names3,int totalTaskInBoard) {
+
+        GroupBarChart(n1, d1, names1);
+        GroupBarChartYouSelf(n2, d2);
+        GroupPieChart(n3, d3, names3, totalTaskInBoard);
+
+    }
+
+    private void setDataRecyclerview(List<String> names, List<Integer> numbeTasks, List<Integer> colors, List<ChartDetailItem> list){
+
+        for(int i = 0; i < names.size(); i++){
+            ChartDetailItem item = new ChartDetailItem();
+            item.setId(String.valueOf(i));
+            item.setName(names.get(i));
+            item.setNumber_tasks(String.valueOf(numbeTasks.get(i)));
+            item.setColor(colors.get(i));
+            list.add(item);
+        }
 
     }
 
     private BarData getDataBarChart(int number, List<Integer> d, List<String> names) {
 
         BarData barData = new BarData();
+
 
 
         for (int i = 0; i < number; i++) {
@@ -318,6 +385,15 @@ public class ChartFragment extends Fragment {
             barData.addDataSet(DataSet);
         }
 
+
+        ArrayList<Integer> colors = new ArrayList<Integer>();
+        colors.add(getActivity().getResources().getColor(R.color.top1));
+        colors.add(getActivity().getResources().getColor(R.color.top2));
+        colors.add(getActivity().getResources().getColor(R.color.top3));
+        colors.add(getActivity().getResources().getColor(R.color.top4));
+        colors.add(getActivity().getResources().getColor(R.color.top5));
+        setDataRecyclerview(names, d,colors, barChartList);
+        barChartAdapter.notifyDataSetChanged();
 
         return barData;
     }
@@ -381,6 +457,8 @@ public class ChartFragment extends Fragment {
         PieData pieData = new PieData(dataSet);
         pieData.setValueTextSize(15f);
         pieData.setValueTextColor(getActivity().getResources().getColor(R.color.white));
+        setDataRecyclerview(names, dd, colors, pieChartList);
+        pieChartAdapter.notifyDataSetChanged();
         return pieData;
 
     }
@@ -391,6 +469,7 @@ public class ChartFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentChartBinding.inflate(inflater);
         view = binding.getRoot();
+        initElements(inflater);
         return view;
     }
 
@@ -411,6 +490,7 @@ public class ChartFragment extends Fragment {
                                     int sizePieChart = 0;
                                     List<String> names1 = new ArrayList<>();
                                     List<String> names3 = new ArrayList<>();
+                                    int totalTaskInBoard = 0;
                                     try {
                                         for (int i = 0; i < dataAllChart.getChart_1().size(); i++) {
                                             try {
@@ -450,6 +530,7 @@ public class ChartFragment extends Fragment {
                                                 if (amount != 0) {
                                                     l3.add(amount);
                                                     names3.add(dataAllChart.getChart_2().get(i).getDisplayName());
+                                                    totalTaskInBoard += amount;
                                                 } else {
                                                     sizePieChart--;
                                                 }
@@ -462,7 +543,9 @@ public class ChartFragment extends Fragment {
                                         System.out.println("Err: havent data in chart 3");
                                     }
 
-                                    GroupChart(dataAllChart.getChart_1().size(), l1, names1, dataAllChart.getChart_3().size(), l2, sizePieChart, l3, names3);
+                                    Collections.reverse(l3);
+
+                                    GroupCharts(dataAllChart.getChart_1().size(), l1, names1, dataAllChart.getChart_3().size(), l2, sizePieChart, l3, names3, totalTaskInBoard);
 
                                 }
                             }

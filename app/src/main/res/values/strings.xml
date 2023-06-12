@@ -31,6 +31,8 @@
         <item>50</item>
         <item>All</item>
     </string-array>
+
+
     <string name="title_activity_notification_popup">NotificationPopupActivity</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
