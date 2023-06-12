@@ -99,8 +99,8 @@ public class ChartFragment extends Fragment {
 
     private RecyclerView barchartRecyclerview, piechartRecyclerview;
     private ChartDetailRecycleviewAdapter barChartAdapter, pieChartAdapter;
-    private List<ChartDetailItem> barChartList = new ArrayList<>();
-    private List<ChartDetailItem> pieChartList = new ArrayList<>();
+    private List<ChartDetailItem> barChartList;
+    private List<ChartDetailItem> pieChartList;
 
     private LocalDate localDate;
 
@@ -116,12 +116,15 @@ public class ChartFragment extends Fragment {
     }
 
 
-    private void initElements(LayoutInflater inflater){
+    private void initElements(LayoutInflater inflater) {
         barChart = view.findViewById(R.id.barchart);
         barChartYouSelf = view.findViewById(R.id.barchart_youself);
         pieChart = view.findViewById(R.id.piechart);
         barchartRecyclerview = view.findViewById(R.id.barchart_recyclerview);
         piechartRecyclerview = view.findViewById(R.id.piechart_recyclerview);
+
+        barChartList = new ArrayList<>();
+        pieChartList = new ArrayList<>();
 
         barchartRecyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
         piechartRecyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -136,12 +139,11 @@ public class ChartFragment extends Fragment {
 
     }
 
-    private void GroupBarChart(int n1, List<Integer> d1, List<String> names1){
+    private void GroupBarChart(int n1, List<Integer> d1, List<String> names1) {
         if (n1 != 0) {
             barChart.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
             barChart.setData(getDataBarChart(n1, d1, names1));
             barChart.setDescription(null);
-
 
 
             Legend l = barChart.getLegend();
@@ -158,8 +160,9 @@ public class ChartFragment extends Fragment {
 
 
             YAxis yAxisLeft = barChart.getAxisLeft();
-            yAxisLeft.setLabelCount(8, true);
+            yAxisLeft.setLabelCount(8, false);
             yAxisLeft.setSpaceTop(0.3f);
+            yAxisLeft.setStartAtZero(true);
 
 
             YAxis yAxisRight = barChart.getAxisRight();
@@ -191,14 +194,12 @@ public class ChartFragment extends Fragment {
             barChart.invalidate();
 
 
-
-
         } else {
 
         }
     }
 
-    private void GroupBarChartYouSelf(int n2, List<Integer> d2){
+    private void GroupBarChartYouSelf(int n2, List<Integer> d2) {
         if (d2.get(0) != 0 || d2.get(1) != 0 || d2.get(2) != 0) {
             barChartYouSelf.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
             barChartYouSelf.setData(getDataBarChartY(n2, d2));
@@ -206,10 +207,10 @@ public class ChartFragment extends Fragment {
 
 
             Legend l = barChartYouSelf.getLegend();
-//            l.setOrientation(Legend.LegendOrientation.VERTICAL);
+            //l.setOrientation(Legend.LegendOrientation.VERTICAL);
             l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
             l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
-            l.setWordWrapEnabled(true);
+            //l.setWordWrapEnabled(true);
             l.setForm(Legend.LegendForm.SQUARE);
 
             XAxis xAxis = barChartYouSelf.getXAxis();
@@ -219,7 +220,8 @@ public class ChartFragment extends Fragment {
 
 
             YAxis yAxisLeft = barChartYouSelf.getAxisLeft();
-            yAxisLeft.setLabelCount(5, true);
+            yAxisLeft.setStartAtZero(true);
+            yAxisLeft.setLabelCount(5, false);
             yAxisLeft.setSpaceTop(0.3f);
 
 
@@ -272,7 +274,7 @@ public class ChartFragment extends Fragment {
 //        return result;
 //    }
 
-    private void GroupPieChart(int n3, List<Integer> d3, List<String> names3, int totalTaskInBoard){
+    private void GroupPieChart(int n3, List<Integer> d3, List<String> names3, int totalTaskInBoard) {
         if (n3 != 0) {
             List<Integer> percent = new ArrayList<>();
             pieChart.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
@@ -326,7 +328,7 @@ public class ChartFragment extends Fragment {
         }
     }
 
-    public void GroupCharts(int n1, List<Integer> d1, List<String> names1, int n2, List<Integer> d2, int n3, List<Integer> d3, List<String> names3,int totalTaskInBoard) {
+    public void GroupCharts(int n1, List<Integer> d1, List<String> names1, int n2, List<Integer> d2, int n3, List<Integer> d3, List<String> names3, int totalTaskInBoard) {
 
         GroupBarChart(n1, d1, names1);
         GroupBarChartYouSelf(n2, d2);
@@ -334,9 +336,9 @@ public class ChartFragment extends Fragment {
 
     }
 
-    private void setDataRecyclerview(List<String> names, List<Integer> numbeTasks, List<Integer> colors, List<ChartDetailItem> list){
+    private void setDataRecyclerview(List<String> names, List<Integer> numbeTasks, List<Integer> colors, List<ChartDetailItem> list) {
 
-        for(int i = 0; i < names.size(); i++){
+        for (int i = 0; i < names.size(); i++) {
             ChartDetailItem item = new ChartDetailItem();
             item.setId(String.valueOf(i));
             item.setName(names.get(i));
@@ -350,8 +352,10 @@ public class ChartFragment extends Fragment {
     private BarData getDataBarChart(int number, List<Integer> d, List<String> names) {
 
         BarData barData = new BarData();
+        ArrayList<Integer> colors = new ArrayList<Integer>();
 
 
+        int temp = d.get(0);
 
         for (int i = 0; i < number; i++) {
             ArrayList<BarEntry> data = new ArrayList<BarEntry>();
@@ -363,36 +367,41 @@ public class ChartFragment extends Fragment {
             else
                 DataSet = new BarDataSet(data, "");
 
-
-            switch (i) {
-                case 0:
-                    DataSet.setColor(getActivity().getResources().getColor(R.color.top1));
-                    break;
-                case 1:
-                    DataSet.setColor(getActivity().getResources().getColor(R.color.top2));
-                    break;
-                case 2:
-                    DataSet.setColor(getActivity().getResources().getColor(R.color.top3));
-                    break;
-                case 3:
-                    DataSet.setColor(getActivity().getResources().getColor(R.color.top4));
-                    break;
-                case 4:
-                    DataSet.setColor(getActivity().getResources().getColor(R.color.top5));
-                    break;
+            if (d.get(i) == temp) {
+                DataSet.setColor(getActivity().getResources().getColor(R.color.top1));
+                colors.add(getActivity().getResources().getColor(R.color.top1));
             }
+            else
+                switch (i) {
+                    case 0:
+                        DataSet.setColor(getActivity().getResources().getColor(R.color.top1));
+                        colors.add(getActivity().getResources().getColor(R.color.top1));
+                        break;
+                    case 1:
+                        DataSet.setColor(getActivity().getResources().getColor(R.color.top2));
+                        colors.add(getActivity().getResources().getColor(R.color.top2));
+                        break;
+                    case 2:
+                        DataSet.setColor(getActivity().getResources().getColor(R.color.top3));
+                        colors.add(getActivity().getResources().getColor(R.color.top3));
+                        break;
+                    case 3:
+                        DataSet.setColor(getActivity().getResources().getColor(R.color.top4));
+                        colors.add(getActivity().getResources().getColor(R.color.top4));
+                        break;
+                    case 4:
+                        DataSet.setColor(getActivity().getResources().getColor(R.color.top5));
+                        colors.add(getActivity().getResources().getColor(R.color.top5));
+                        break;
+                }
 
             barData.addDataSet(DataSet);
         }
 
 
-        ArrayList<Integer> colors = new ArrayList<Integer>();
-        colors.add(getActivity().getResources().getColor(R.color.top1));
-        colors.add(getActivity().getResources().getColor(R.color.top2));
-        colors.add(getActivity().getResources().getColor(R.color.top3));
-        colors.add(getActivity().getResources().getColor(R.color.top4));
-        colors.add(getActivity().getResources().getColor(R.color.top5));
-        setDataRecyclerview(names, d,colors, barChartList);
+
+
+        setDataRecyclerview(names, d, colors, barChartList);
         barChartAdapter.notifyDataSetChanged();
 
         return barData;
@@ -476,6 +485,8 @@ public class ChartFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
         userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
         userViewModel.getCurrentBoardId().observe(getViewLifecycleOwner(), id ->
                 BoardServiceImpl.getInstance().getService(userViewModel.getToken().getValue()).getChartData(id)
@@ -544,6 +555,11 @@ public class ChartFragment extends Fragment {
                                     }
 
                                     Collections.reverse(l3);
+                                    barChartList.clear();
+                                    pieChartList.clear();
+                                    barChartAdapter.notifyDataSetChanged();
+                                    pieChartAdapter.notifyDataSetChanged();
+
 
                                     GroupCharts(dataAllChart.getChart_1().size(), l1, names1, dataAllChart.getChart_3().size(), l2, sizePieChart, l3, names3, totalTaskInBoard);
 
@@ -557,4 +573,6 @@ public class ChartFragment extends Fragment {
                         })
         );
     }
+
+
 }
