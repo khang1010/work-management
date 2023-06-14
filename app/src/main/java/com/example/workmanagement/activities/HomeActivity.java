@@ -335,7 +335,7 @@ public class HomeActivity extends AppCompatActivity {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "MY_NOTIFICATION")
                 .setSmallIcon(R.mipmap.ic_logo)
-                .setLargeIcon(Glide.with(HomeActivity.this).asBitmap().load(message.getPhotoUrl()).submit().get())
+                .setLargeIcon(Glide.with(HomeActivity.this).asBitmap().load(message.getPhotoUrl().equals("null") ? BitmapFactory.decodeResource(getResources(), R.drawable.user_default) : message.getPhotoUrl()).submit().get())
                 .setStyle(new NotificationCompat.BigPictureStyle())
                 .setContentTitle(message.getBoardName())
                 .setContentText(message.getDisplayName() + ": " + message.getMessage())
