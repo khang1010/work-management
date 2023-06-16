@@ -53,7 +53,7 @@
             android:name=".activities.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.UserInforActivity"
+            android:name=".activities.UserInfoActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

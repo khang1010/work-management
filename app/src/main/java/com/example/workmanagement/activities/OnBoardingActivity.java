@@ -85,7 +85,7 @@ public class OnBoardingActivity extends AppCompatActivity {
             userDTO.setGivenName(account.getGivenName());
             userDTO.setPhotoUrl(String.valueOf(account.getPhotoUrl()));
 
-            AuthServiceImpl.getInstance().getService().loginUser(userDTO).enqueue(new Callback<UserDTO>() {
+            AuthServiceImpl.getInstance().getService().loginUser(userDTO).enqueue(new Callback<>() {
                 @Override
                 public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
                     if (response.isSuccessful() && response.code() == 200) {

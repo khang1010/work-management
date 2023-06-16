@@ -1,18 +1,9 @@
 package com.example.workmanagement.activities;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,9 +15,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,6 +26,7 @@ import com.example.workmanagement.adapter.EditBoardMembersRecAdapter;
 import com.example.workmanagement.adapter.UserInvitedRecViewAdapter;
 import com.example.workmanagement.adapter.UserSearchRecViewAdapter;
 import com.example.workmanagement.databinding.ActivityEditBoardBinding;
+import com.example.workmanagement.utils.NotificationsUtils;
 import com.example.workmanagement.utils.SystemConstant;
 import com.example.workmanagement.utils.dto.BoardDTO;
 import com.example.workmanagement.utils.dto.BoardDetailsDTO;
@@ -51,8 +40,6 @@ import com.squareup.moshi.Moshi;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import es.dmoral.toasty.Toasty;
@@ -236,87 +223,15 @@ public class EditBoardActivity extends AppCompatActivity {
             stompClient.topic("/notification/" + userId)
                     .subscribe(message -> {
                         Moshi moshi = new Moshi.Builder().build();
-                        createNotification(moshi.adapter(NotificationDTO.class).fromJson(message.getPayload()));
+                        NotificationsUtils.getInstance().createNotification(this, moshi.adapter(NotificationDTO.class).fromJson(message.getPayload()));
                     });
             ids.forEach(i ->
                     stompClient.topic("/chatroom/" + i)
                             .subscribe(message ->
-                                    createNotification(new Moshi.Builder().build().adapter(MessageDTO.class).fromJson(message.getPayload()))
+                                    NotificationsUtils.getInstance().createNotification(this, new Moshi.Builder().build().adapter(MessageDTO.class).fromJson(message.getPayload()))
                             )
             );
         }
-    }
-
-    private void createNotification(MessageDTO message) throws ExecutionException, InterruptedException {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel("MY_NOTIFICATION",
-                    "My Notification", NotificationManager.IMPORTANCE_HIGH);
-            channel.enableVibration(true);
-            channel.setVibrationPattern(new long[]{100, 1000, 200, 340});
-            channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-
-        Intent notificationIntent = new Intent(this, BlankActivity.class);
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "MY_NOTIFICATION")
-                .setSmallIcon(R.mipmap.ic_logo)
-                .setLargeIcon(Glide.with(EditBoardActivity.this).asBitmap().load(message.getPhotoUrl().equals("null") ? BitmapFactory.decodeResource(getResources(), R.drawable.user_default) : message.getPhotoUrl()).submit().get())
-                .setStyle(new NotificationCompat.BigPictureStyle())
-                .setContentTitle(message.getBoardName())
-                .setContentText(message.getDisplayName() + ": " + message.getMessage())
-                .setFullScreenIntent(null, true)
-                .setVibrate(new long[]{100, 1000, 200, 340})
-                .setAutoCancel(false)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setTicker("Notification");
-        builder.setContentIntent(contentIntent);
-
-        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(getApplicationContext());
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        managerCompat.notify(new Random().nextInt(), builder.build());
-    }
-
-    private void createNotification(NotificationDTO notification) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel("MY_NOTIFICATION",
-                    "My Notification", NotificationManager.IMPORTANCE_HIGH);
-            channel.enableVibration(true);
-            channel.setVibrationPattern(new long[]{100, 1000, 200, 340});
-            channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-
-        Intent notificationIntent = new Intent(this, BlankActivity.class);
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "MY_NOTIFICATION")
-                .setSmallIcon(R.mipmap.ic_logo)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_logo3x))
-                .setStyle(new NotificationCompat.BigPictureStyle())
-                .setContentTitle("Notification")
-                .setContentText(notification.getMessage())
-                .setFullScreenIntent(null, true)
-                .setVibrate(new long[]{100, 1000, 200, 340})
-                .setAutoCancel(false)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setTicker("Notification");
-        builder.setContentIntent(contentIntent);
-
-        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(getApplicationContext());
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        managerCompat.notify(new Random().nextInt(), builder.build());
     }
 
     private void showInviteUserDialog(String token, long boardId, long userId, String boardName) {

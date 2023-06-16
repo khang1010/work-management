@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import com.example.workmanagement.R;
 import com.example.workmanagement.activities.LoginActivity;
-import com.example.workmanagement.activities.UserInforActivity;
 import com.example.workmanagement.databinding.FragmentSettingBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
