@@ -27,6 +27,7 @@ git clone https://github.com/khang1010/work-management.git
 2. [Nguyễn Tuấn Khang](https://github.com/khang1010)
 3. [Nguyễn Đức Thành Duy](https://github.com/DuyDangCode)
 4. [Đinh Quang Dương](https://github.com/QuangDuong2903)
+5. [Ngô Quang Khải](https://github.com/doublek2712)
 ##
 **Xin hãy đóng góp ý kiến và báo lỗi [tại đây](https://github.com/khang1010/work-management)**
 Footer
