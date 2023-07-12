@@ -1,6 +1,6 @@
 # Work Management Mobile App 
-**Đồ án cuối kì môn Nhập môn ứng dụng di động nhóm Chim Cánh Cụt lớp SE114.N23.PMCL**
-**Xem thông tin chi tiết về ứng dụng [tại đây](https://workmanagement-app-web.vercel.app/?fbclid=IwAR2fHZ7v2mTvBdGhHFhUS-ivGVz3jSdvFLoeMMOHSP-RiCD8-XoLmreqZfw)**
+###Đồ án cuối kì môn Nhập môn ứng dụng di động nhóm Chim Cánh Cụt lớp SE114.N23.PMCL
+###Xem thông tin chi tiết về ứng dụng [tại đây](https://workmanagement-app-web.vercel.app/?fbclid=IwAR2fHZ7v2mTvBdGhHFhUS-ivGVz3jSdvFLoeMMOHSP-RiCD8-XoLmreqZfw)
 
 ## Tải về
 **Cách 1: Clone project**
