@@ -9,14 +9,15 @@
 work-management 
 
 ## Tải về
-**Bước 1: Clone project**
+**Cách 1: Clone project**
 ```
 git clone https://github.com/khang1010/work-management.git
 ```
-
+**Cách 2: Truy cập website**
+[https://workmanagement-app-web.vercel.app/download]
 ## Cách sử dụng
-**Bước 1: Đăng nhập/Đăng kí**
-  Đăng nhập bằng tài khoản google
+**Bước 1: Đăng nhập**
+*Đăng nhập bằng tài khoản google*
 
 **Bước 2: Trải nghiệm các tính năng** 
 
