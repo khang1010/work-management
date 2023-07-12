@@ -1,12 +1,6 @@
-# work-management 
-100$/1 lần tải
-
-
-
-# work-management 
+# Work Management Mobile App 
 **Đồ án cuối kì môn Nhập môn ứng dụng di động nhóm Chim Cánh Cụt lớp SE114.N23.PMCL**
-
-work-management 
+**Xem thông tin chi tiết về ứng dụng [tại đây](https://workmanagement-app-web.vercel.app/?fbclid=IwAR2fHZ7v2mTvBdGhHFhUS-ivGVz3jSdvFLoeMMOHSP-RiCD8-XoLmreqZfw)**
 
 ## Tải về
 **Cách 1: Clone project**
@@ -14,7 +8,7 @@ work-management
 git clone https://github.com/khang1010/work-management.git
 ```
 **Cách 2: Truy cập website**
-[https://workmanagement-app-web.vercel.app/download]
+https://workmanagement-app-web.vercel.app/download
 ## Cách sử dụng
 ### Bước 1: Đăng nhập
 Đăng nhập bằng tài khoản google
