@@ -16,10 +16,10 @@ git clone https://github.com/khang1010/work-management.git
 **Cách 2: Truy cập website**
 [https://workmanagement-app-web.vercel.app/download]
 ## Cách sử dụng
-# Bước 1: Đăng nhập
+### Bước 1: Đăng nhập
 Đăng nhập bằng tài khoản google
 
-# Bước 2: Các tính năng vui lòng xem chi tiết [tại đây](https://uithcm-my.sharepoint.com/:p:/g/personal/21520953_ms_uit_edu_vn/EeOH63T7iC9Ghn5j0omGVkQBpMbEqBZl3Q46ruLTmTQxnw?e=onFtuM&fbclid=IwAR0LJc0FOYB7E2ekxv5FVgJrwhpx6nBVHSeBCSNqOVhVC6Iugp2hJijad3c) 
+### Bước 2: Các tính năng và cách sử dụng vui lòng xem chi tiết [tại đây](https://uithcm-my.sharepoint.com/:p:/g/personal/21520953_ms_uit_edu_vn/EeOH63T7iC9Ghn5j0omGVkQBpMbEqBZl3Q46ruLTmTQxnw?e=onFtuM&fbclid=IwAR0LJc0FOYB7E2ekxv5FVgJrwhpx6nBVHSeBCSNqOVhVC6Iugp2hJijad3c) 
 
 
 ## Thành viên nhóm
